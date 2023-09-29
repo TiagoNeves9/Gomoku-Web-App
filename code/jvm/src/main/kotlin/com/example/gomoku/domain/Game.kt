@@ -12,18 +12,18 @@ data class Game(
     val board: Board,
     val created: Instant,
     val updated: Instant,
-    val player1: User,
-    val player2: User,
+    val playerX: User,
+    val playerO: User,
 ) {
     enum class State {
-        NEXT_PLAYER_1,
-        NEXT_PLAYER_2,
-        PLAYER_1_WON,
-        PLAYER_2_WON,
+        NEXT_PLAYER_X,
+        NEXT_PLAYER_O,
+        PLAYER_X_WON,
+        PLAYER_O_WON,
         DRAW;
 
         val finished: Boolean
-            get() = this == PLAYER_1_WON || this == PLAYER_2_WON || this == DRAW
+            get() = this == PLAYER_X_WON || this == PLAYER_O_WON || this == DRAW
     }
 }
 

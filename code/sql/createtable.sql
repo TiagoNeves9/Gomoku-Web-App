@@ -6,11 +6,11 @@ create schema IF NOT EXISTS dbo;
 CREATE TABLE IF NOT EXISTS dbo.Users (
     id UUID NOT NULL primary key,
     username varchar(80) NOT NULL UNIQUE,
-    password_validation varchar(256) NOT NULL
+    encoded_password varchar(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Tokens (
-    token_validation VARCHAR(256) primary key,
+    encoded_token VARCHAR(256) primary key,
     user_id uuid references dbo.Users(id)
 );
 
