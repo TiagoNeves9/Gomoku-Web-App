@@ -53,4 +53,8 @@ data class Board(private val cells: Array<Array<Cells>>){
         newBoard[playCol][playRow]
         return Board(newBoard)
     }
+
+    companion object{
+        fun create() = Board(Array(GAME_SIZE) { Array(GAME_SIZE) {Cells.EMPTY} })
+    }
 }
