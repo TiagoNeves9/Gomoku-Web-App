@@ -15,7 +15,7 @@ class GomokuService(private val gamesRepository: GamesRepository) {
 
     fun play(gameID: UUID, userID : UUID, c : Int, r: Int): Game{
         val game = gamesRepository.getById(gameID)?:throw NotFound()
-        val updatedGame  = game.copy(board = game.board.mutate(if (game.playerX.userId == userID) Cells.WHITE else Cells.BLACK, c,r))
+        val updatedGame  = game.copy(board = game.board.mutate(if (game.playerB.userId == userID) Cells.BLACK else Cells.WHITE, c,r))
         gamesRepository.update(updatedGame)
         return updatedGame
     }

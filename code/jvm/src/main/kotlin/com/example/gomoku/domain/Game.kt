@@ -12,18 +12,18 @@ data class Game(
     val board: Board,
     val created: Instant,
     val updated: Instant,
-    val playerX: User,
-    val playerO: User,
+    val playerB: User,
+    val playerW: User,
 ) {
     enum class State {
-        NEXT_PLAYER_X,
-        NEXT_PLAYER_O,
-        PLAYER_X_WON,
-        PLAYER_O_WON,
+        NEXT_PLAYER_B,
+        NEXT_PLAYER_W,
+        PLAYER_B_WON,
+        PLAYER_W_WON,
         DRAW;
 
         val finished: Boolean
-            get() = this == PLAYER_X_WON || this == PLAYER_O_WON || this == DRAW
+            get() = this == PLAYER_B_WON || this == PLAYER_W_WON || this == DRAW
     }
 }
 
@@ -50,7 +50,7 @@ data class Board(private val cells: Array<Array<Cells>>){
                 r-> cells[c][r]
             }
         }
-        newBoard[playCol][playRow]
+        newBoard[playCol][playRow] = cell
         return Board(newBoard)
     }
 
