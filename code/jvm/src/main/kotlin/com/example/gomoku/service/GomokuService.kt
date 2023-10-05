@@ -20,6 +20,10 @@ class GomokuService(private val gamesRepository: GamesRepository) {
         return updatedGame
     }
 
+    fun getById(id: UUID) : Game{
+        return gamesRepository.getById(id)?: throw NotFound()
+    }
+
     //TODO()
     /*fun start(userXID : UUID, userOID : UUID) : Game{
         val newGame = Game(

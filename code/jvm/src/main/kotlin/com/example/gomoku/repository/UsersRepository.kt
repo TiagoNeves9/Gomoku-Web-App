@@ -4,7 +4,7 @@ import com.example.gomoku.domain.User
 import java.util.*
 
 interface UsersRepository {
-    fun getById(id : Int) : User?
+    fun getById(id : UUID) : User?
     fun insert(name : String)
 
     fun storeUser(
