@@ -10,11 +10,12 @@ data class Game(
     val id: UUID,
     val state: State,
     val board: Board,
-    val created: Instant,
     val updated: Instant,
     val playerB: User,
     val playerW: User,
+    val score: Int
 ) {
+
     enum class State {
         NEXT_PLAYER_B,
         NEXT_PLAYER_W,

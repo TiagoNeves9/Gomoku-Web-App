@@ -5,7 +5,6 @@ import java.util.*
 
 interface UsersRepository {
     fun getById(id : UUID) : User?
-    fun insert(name : String)
 
     fun storeUser(
         username: String,

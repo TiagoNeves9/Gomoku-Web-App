@@ -11,9 +11,7 @@ class JdbiStatisticsRepository(
 ) : StatisticsRepository {
     override fun getRankings(): List<UserRanking> {
         return handle.createQuery(
-            """
-               select username, played_games, score from dbo.statistics by score DESC
-            """
+            "select username, played_games, score from dbo.statistics order by score DESC"
         ).mapTo<StatisticsModel>()
             .list()
             .map {

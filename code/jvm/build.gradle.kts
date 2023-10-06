@@ -19,10 +19,12 @@ repositories {
 }
 
 dependencies {
-	implementation("org.jdbi:jdbi3-core:3.32.0")
-	implementation("org.jdbi:jdbi3-kotlin:3.28.0")
-	implementation("org.jdbi:jdbi3-postgres:3.32.0")
-	implementation("org.postgresql:postgresql:42.5.0")
+	implementation("org.jdbi:jdbi3-core:3.37.1")
+	implementation("org.jdbi:jdbi3-kotlin:3.37.1")
+	implementation("org.jdbi:jdbi3-postgres:3.37.1")
+	implementation("org.postgresql:postgresql:42.5.4")
+
+	implementation("org.springframework.security:spring-security-core:6.0.2")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
