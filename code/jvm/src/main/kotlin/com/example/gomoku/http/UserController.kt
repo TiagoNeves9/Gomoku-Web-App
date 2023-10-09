@@ -27,7 +27,8 @@ class UsersController(private val usersService : UserService) {
     fun insert(@RequestBody user : UserInputModel) : UserOutputModel {
         return try {
             val createdUser = usersService.createNewUser(user.name, user.password)
-            UserOutputModel(createdUser.username, createdUser.token)
+            val token = usersService.createToken(user.name, user.password)
+            UserOutputModel(createdUser.username, token)
         } catch (ex : Exception) {
             throw ex
         }

@@ -1,8 +1,6 @@
 package com.example.gomoku
 
 import org.jdbi.v3.core.Jdbi
-import org.postgresql.ds.PGSimpleDataSource
-import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication

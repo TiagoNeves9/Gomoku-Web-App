@@ -13,8 +13,9 @@ data class Game(
     val updated: Instant,
     val playerB: User,
     val playerW: User,
-    val score: Int = 0
+    val score: Int = 0,
 ) {
+    fun other() = if (this.state == GameState.NEXT_PLAYER_W ) GameState.NEXT_PLAYER_B else GameState.NEXT_PLAYER_W
     enum class GameState {
         NEXT_PLAYER_B,
         NEXT_PLAYER_W,

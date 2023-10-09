@@ -43,12 +43,12 @@ class GamesController(private val gomokuService: GomokuService) {
     }
 
     /* TODO
-    @PostMapping(PathTemplate.START)
+    /*@PostMapping(PathTemplate.START)
     fun startGame(@RequestBody s: GomokuStartInputModel): ResponseEntity<GomokuOutputModel> {
         val game = gomokuService.start(s.userIdX, s.userIdO)
         val gameOutModel =
             GomokuOutputModel(game.id, BoardOutputModel(game.board.toString()), game.playerX, game.playerO)
         return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(gameOutModel)
-    }
+    }*/
     */
 }
