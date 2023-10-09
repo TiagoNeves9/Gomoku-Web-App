@@ -8,15 +8,14 @@ const val GAME_SIZE = 15
 
 data class Game(
     val id: UUID,
-    val state: State,
+    val state: GameState,
     val board: Board,
     val updated: Instant,
     val playerB: User,
     val playerW: User,
-    val score: Int
+    val score: Int = 0
 ) {
-
-    enum class State {
+    enum class GameState {
         NEXT_PLAYER_B,
         NEXT_PLAYER_W,
         PLAYER_B_WON,
@@ -28,13 +27,13 @@ data class Game(
     }
 }
 
-enum class Cells(val char : Char) {
+enum class Cells(val char: Char) {
     EMPTY('+'),
     WHITE('W'),
     BLACK('B');
 
     companion object {
-        fun fromChar(c:Char) = when (c){
+        fun fromChar(c: Char) = when (c) {
             '+' -> EMPTY
             'W' -> WHITE
             'B' -> BLACK
@@ -43,19 +42,19 @@ enum class Cells(val char : Char) {
     }
 }
 
-data class Board(private val cells: Array<Array<Cells>>){
-    fun get(c:Int, r:Int)= cells[c][r]
-    fun mutate(cell : Cells, playCol : Int, playRow: Int):Board{
-        val newBoard = Array(GAME_SIZE){
-            c->Array(GAME_SIZE){
-                r-> cells[c][r]
+data class Board(private val cells: Array<Array<Cells>>) {
+    fun get(c: Int, r: Int) = cells[c][r]
+    fun mutate(cell: Cells, playCol: Int, playRow: Int): Board {
+        val newBoard = Array(GAME_SIZE) { c ->
+            Array(GAME_SIZE) { r ->
+                cells[c][r]
             }
         }
         newBoard[playCol][playRow] = cell
         return Board(newBoard)
     }
 
-    companion object{
-        fun create() = Board(Array(GAME_SIZE) { Array(GAME_SIZE) {Cells.EMPTY} })
+    companion object {
+        fun create() = Board(Array(GAME_SIZE) { Array(GAME_SIZE) { Cells.EMPTY } })
     }
 }

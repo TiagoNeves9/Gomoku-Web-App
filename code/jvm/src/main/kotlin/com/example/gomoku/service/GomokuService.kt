@@ -1,33 +1,34 @@
 package com.example.gomoku.service
 
-import com.example.gomoku.domain.Board
 import com.example.gomoku.domain.Cells
 import com.example.gomoku.domain.Game
-import com.example.gomoku.repository.GamesRepository
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException.NotFound
-import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 
 @Component
 class GomokuService(private val transactionManager: TransactionManager) {
 
-    fun play(gameID: UUID, userID : UUID, c : Int, r: Int): Game{
+    fun play(gameID: UUID, userID: UUID, c: Int, r: Int): Game {
         return transactionManager.run {
-            val game = it.gamesRepository.getById(gameID)?:throw NotFound()
-            val updatedGame  = game.copy(board = game.board.mutate(if (game.playerB.userId == userID) Cells.BLACK else Cells.WHITE, c,r))
+            val game = it.gamesRepository.getById(gameID) ?: throw NotFound()
+            val updatedGame = game.copy(
+                board = game.board.mutate(
+                    if (game.playerB.userId == userID) Cells.BLACK else Cells.WHITE,
+                    c,
+                    r
+                )
+            )
             it.gamesRepository.update(updatedGame)
             updatedGame
         }
     }
 
-    fun getById(id: UUID) : Game{
-        return transactionManager.run {
-            it.gamesRepository.getById(id)?: throw NotFound()
+    fun getById(id: UUID): Game =
+        transactionManager.run {
+            it.gamesRepository.getById(id) ?: throw NotFound()
         }
-    }
 
     //TODO()
     /*fun start(userXID : UUID, userOID : UUID) : Game{
@@ -41,5 +42,4 @@ class GomokuService(private val transactionManager: TransactionManager) {
             userXID,
         )
     }*/
-
 }

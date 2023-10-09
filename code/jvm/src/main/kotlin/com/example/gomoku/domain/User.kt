@@ -8,5 +8,3 @@ data class User(
     val username: String,
     val encodedPassword: String
 )
-
-
