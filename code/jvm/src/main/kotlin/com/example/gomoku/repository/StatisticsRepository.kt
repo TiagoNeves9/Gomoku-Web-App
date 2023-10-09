@@ -4,5 +4,9 @@ import com.example.gomoku.domain.UserRanking
 
 interface StatisticsRepository {
     fun getRankings() : List<UserRanking>
+    fun getNumberOfGames(): Int
+    fun getUserRanking(username: String) : UserRanking
+
+    fun updateUserRanking(username: String, score: Int) : Boolean
 }
 

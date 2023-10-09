@@ -20,6 +20,32 @@ class JdbiStatisticsRepository(
 
     }
 
+    override fun getNumberOfGames() : Int {
+        return handle.createQuery(
+            "select count(id) from dbo.games"
+        )
+            .mapTo<Int>()
+            .first()
+    }
+
+    override fun getUserRanking(username : String) : UserRanking {
+        return handle.createQuery(
+            "select username, played_games, score from dbo.statistics where username =:username"
+        )
+            .bind("username", username)
+            .mapTo<StatisticsModel>()
+            .first().getUserRanking()
+    }
+
+    override fun updateUserRanking(username: String, score: Int): Boolean {
+        return handle.createUpdate(
+            "update dbo.statistics set score=:score where username = :username"
+        )
+            .bind("username", username)
+            .bind("score", score)
+            .execute()
+            .compareTo(1) == 0
+    }
 
     data class StatisticsModel(
         val username : String,

@@ -1,6 +1,7 @@
 package com.example.gomoku.repository
 
 import com.example.gomoku.domain.User
+import java.time.Instant
 import java.util.*
 
 interface UsersRepository {
@@ -8,20 +9,15 @@ interface UsersRepository {
 
     fun storeUser(
         username: String,
-        encodedPassword : String,
-        encodedToken: String
-    )
+        encodedPassword : String
+    ) : Int
 
     fun getUserWithUsername(username: String) : User
 
     fun getUserWithToken(encodedToken: String) : User?
 
     fun doesUserExist(username: String) : Boolean
-    fun updateUserScore(username: String, score: Int) : Boolean
-
-    fun getUserScore(username: String) : Int
-
-    fun getUserNumberOfPlayedGames(username: String) : Int
 
     fun updateUserToken(userId : UUID, encodedToken: String )
+    fun createToken(token: String, userId: UUID, createdInstant: Instant)
 }

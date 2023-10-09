@@ -6,6 +6,7 @@ import com.example.gomoku.service.NotFound
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
+import java.time.Instant
 import java.util.*
 
 
@@ -22,16 +23,15 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             .singleOrNull()
     }
 
-    override fun storeUser(username: String, encodedPassword: String, encodedToken: String) {
+    override fun storeUser(username: String, encodedPassword: String) : Int {
         try {
-            handle.createUpdate(
+            return handle.createUpdate(
                 "insert into dbo.Users (id, username, encoded_password) values (:id, :username, :password)"
                 )
                 .bind("id", UUID.randomUUID())
                 .bind("username", username)
                 .bind("password", encodedPassword)
                 .execute()
-                .toString()
         }catch (ex : UnableToExecuteStatementException) {
             throw Exception() //change to uh exception UsernameAlreadyExists ?
         }
@@ -70,36 +70,22 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             .single() == 1
     }
 
-    override fun updateUserScore(username: String, score: Int): Boolean {
-        return handle.createUpdate(
-            "update dbo.statistics set score=:score where username = :username"
-        )
-            .bind("username", username)
-            .bind("score", score)
-            .execute()
-            .compareTo(1) == 0
-    }
-
-    override fun getUserScore(username: String): Int {
-       return handle.createQuery(
-           "select score from dbo.statistics where username = :username"
-            )
-           .bind("username", username)
-           .mapTo<Int>()
-           .single()
-    }
-
-    override fun getUserNumberOfPlayedGames(username: String): Int {
-        return handle.createQuery(
-            "select played_games from dbo.statistics where username = :username"
-        )
-            .bind("username", username)
-            .mapTo<Int>()
-            .single()
-    }
-
     override fun updateUserToken(userId: UUID, encodedToken: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun createToken(token: String, userId: UUID, createdInstant: Instant) {
+        try {
+            handle.createUpdate(
+                "insert into dbo.tokens (encoded_token, generated_at, user_id) VALUES (:token, :instant, :id)"
+            )
+                .bind("token", token)
+                .bind("instant", createdInstant)
+                .bind("id", userId)
+                .execute()
+        } catch (ex : Exception) {
+            throw ex
+        }
     }
 
 }
