@@ -1,15 +1,14 @@
 package com.example.gomoku.repository.jdbi
 
-import org.jdbi.v3.core.Jdbi
 import com.example.gomoku.domain.Game
-import com.example.gomoku.repository.GamesRepository
+import com.example.gomoku.repository.jdbi_interfaces.GamesRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import java.util.*
 
 
 class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
-    override fun getById(id: UUID): Game? =
+    override fun getById(id: UUID): Game =
         handle
             .createQuery(
                 "select id, last_move, game_state, board, score, " +
@@ -17,7 +16,7 @@ class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
             )
             .bind("id", id)
             .mapTo(Game::class.java)
-            .singleOrNull()
+            .singleOrNull() ?: throw Exception()
 
     override fun update(game: Game) {
         handle

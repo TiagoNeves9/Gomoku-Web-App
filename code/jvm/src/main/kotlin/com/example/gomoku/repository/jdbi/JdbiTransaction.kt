@@ -1,9 +1,9 @@
 package com.example.gomoku.repository.jdbi
 
-import com.example.gomoku.repository.GamesRepository
-import com.example.gomoku.repository.StatisticsRepository
-import com.example.gomoku.repository.Transaction
-import com.example.gomoku.repository.UsersRepository
+import com.example.gomoku.repository.jdbi_interfaces.GamesRepository
+import com.example.gomoku.repository.jdbi_interfaces.StatisticsRepository
+import com.example.gomoku.repository.jdbi_interfaces.Transaction
+import com.example.gomoku.repository.jdbi_interfaces.UsersRepository
 import org.jdbi.v3.core.Handle
 
 

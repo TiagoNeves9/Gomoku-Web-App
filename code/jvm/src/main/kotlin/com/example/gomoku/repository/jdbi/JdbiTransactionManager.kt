@@ -1,7 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
-import com.example.gomoku.repository.Transaction
-import com.example.gomoku.repository.TransactionManager
+import com.example.gomoku.repository.jdbi_interfaces.Transaction
+import com.example.gomoku.repository.jdbi_interfaces.TransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.springframework.stereotype.Component
 
