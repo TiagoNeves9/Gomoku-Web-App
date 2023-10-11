@@ -15,7 +15,10 @@ data class Game(
     val playerW: User,
     val score: Int = 0,
 ) {
-    fun other() = if (this.state == GameState.NEXT_PLAYER_W ) GameState.NEXT_PLAYER_B else GameState.NEXT_PLAYER_W
+    fun other() =
+        if (this.state == GameState.NEXT_PLAYER_W) GameState.NEXT_PLAYER_B
+        else GameState.NEXT_PLAYER_W
+
     enum class GameState {
         NEXT_PLAYER_B,
         NEXT_PLAYER_W,
@@ -45,6 +48,7 @@ enum class Cells(val char: Char) {
 
 data class Board(private val cells: Array<Array<Cells>>) {
     fun get(c: Int, r: Int) = cells[c][r]
+
     fun mutate(cell: Cells, playCol: Int, playRow: Int): Board {
         val newBoard = Array(GAME_SIZE) { c ->
             Array(GAME_SIZE) { r ->

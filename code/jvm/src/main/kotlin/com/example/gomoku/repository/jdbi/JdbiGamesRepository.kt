@@ -1,7 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.Game
-import com.example.gomoku.repository.jdbi_interfaces.GamesRepository
+import com.example.gomoku.repository.GamesRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import java.util.*

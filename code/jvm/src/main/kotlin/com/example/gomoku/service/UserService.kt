@@ -2,7 +2,7 @@ package com.example.gomoku.service
 
 import com.example.gomoku.domain.Token
 import com.example.gomoku.domain.User
-import com.example.gomoku.repository.jdbi_interfaces.TransactionManager
+import com.example.gomoku.repository.TransactionManager
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.Instant

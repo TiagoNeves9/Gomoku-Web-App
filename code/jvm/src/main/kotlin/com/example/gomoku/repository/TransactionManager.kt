@@ -1,4 +1,4 @@
-package com.example.gomoku.repository.jdbi_interfaces
+package com.example.gomoku.repository
 
 
 interface TransactionManager {

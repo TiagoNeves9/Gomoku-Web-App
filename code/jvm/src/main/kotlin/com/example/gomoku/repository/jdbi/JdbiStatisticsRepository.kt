@@ -1,7 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.UserRanking
-import com.example.gomoku.repository.jdbi_interfaces.StatisticsRepository
+import com.example.gomoku.repository.StatisticsRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 

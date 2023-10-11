@@ -2,7 +2,7 @@ package com.example.gomoku.service
 
 import com.example.gomoku.domain.Cells
 import com.example.gomoku.domain.Game
-import com.example.gomoku.repository.jdbi_interfaces.TransactionManager
+import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
 import java.util.*
 

@@ -1,8 +1,8 @@
 package com.example.gomoku
 
 import com.example.gomoku.domain.*
-import com.example.gomoku.repository.jdbi_interfaces.TransactionManager
-import com.example.gomoku.repository.jdbi_interfaces.UsersRepository
+import com.example.gomoku.repository.TransactionManager
+import com.example.gomoku.repository.UsersRepository
 import com.example.gomoku.service.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

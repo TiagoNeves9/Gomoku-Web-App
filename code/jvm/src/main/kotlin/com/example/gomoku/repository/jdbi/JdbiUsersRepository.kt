@@ -1,7 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.User
-import com.example.gomoku.repository.jdbi_interfaces.UsersRepository
+import com.example.gomoku.repository.UsersRepository
 import com.example.gomoku.service.NotFound
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo

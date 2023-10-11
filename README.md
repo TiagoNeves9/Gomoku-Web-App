@@ -1,10 +1,13 @@
 # DAW project
 
-Please edit this document with an introduction to your project, including links to all the existing documentation.
+This system will be composed of a centralized backend service and one or more frontend applications. 
+The frontend applications will run on the user's devices, providing the interface between those users and the system. 
+The backend service will manage all the game related data and enforce the game rules.
 
-In addition, please add a [`.mailmap`](https://git-scm.com/docs/gitmailmap) file, mapping the emails used in the commits to your ISEL email and student number
-Example:
+Frontend applications will communicate with the backend service using an HTTP API. 
+These applications will not communicate directly between themselves. 
+All communication should be done via the backend service, 
+which has the responsibility of ensuring all the game rules are followed, 
+as well as storing the game states and final outcomes.
 
-```
-12345 <a12345@alunos.isel.pt> <mygithubuser@whatever.com>
-```
+TODO: Add links to all the existing documentation.
