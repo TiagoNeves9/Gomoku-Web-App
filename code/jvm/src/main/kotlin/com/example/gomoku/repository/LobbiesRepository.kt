@@ -7,4 +7,6 @@ interface LobbiesRepository {
     fun insert(lobby: Lobby)
 
     fun getLobby(): Lobby?
+
+    fun delete(lobby: Lobby)
 }

@@ -22,7 +22,7 @@ class UserService(
         transactionManager.run { it.usersRepository.getAll() }
 
     fun getById(id: UUID) =
-        transactionManager.run { it.usersRepository.getById(id) ?: throw NotFound() }
+        transactionManager.run { it.usersRepository.getById(id) }
 
     fun createNewUser(username: String, password: String): User {
         val passwordEncoded = passwordEncoder.encode(password)

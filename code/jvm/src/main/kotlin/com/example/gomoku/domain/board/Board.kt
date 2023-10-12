@@ -1,6 +1,6 @@
 package com.example.gomoku.domain.board
 
-import com.example.gomoku.domain.User
+import com.example.gomoku.domain.Player
 
 
 const val BOARD_DIM = 15
@@ -55,12 +55,12 @@ class BoardRun(positions: Map<Cell, Piece>, val turn: Piece) : Board(positions) 
     }
 }
 
-class BoardWin(positions: Map<Cell, Piece>, val winner: User) : Board(positions)
+class BoardWin(positions: Map<Cell, Piece>, val winner: Player) : Board(positions)
 
 class BoardDraw(positions: Map<Cell, Piece>) : Board(positions)
 
 
-fun createBoard(firstTurn: Piece) = BoardRun(mapOf(), firstTurn)
+fun createBoard(firstTurn: Piece = Piece.BLACK_PIECE) = BoardRun(mapOf(), firstTurn)
 
 val exampleMap = mapOf(
     Cell(0, 0) to Piece.BLACK_PIECE,

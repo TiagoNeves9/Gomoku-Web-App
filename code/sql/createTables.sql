@@ -6,8 +6,7 @@ create schema IF NOT EXISTS dbo;
 CREATE TABLE IF NOT EXISTS dbo.Users (
     user_id uuid primary key,
     username varchar(80) not null unique,
-    encoded_password varchar(256) not null,
-	color varchar(11)
+    encoded_password varchar(256) not null
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Lobbies (
@@ -22,22 +21,13 @@ CREATE TABLE IF NOT EXISTS dbo.Tokens (
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Games (
-    game_id uuid not null primary key,
-    last_move timestamp not null CHECK (last_move <= CURRENT_TIMESTAMP),
-    game_state VARCHAR(64) not null
-        CHECK (
-            game_state in (
-                'NEXT_PLAYERX',
-                'NEXT_PLAYERO',
-                'PLAYERX_WON',
-                'PLAYERO_WON',
-                'DRAW'
-            )
-        ),
-    board jsonb not null,
-    score int not null,
-	player_x UUID references dbo.Users(user_id),
-    player_o UUID references dbo.Users(user_id)
+    game_id uuid primary key,
+    user1_id uuid references dbo.Users(user_id),
+    user2_id uuid references dbo.Users(user_id),
+    --board_id json not null,
+    current_player varchar(255),
+    score int,
+    now timestamp not null CHECK (now <= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Statistics (

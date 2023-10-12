@@ -1,7 +1,10 @@
 package com.example.gomoku.http
 
 import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.Player
+import com.example.gomoku.domain.Turn
 import com.example.gomoku.domain.User
+import com.example.gomoku.domain.board.Piece
 import com.example.gomoku.domain.board.createBoard
 import com.example.gomoku.http.model.GomokuOutputModel
 import com.example.gomoku.http.model.GomokuPlayInputModel
@@ -35,17 +38,23 @@ class GamesController(
             gomokuService.createLobby(user)
             null
         } else {
-            // join the unique lobby
-            val host = usersController.getById(lobbyOrNull.host)
-            gomokuService.createGame(host, user)
-            val game = Game(
+            // host user is trying to join the lobby
+            if (lobbyOrNull.hostUserId == user.userId)
+                return null
+            // join the unique lobby, start a game and remove the lobby
+            gomokuService.deleteLobby(lobbyOrNull)
+            val hostUser = usersController.getById(lobbyOrNull.hostUserId)
+            val hostPlayer = Player(hostUser, Turn(Piece.BLACK_PIECE))
+            //TODO on createGame we are not saving the board
+            val game = gomokuService.createGame(hostUser, user)
+            /*val game = Game(
                 UUID.randomUUID(),
-                Pair(host, user),
-                createBoard(host.color),
-                host,
+                Pair(hostUser, user),
+                createBoard(hostPlayer.second.color),
+                hostPlayer,
                 0,
                 Instant.now()
-            )
+            )*/
             //GomokuOutputModel(game)
             game
         }

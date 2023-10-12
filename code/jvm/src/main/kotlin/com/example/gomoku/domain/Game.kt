@@ -9,12 +9,12 @@ import java.util.UUID
 
 
 data class Game(
-    val gameId: UUID, val players: Pair<User, User>, val board: Board,
-    val currentPlayer: User, val score: Int, val now: Instant
+    val gameId: UUID, val users: Pair<User, User>, val board: Board,
+    val currentPlayer: Player, val score: Int, val now: Instant
 ) {
     private fun switchTurn() =
-        if (currentPlayer == players.first) players.second
-        else players.first
+        if (currentPlayer.first == users.first) users.second
+        else users.first
 
     fun computeNewGame(cell: Cell): Game {
         val newBoard = this.board.addPiece(cell)
@@ -23,6 +23,11 @@ data class Game(
             this.copy(board = BoardWin(newBoard.positions, this.currentPlayer))
         else if (newBoard.checkDraw())
             this.copy(board = BoardDraw(newBoard.positions))
-        else this.copy(board = newBoard, currentPlayer = this.switchTurn())
+        else this.copy(
+            board = newBoard,
+            currentPlayer = Player(
+                this.switchTurn(), Turn(this.currentPlayer.second.other())
+            )
+        )
     }
 }
