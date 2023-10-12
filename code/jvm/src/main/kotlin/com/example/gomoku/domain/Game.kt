@@ -1,65 +1,28 @@
 package com.example.gomoku.domain
 
+import com.example.gomoku.domain.board.Board
+import com.example.gomoku.domain.board.BoardDraw
+import com.example.gomoku.domain.board.BoardWin
+import com.example.gomoku.domain.board.Cell
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
-
-const val GAME_SIZE = 15
 
 data class Game(
-    val id: UUID,
-    val state: GameState,
-    val board: Board,
-    val updated: Instant,
-    val playerB: User,
-    val playerW: User,
-    val score: Int = 0,
+    val gameId: UUID, val players: Pair<User, User>, val board: Board,
+    val currentPlayer: User, val score: Int, val now: Instant
 ) {
-    fun other() =
-        if (this.state == GameState.NEXT_PLAYER_W) GameState.NEXT_PLAYER_B
-        else GameState.NEXT_PLAYER_W
+    private fun switchTurn() =
+        if (currentPlayer == players.first) players.second
+        else players.first
 
-    enum class GameState {
-        NEXT_PLAYER_B,
-        NEXT_PLAYER_W,
-        PLAYER_B_WON,
-        PLAYER_W_WON,
-        DRAW;
+    fun computeNewGame(cell: Cell): Game {
+        val newBoard = this.board.addPiece(cell)
 
-        val finished: Boolean
-            get() = this == PLAYER_B_WON || this == PLAYER_W_WON || this == DRAW
-    }
-}
-
-enum class Cells(val char: Char) {
-    EMPTY('+'),
-    WHITE('W'),
-    BLACK('B');
-
-    companion object {
-        fun fromChar(c: Char) = when (c) {
-            '+' -> EMPTY
-            'W' -> WHITE
-            'B' -> BLACK
-            else -> throw IllegalArgumentException("Invalid value for Board.state")
-        }
-    }
-}
-
-data class Board(private val cells: Array<Array<Cells>>) {
-    fun get(c: Int, r: Int) = cells[c][r]
-
-    fun mutate(cell: Cells, playCol: Int, playRow: Int): Board {
-        val newBoard = Array(GAME_SIZE) { c ->
-            Array(GAME_SIZE) { r ->
-                cells[c][r]
-            }
-        }
-        newBoard[playCol][playRow] = cell
-        return Board(newBoard)
-    }
-
-    companion object {
-        fun create() = Board(Array(GAME_SIZE) { Array(GAME_SIZE) { Cells.EMPTY } })
+        return if (newBoard.checkWin(cell))
+            this.copy(board = BoardWin(newBoard.positions, this.currentPlayer))
+        else if (newBoard.checkDraw())
+            this.copy(board = BoardDraw(newBoard.positions))
+        else this.copy(board = newBoard, currentPlayer = this.switchTurn())
     }
 }

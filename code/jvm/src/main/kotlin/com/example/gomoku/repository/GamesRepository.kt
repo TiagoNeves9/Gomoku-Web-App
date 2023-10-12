@@ -1,6 +1,7 @@
 package com.example.gomoku.repository
 
 import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.Lobby
 import java.util.*
 
 

@@ -1,10 +1,13 @@
 package com.example.gomoku.http
 
 object PathTemplate {
-    const val START = "/games"
+    const val HOME = "/"
+
+    const val START = "/games/{id}"
     const val GAME_BY_ID = "/games/{id}"
     const val PLAY = "games/{id}"
 
+    const val USERS = "/users"
     const val USER_BY_ID = "/users/{id}"
     const val CREATE_USER = "/users/signup"
     const val LOGIN = "/users/login"

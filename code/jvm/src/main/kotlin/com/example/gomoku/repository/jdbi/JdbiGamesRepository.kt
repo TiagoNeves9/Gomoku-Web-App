@@ -23,18 +23,17 @@ class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
             .createUpdate(
                 """
                 update dbo.Games set 
-                last_move =:last_move,
-                game_state =:game_state,
-                board =:board,
-                score =:score
-                where id =:id
+                board = :board,
+                current_player = :currentPlayer,
+                score = :score,
+                now = :now
+                where id = :id
                 """
             )
-            .bind("id", game.id)
-            .bind("last_move", game.updated)
-            .bind("game_state", game.state)
             .bind("board", game.board)
+            .bind("currentPlayer", game.currentPlayer)
             .bind("score", game.score)
+            .bind("now", game.now)
             .execute()
     }
 
@@ -42,24 +41,23 @@ class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
         handle
             .createUpdate(
                 """
-                insert into dbo.games(id, last_move, game_state, board, score, player_x, player_o)
-                values(:game_id, :last_move, :state, :board, :score, :player_x, :player_o)
+                insert into dbo.games(id, players, board, currentPlayer, score, now)
+                values (:id, :players, :board, :currentPlayer, :score, :now)
                 """
             )
-            .bind("id", game.id)
-            .bind("last_move", game.updated)
-            .bind("state", game.state)
+            .bind("id", game.gameId)
+            .bind("players", game.players)
             .bind("board", game.board)
+            .bind("currentPlayer", game.currentPlayer)
             .bind("score", game.score)
-            .bind("player_x", game.playerB)
-            .bind("player_o", game.playerW)
+            .bind("now", game.now)
+            .execute()
     }
 
-    override fun doesGameExist(id: UUID): Boolean {
-        return handle
+    override fun doesGameExist(id: UUID): Boolean =
+        handle
             .createQuery("select count(*) from dbo.games where id = :id")
             .bind("id", id)
             .mapTo<Int>()
             .single() == 1
-    }
 }

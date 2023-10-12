@@ -1,6 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.User
+import com.example.gomoku.domain.board.Piece
 import com.example.gomoku.repository.UsersRepository
 import com.example.gomoku.service.NotFound
 import org.jdbi.v3.core.Handle
@@ -11,9 +12,17 @@ import java.util.*
 
 
 class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
+    override fun getAll(): List<User> {
+        return handle.createQuery(
+            "select user_id, username, encoded_password, color from dbo.users"
+        )
+            .mapTo<User>()
+            .list()
+    }
+
     override fun getById(id: UUID): User =
         handle.createQuery(
-            "select id, username from dbo.users where id = :user_id"
+            "select user_id, username from dbo.users where user_id = :user_id"
         )
             .bind("user_id", id)
             .mapTo<User>()
@@ -22,11 +31,13 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
     override fun storeUser(username: String, encodedPassword: String): Int {
         try {
             return handle.createUpdate(
-                "insert into dbo.Users (id, username, encoded_password) values (:id, :username, :password)"
+                "insert into dbo.Users (user_id, username, encoded_password, color) " +
+                        "values (:user_id, :username, :password, :color)"
             )
-                .bind("id", UUID.randomUUID())
+                .bind("user_id", UUID.randomUUID())
                 .bind("username", username)
                 .bind("password", encodedPassword)
+                .bind("color", Piece.BLACK_PIECE) //TODO: HARD-CODED
                 .execute()
         } catch (ex: UnableToExecuteStatementException) {
             throw Exception() //change to uh exception UsernameAlreadyExists ?
@@ -44,7 +55,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
     override fun getUserWithToken(encodedToken: String): User =
         handle.createQuery(
             """
-            select id, username, encoded_password
+            select user_id, username, encoded_password
             from dbo.Users as users 
             inner join dbo.Tokens as tokens 
             on users.id = tokens.user_id

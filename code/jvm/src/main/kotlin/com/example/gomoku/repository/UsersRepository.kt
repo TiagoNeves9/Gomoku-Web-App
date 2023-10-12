@@ -6,6 +6,8 @@ import java.util.*
 
 
 interface UsersRepository {
+    fun getAll(): List<User>
+
     fun getById(id: UUID): User
 
     fun storeUser(username: String, encodedPassword: String): Int

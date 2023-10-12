@@ -1,5 +1,6 @@
 package com.example.gomoku.http
 
+import com.example.gomoku.domain.User
 import com.example.gomoku.http.model.UserInfoOutputModel
 import com.example.gomoku.http.model.UserInputModel
 import com.example.gomoku.http.model.UserOutputModel
@@ -17,10 +18,16 @@ class UsersController(private val usersService: UserService) {
     *  links/actions ? siren?
     * */
 
+    @GetMapping(PathTemplate.USERS)
+    fun getAll(): List<User> {
+        return usersService.getAll()
+    }
+
     @GetMapping(PathTemplate.USER_BY_ID)
-    fun getById(@PathVariable id: UUID): UserInfoOutputModel {
+    fun getById(@PathVariable id: UUID): User /*UserInfoOutputModel*/ {
         val user = usersService.getById(id)
-        return UserInfoOutputModel(user.userId, user.username)
+        return user
+        //return UserInfoOutputModel(user.userId, user.username)
     }
 
     @PostMapping(PathTemplate.CREATE_USER)

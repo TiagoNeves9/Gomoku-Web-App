@@ -18,6 +18,9 @@ class WrongUserOrPasswordException(message: String) : Exception(message)
 class UserService(
     var transactionManager: TransactionManager, var passwordEncoder: BCryptPasswordEncoder
 ) {
+    fun getAll(): List<User> =
+        transactionManager.run { it.usersRepository.getAll() }
+
     fun getById(id: UUID) =
         transactionManager.run { it.usersRepository.getById(id) ?: throw NotFound() }
 

@@ -15,7 +15,8 @@ class GomokuApplication {
     fun jdbi(): Jdbi {
         val jdbcDatabaseURL =
             System.getenv("JDBC_DATABASE_URL")
-                ?: "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+                //?: "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+                ?: "jdbc:postgresql://localhost/postgres?user=postgres&password=admin"
         val dataSource = PGSimpleDataSource()
         dataSource.setURL(jdbcDatabaseURL)
 

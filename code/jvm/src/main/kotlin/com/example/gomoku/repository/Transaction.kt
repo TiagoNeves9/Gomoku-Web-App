@@ -6,6 +6,8 @@ interface Transaction {
 
     val gamesRepository: GamesRepository
 
+    val lobbiesRepository: LobbiesRepository
+
     val statisticsRepository: StatisticsRepository
 
     fun rollback()

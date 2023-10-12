@@ -1,24 +1,50 @@
 package com.example.gomoku.service
 
-import com.example.gomoku.domain.Cells
 import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.Lobby
+import com.example.gomoku.domain.User
+import com.example.gomoku.domain.board.Cell
+import com.example.gomoku.domain.board.createBoard
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.util.*
 
 
 @Component
 class GomokuService(private val transactionManager: TransactionManager) {
-    fun play(gameID: UUID, userID: UUID, c: Int, r: Int): Game =
+    fun createOrJoinLobby(): Lobby? =
         transactionManager.run {
-            val game = it.gamesRepository.getById(gameID) ?: throw NotFound()
-            val updatedGame = game.copy(
-                board = game.board.mutate(
-                    if (game.playerB.userId == userID) Cells.BLACK else Cells.WHITE,
-                    c,
-                    r
-                )
+            it.lobbiesRepository.getLobby()
+        }
+
+    fun createLobby(user: User): Lobby =
+        transactionManager.run {
+            val lobby = Lobby(UUID.randomUUID(), user.userId)
+            it.lobbiesRepository.insert(lobby)
+            lobby
+        }
+
+    // when the other player tries to join the lobby,
+    // we create a game and remove the lobby
+    fun createGame(host: User, joined: User): Game =
+        transactionManager.run {
+            val game = Game(
+                UUID.randomUUID(),
+                Pair(host, joined),
+                createBoard(host.color),
+                host,
+                0,
+                Instant.now()
             )
+            it.gamesRepository.insert(game)
+            game
+        }
+
+    fun play(gameID: UUID, userID: UUID, cell: Cell): Game =
+        transactionManager.run {
+            val game = it.gamesRepository.getById(gameID)
+            val updatedGame = game.computeNewGame(cell)
             it.gamesRepository.update(updatedGame)
             updatedGame
         }

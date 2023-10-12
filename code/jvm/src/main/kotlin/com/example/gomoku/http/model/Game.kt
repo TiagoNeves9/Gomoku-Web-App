@@ -1,12 +1,15 @@
 package com.example.gomoku.http.model
 
+import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.board.Board
+import com.example.gomoku.domain.board.Cell
 import java.util.*
 
 
-data class GomokuPlayInputModel(val userId: UUID, val c: Int, val r: Int)
-
 data class GomokuStartInputModel(val userIdB: UUID, val userIdW: UUID)
 
-data class BoardOutputModel(val cells: String)
+data class GomokuPlayInputModel(val userId: UUID, val board: Board, val cell: Cell)
 
-data class GomokuOutputModel(val id: UUID, val board: BoardOutputModel, val userIdB: UUID, val userIdW: UUID)
+data class BoardOutputModel(val board: Board)
+
+data class GomokuOutputModel(val game: Game)
