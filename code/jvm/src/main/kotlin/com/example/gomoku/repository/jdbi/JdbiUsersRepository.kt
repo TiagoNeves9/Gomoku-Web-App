@@ -1,7 +1,6 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.User
-import com.example.gomoku.domain.board.Piece
 import com.example.gomoku.repository.UsersRepository
 import com.example.gomoku.service.NotFound
 import org.jdbi.v3.core.Handle

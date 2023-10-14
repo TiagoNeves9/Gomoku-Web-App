@@ -10,46 +10,52 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
+import org.springframework.test.web.reactive.server.expectBodyList
+import java.net.http.HttpHeaders
 import java.util.UUID
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GomokuApplicationTests {
 
-    @Mock
-    private lateinit var transactionManager: TransactionManager
+    @LocalServerPort
+    var port : Int = 8080
 
-    @Mock
-    private lateinit var usersRepository: UsersRepository
-
-    private lateinit var userService: UserService
-
-    @BeforeEach
-    fun setup() {
-        MockitoAnnotations.openMocks(this)
-        userService = UserService(transactionManager, BCryptPasswordEncoder())
-    }
+    val url = "http://localhost:$port"
 
     @Test
-    fun createUser() {
-        val username = "thiagolk"
-        val password = "forte8password"
-        val encoded = BCryptPasswordEncoder().encode(password)
-
-        `when`(transactionManager.run { usersRepository.storeUser(username, encoded) }).thenReturn(1)
-        `when`(transactionManager.run { usersRepository.getUserWithUsername(username) }).thenReturn(
-            User(
-                UUID.randomUUID(),
-                username,
-                encoded
-            )
-        )
-
-        // Teste da função createNewUser
-        val createdUser = userService.createNewUser(username, password)
-        // Verificação
-        assert(createdUser.username == username)
-        assert(createdUser.encodedPassword == encoded)
+    fun getUserWebTestClient(){
+        val client = WebTestClient.bindToServer().baseUrl(url).build()
+        client.get().uri("/users/2e6df5e3-e568-4e22-9439-74e9d9ba5b40")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath("username").isEqualTo("Thiago")
     }
+
+
+    @Test
+    fun addUserWebTestClient(){
+        val client = WebTestClient.bindToServer().baseUrl(url).build()
+        val user = """
+            {
+                "name": "john",
+                "password": "admin"
+            }
+        """
+        client.post().uri("/users/signup")
+            .header("Content-Type","application/json")
+            .bodyValue(user)
+            .exchange()
+            .expectStatus().isOk
+
+
+
+    }
+
+
 }
