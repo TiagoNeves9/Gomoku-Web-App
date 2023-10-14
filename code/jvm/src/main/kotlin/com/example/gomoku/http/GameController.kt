@@ -4,15 +4,12 @@ import com.example.gomoku.domain.Game
 import com.example.gomoku.domain.Player
 import com.example.gomoku.domain.Turn
 import com.example.gomoku.domain.User
-import com.example.gomoku.domain.board.Piece
-import com.example.gomoku.domain.board.createBoard
 import com.example.gomoku.http.model.GomokuOutputModel
 import com.example.gomoku.http.model.GomokuPlayInputModel
 import com.example.gomoku.service.GomokuService
 import com.example.gomoku.service.NotFound
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.Instant
 import java.util.*
 
 
@@ -44,7 +41,7 @@ class GamesController(
             // join the unique lobby, start a game and remove the lobby
             gomokuService.deleteLobby(lobbyOrNull)
             val hostUser = usersController.getById(lobbyOrNull.hostUserId)
-            val hostPlayer = Player(hostUser, Turn(Piece.BLACK_PIECE))
+            val hostPlayer = Player(hostUser, Turn.BLACK_PIECE)
             //TODO on createGame we are not saving the board
             val game = gomokuService.createGame(hostUser, user)
             /*val game = Game(

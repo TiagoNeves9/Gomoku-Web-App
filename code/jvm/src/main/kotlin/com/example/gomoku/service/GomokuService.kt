@@ -1,9 +1,10 @@
 package com.example.gomoku.service
 
 import com.example.gomoku.domain.*
+import com.example.gomoku.domain.board.BoardRun
 import com.example.gomoku.domain.board.Cell
-import com.example.gomoku.domain.board.Piece
 import com.example.gomoku.domain.board.createBoard
+import com.example.gomoku.domain.board.exampleMap
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -28,11 +29,12 @@ class GomokuService(private val transactionManager: TransactionManager) {
     // we create a game and remove the lobby
     fun createGame(host: User, joined: User): Game =
         transactionManager.run {
-            val hostPlayer = Player(host, Turn(Piece.BLACK_PIECE))
+            val hostPlayer = Player(host, Turn.BLACK_PIECE)
             val game = Game(
                 UUID.randomUUID(),
                 Pair(host, joined),
-                createBoard(hostPlayer.second.color),
+                //createBoard(hostPlayer.second),
+                BoardRun(exampleMap, hostPlayer.second),
                 hostPlayer,
                 0,
                 Instant.now()
@@ -51,7 +53,7 @@ class GomokuService(private val transactionManager: TransactionManager) {
 
     fun getById(id: UUID): Game =
         transactionManager.run {
-            it.gamesRepository.getById(id) ?: throw NotFound()
+            it.gamesRepository.getById(id)
         }
 
     fun deleteLobby(lobby: Lobby) =

@@ -1,6 +1,5 @@
 package com.example.gomoku.domain
 
-import com.example.gomoku.domain.board.Piece
 import java.util.*
 
 
@@ -22,14 +21,11 @@ data class User(val userId: UUID, val username: String, val encodedPassword: Str
     */
 }
 
-data class Turn(val color: Piece) {
+enum class Turn {
+    BLACK_PIECE, WHITE_PIECE;
+
     //TODO Does turn needs score?
     fun other() =
-        if (this.color == Piece.WHITE_PIECE) Piece.BLACK_PIECE
-        else Piece.WHITE_PIECE
-    /*
-    fun piece(): Piece =
-        if (this.color == Piece.BLACK_PIECE) Piece.BLACK_PIECE
-        else Piece.WHITE_PIECE
-     */
+        if (this == WHITE_PIECE) BLACK_PIECE
+        else WHITE_PIECE
 }

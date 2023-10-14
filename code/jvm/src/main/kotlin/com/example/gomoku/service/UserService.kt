@@ -43,7 +43,6 @@ class UserService(
             val user = it.usersRepository.getUserWithUsername(username)
             if (!passwordEncoder.matches(password, user.encodedPassword))
                 throw WrongUserOrPasswordException("User or Password are incorrect!")
-
             val token = UUID.randomUUID().toString() //change this?
             val createdInstant = Instant.now()
             it.usersRepository.createToken(token, user.userId, createdInstant)

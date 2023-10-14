@@ -39,14 +39,17 @@ class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
         //TODO we are not saving the board
         handle.createUpdate(
             """
-                insert into dbo.games(game_id, user1_id, user2_id, current_player, score, now)
-                values (:game_id, :user1_id, :user2_id, :current_player, :score, :now)
+                insert into 
+                dbo.games(game_id, user1_id, user2_id, board_positions, board_type, current_turn, score, now)
+                values (:game_id, :user1_id, :user2_id, :board_positions, :board_type, :current_turn, :score, :now)
                 """
         )
             .bind("game_id", game.gameId)
             .bind("user1_id", game.users.first.userId)
             .bind("user2_id", game.users.second.userId)
-            .bind("current_player", game.currentPlayer.second.color)
+            .bind("board_positions", game.board.positionsToString())
+            .bind("board_type", game.board.typeToString())
+            .bind("current_turn", game.currentPlayer.second)
             .bind("score", game.score)
             .bind("now", game.now)
             .execute()

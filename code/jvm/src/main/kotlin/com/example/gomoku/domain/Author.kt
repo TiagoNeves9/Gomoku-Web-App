@@ -1,11 +1,7 @@
 package com.example.gomoku.domain
 
 
-data class Author(
-    val number: Int,
-    val name: String,
-    val email: String
-)
+data class Author(val number: Int, val name: String, val email: String)
 
 val authors: ArrayList<Author> = arrayListOf(
     Author(48264, "João Pereira", "a48264@alunos.isel.pt"),

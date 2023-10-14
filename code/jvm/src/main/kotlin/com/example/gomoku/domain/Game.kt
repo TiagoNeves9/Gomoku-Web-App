@@ -5,7 +5,7 @@ import com.example.gomoku.domain.board.BoardDraw
 import com.example.gomoku.domain.board.BoardWin
 import com.example.gomoku.domain.board.Cell
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 
 data class Game(
@@ -25,9 +25,7 @@ data class Game(
             this.copy(board = BoardDraw(newBoard.positions))
         else this.copy(
             board = newBoard,
-            currentPlayer = Player(
-                this.switchTurn(), Turn(this.currentPlayer.second.other())
-            )
+            currentPlayer = Player(this.switchTurn(), this.currentPlayer.second.other())
         )
     }
 }
