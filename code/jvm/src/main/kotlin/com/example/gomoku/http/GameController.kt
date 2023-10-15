@@ -6,8 +6,8 @@ import com.example.gomoku.domain.Turn
 import com.example.gomoku.domain.User
 import com.example.gomoku.http.model.GomokuOutputModel
 import com.example.gomoku.http.model.GomokuPlayInputModel
+import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.GomokuService
-import com.example.gomoku.service.NotFound
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -18,7 +18,7 @@ class GamesController(
     private val gomokuService: GomokuService, private val usersController: UsersController
 ) {
     //TODO
-    @ExceptionHandler(value = [NotFound::class])
+    @ExceptionHandler(value = [Exceptions.NotFound::class])
     fun exceptionHandler() = ResponseEntity
         .status(404)
         .body("GAME NOT FOUND")

@@ -2,7 +2,7 @@ package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.User
 import com.example.gomoku.repository.UsersRepository
-import com.example.gomoku.service.NotFound
+import com.example.gomoku.service.Exceptions
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
@@ -25,7 +25,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("user_id", id)
             .mapTo<User>()
-            .singleOrNull() ?: throw NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFound()
 
     override fun storeUser(username: String, encodedPassword: String): Int {
         try {
@@ -48,7 +48,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("username", username)
             .mapTo<User>()
-            .singleOrNull() ?: throw NotFound() //change exception?
+            .singleOrNull() ?: throw Exceptions.NotFound() //change exception?
 
     override fun getUserWithToken(encodedToken: String): User =
         handle.createQuery(
@@ -62,7 +62,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("given_token", encodedToken)
             .mapTo<User>()
-            .singleOrNull() ?: throw NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFound()
 
     override fun doesUserExist(username: String): Boolean =
         handle.createQuery(

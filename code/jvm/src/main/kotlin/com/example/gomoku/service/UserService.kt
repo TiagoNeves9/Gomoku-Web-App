@@ -10,9 +10,7 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 
-class UsernameAlreadyInUseException(message: String) : Exception(message)
 
-class WrongUserOrPasswordException(message: String) : Exception(message)
 
 @Component
 class UserService(
@@ -29,7 +27,7 @@ class UserService(
         return transactionManager.run {
             val storedCount = it.usersRepository.storeUser(username, passwordEncoded)
             if (storedCount == 1) it.usersRepository.getUserWithUsername(username)
-            else throw UsernameAlreadyInUseException("Username already in use")
+            else throw Exceptions.UsernameAlreadyInUseException("Username already in use")
         }
     }
 
@@ -42,7 +40,7 @@ class UserService(
         transactionManager.run {
             val user = it.usersRepository.getUserWithUsername(username)
             if (!passwordEncoder.matches(password, user.encodedPassword))
-                throw WrongUserOrPasswordException("User or Password are incorrect!")
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect!")
             val token = UUID.randomUUID().toString() //change this?
             val createdInstant = Instant.now()
             it.usersRepository.createToken(token, user.userId, createdInstant)

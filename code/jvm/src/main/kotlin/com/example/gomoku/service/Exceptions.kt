@@ -1,4 +1,12 @@
 package com.example.gomoku.service
 
 
-class NotFound : Exception()
+class Exceptions : Exception(){
+    class UsernameAlreadyInUseException(message: String) : Exception(message)
+
+    class WrongUserOrPasswordException(message: String) : Exception(message)
+
+    class NotFound() : Exception()
+}
+
+

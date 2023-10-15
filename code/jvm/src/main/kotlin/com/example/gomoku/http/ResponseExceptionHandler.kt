@@ -1,7 +1,8 @@
 package com.example.gomoku.http
 
 import com.example.gomoku.http.model.ErrorJsonModel
-import com.example.gomoku.service.NotFound
+import com.example.gomoku.service.Exceptions
+
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
@@ -14,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
 
-    @ExceptionHandler (value = [NotFound::class] )
+    @ExceptionHandler (value = [Exceptions.NotFound::class] )
     fun exceptionHandler() = ResponseEntity
         .status(404)
         .contentType(ErrorJsonModel.MEDIA_TYPE)
