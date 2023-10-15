@@ -25,36 +25,22 @@ sealed class Board(val positions: Map<Cell, Turn>) {
     }
 
     /**
+     *      Serialize Board positions to a string.
      * This function turns Board positions from a Map<Cell, Turn>
      * to a string representation of the board.
      */
     fun positionsToString(): String {
         var str = ""
         positions.forEach {
-            str += if (it.value == Turn.BLACK_PIECE) "${it.key}B"
-            else "${it.key}W"
+            val key = if (it.key.rowIndex <= 9) "0${it.key}" else "${it.key}"
+            str += if (it.value == Turn.BLACK_PIECE) "${key}B"
+            else "${key}W"
         }
         return str
     }
 
     /**
-     * This function turns Board positions from a String
-     * to a Map<Cell, Piece>.
-     */
-    fun stringToPositions(str: String): Map<Cell, Turn> {
-        check(str.length % 3 == 0) { "Invalid string length." }
-        val map = mutableMapOf<Cell, Turn>()
-        var i = 0
-        while (i + 2 < str.length) {
-            val cell = Cell(str[i].toString().toInt(), str[i + 1].toString().toInt())
-            val piece = if (str[i + 2] == 'B') Turn.BLACK_PIECE else Turn.WHITE_PIECE
-            map += mapOf(cell to piece)
-            i += 3  //each cell-piece pair is represented by 3 chars
-        }
-        return map
-    }
-
-    /**
+     *     Serialize Board type to a string.
      * This function turns Board type (run, draw or winner)
      * to a string representation of the board's type.
      */
@@ -68,19 +54,40 @@ sealed class Board(val positions: Map<Cell, Turn>) {
             }
         }
     }
+}
 
-    /**
-     * This functions turna a string representation of the board's type
-     * to a Board type (BoardRun, BoardDraw or BoardWin).
-     */
-    fun stringToType(str: String, lastPlayer: Player): Board {
-        return when (str) {
-            "RUNNING" -> BoardRun(this.positions, lastPlayer.second)
-            "DRAW" -> BoardDraw(this.positions)
-            "BLACK_WON" -> BoardWin(this.positions, lastPlayer)
-            "WHITE_WON" -> BoardWin(mapOf(), lastPlayer)
-            else -> throw IllegalArgumentException("Invalid board type.")
-        }
+/**
+ *    Deserialize Board positions from a string.
+ * This function turns Board positions from a String
+ * to a Map<Cell, Piece>.
+ */
+fun String.stringToPositions(): Map<Cell, Turn> {
+    check(this.length % 4 == 0) { "Invalid string length." }
+    val map = mutableMapOf<Cell, Turn>()
+    var i = 0
+    while (i + 3 < this.length) {
+        val row = (this[i].toString() + this[i + 1].toString())
+        val col = this[i + 2].toString()
+        val cell = (row + col).toCell()
+        val piece = if (this[i + 3] == 'B') Turn.BLACK_PIECE else Turn.WHITE_PIECE
+        map += mapOf(cell to piece)
+        i += 4  //each cell-piece pair is represented by 4 chars
+    }
+    return map
+}
+
+/**
+ *    Deserialize Board type from a string.
+ * This function turn a string representation of the board's type
+ * to a Board type (BoardRun, BoardDraw or BoardWin).
+ */
+fun String.stringToType(lastBoard: Board, lastPlayer: Player): Board {
+    return when (this) {
+        "RUNNING" -> BoardRun(lastBoard.positions, lastPlayer.second)
+        "DRAW" -> BoardDraw(lastBoard.positions)
+        "BLACK_WON" -> BoardWin(lastBoard.positions, lastPlayer)
+        "WHITE_WON" -> BoardWin(lastBoard.positions, lastPlayer)
+        else -> throw IllegalArgumentException("Invalid board type.")
     }
 }
 
@@ -127,4 +134,6 @@ val exampleMap = mapOf(
     "5C".toCell() to Turn.WHITE_PIECE,
     "2B".toCell() to Turn.BLACK_PIECE,
     "5D".toCell() to Turn.WHITE_PIECE,
+    "11A".toCell() to Turn.BLACK_PIECE,
+    "14E".toCell() to Turn.WHITE_PIECE
 )
