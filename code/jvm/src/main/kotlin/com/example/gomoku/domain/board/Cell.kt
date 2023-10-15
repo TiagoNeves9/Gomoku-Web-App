@@ -27,6 +27,8 @@ class Cell private constructor(val row: Row, val col: Column) {
 fun String.toCellOrNull(): Cell? {
     if (this.length < 2 || this.length > 3) return null
     val aux = if (this.length == 2) "0$this" else this
+    if (!aux[1].isDigit()) return null  //'1BB' is not a valid cell, but '10B' is
+
     val row = aux.dropLast(1).toInt().toRowOrNull()
     val col = aux[2].toColumnOrNull()
     return Cell.values.find { it.row == row && it.col == col }

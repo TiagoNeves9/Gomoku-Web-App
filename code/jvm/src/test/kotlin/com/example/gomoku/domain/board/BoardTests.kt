@@ -3,10 +3,10 @@ package com.example.gomoku.domain.board
 import com.example.gomoku.domain.Player
 import com.example.gomoku.domain.Turn
 import com.example.gomoku.domain.User
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 import java.util.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 class BoardTests {
