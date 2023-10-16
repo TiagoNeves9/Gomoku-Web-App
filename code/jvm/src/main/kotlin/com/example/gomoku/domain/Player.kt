@@ -29,3 +29,8 @@ enum class Turn {
         if (this == WHITE_PIECE) BLACK_PIECE
         else WHITE_PIECE
 }
+
+fun String.toTurn(): Turn =
+    if (this == "BLACK_PIECE") Turn.BLACK_PIECE
+    else if (this == "WHITE_PIECE") Turn.WHITE_PIECE
+    else throw IllegalStateException("Invalid Turn!")

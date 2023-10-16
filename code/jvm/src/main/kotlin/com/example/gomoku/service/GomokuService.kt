@@ -43,7 +43,7 @@ class GomokuService(private val transactionManager: TransactionManager) {
             game
         }
 
-    fun play(gameID: UUID, userID: UUID, cell: Cell): Game =
+    fun play(gameID: UUID, cell: Cell): Game =
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
             val updatedGame = game.computeNewGame(cell)

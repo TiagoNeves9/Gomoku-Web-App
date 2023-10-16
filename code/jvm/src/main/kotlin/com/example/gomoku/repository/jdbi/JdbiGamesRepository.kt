@@ -1,35 +1,67 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.Player
+import com.example.gomoku.domain.Turn
+import com.example.gomoku.domain.board.BoardRun
+import com.example.gomoku.domain.board.stringToPositions
+import com.example.gomoku.domain.toTurn
 import com.example.gomoku.repository.GamesRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import java.sql.ResultSet
 import java.util.*
 
 
-class JdbiGamesRepository(private val handle: Handle) : GamesRepository {
+class JdbiGamesRepository(
+    private val handle: Handle, private val usersRepository: JdbiUsersRepository
+) : GamesRepository {
+    fun myMapToGame(rs: ResultSet): Game {
+        val gameId = rs.getObject("game_id", UUID::class.java)
+        val user1Id = rs.getObject("user1_id", UUID::class.java)
+        val user2Id = rs.getObject("user2_id", UUID::class.java)
+        val boardPositionsStr = rs.getString("board_positions")
+        val currentTurnStr = rs.getString("current_turn")
+        val score = rs.getInt("score")
+        val now = rs.getTimestamp("now").toInstant()
+
+        val user1 = usersRepository.getById(user1Id)
+        val user2 = usersRepository.getById(user2Id)
+        val users = Pair(user1, user2)
+
+        val turn = currentTurnStr.toTurn()
+        val currentPlayer =
+            if (turn == Turn.BLACK_PIECE) Player(user1, turn)
+            else Player(user2, turn)
+        val board = BoardRun(boardPositionsStr.stringToPositions(), turn)
+
+        return Game(gameId, users, board, currentPlayer, score, now)
+    }
+
     override fun getById(id: UUID): Game =
         handle.createQuery(
-            "select id, last_move, game_state, board, score, " +
-                    "player_x, player_o from dbo.Games where id = :id"
+            "select * from dbo.Games where game_id = :id"
         )
             .bind("id", id)
-            .mapTo(Game::class.java)
+            .map { rs, _ -> myMapToGame(rs) }
             .singleOrNull() ?: throw Exception()
 
     override fun update(game: Game) {
         handle.createUpdate(
             """
                 update dbo.Games set 
-                board = :board,
-                current_player = :currentPlayer,
+                board_positions = :board_positions,
+                board_type = :board_type,
+                current_turn = :current_turn,
                 score = :score,
                 now = :now
-                where id = :id
+                where game_id = :game_id
                 """
         )
-            .bind("board", game.board)
-            .bind("currentPlayer", game.currentPlayer)
+            .bind("game_id", game.gameId)
+            .bind("board_positions", game.board.positionsToString())
+            .bind("board_type", game.board.typeToString())
+            .bind("current_turn", game.currentPlayer.second)
             .bind("score", game.score)
             .bind("now", game.now)
             .execute()
