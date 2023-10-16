@@ -1,5 +1,8 @@
 package com.example.gomoku.service
 
+import com.example.gomoku.domain.Lobby
+import com.example.gomoku.domain.game.Game
+import com.example.gomoku.domain.game.play
 import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.BoardRun
 import com.example.gomoku.domain.board.Cell
@@ -11,20 +14,73 @@ import java.time.Instant
 import java.util.*
 
 
+class UserDoesNotExist(message: String) : Exception(message)
+class ErrorUpdatingGame(message: String) : Exception(message)
+
 @Component
 class GomokuService(private val transactionManager: TransactionManager) {
-    fun createOrJoinLobby(): Lobby? =
+
+
+    fun makePlay(gameID: UUID, userID: UUID, c: Int, r: Int): Game =
         transactionManager.run {
-            it.lobbiesRepository.getLobby()
+            val game = it.gamesRepository.getById(gameID)
+
+            val updatedGame = play(game, userID, c, r)
+
+            val wasUpdated = it.gamesRepository.update(updatedGame)
+
+            if(wasUpdated) {
+                var b = false
+                when (updatedGame.state) {
+                    Game.GameState.PLAYER_B_WON -> {
+                        b = it.statisticsRepository.updateUserRanking(updatedGame.playerB.username,updatedGame.score)
+                    }
+                    Game.GameState.PLAYER_W_WON -> {
+                        b = it.statisticsRepository.updateUserRanking(updatedGame.playerW.username,updatedGame.score)
+                    }
+                    Game.GameState.DRAW -> {
+                        b = it.statisticsRepository.updateUserRanking(updatedGame.playerB.username, updatedGame.score/2)
+                        if(b) b = it.statisticsRepository.updateUserRanking(updatedGame.playerW.username, updatedGame.score/2)
+                    }
+                    Game.GameState.NEXT_PLAYER_B -> {}
+                    Game.GameState.NEXT_PLAYER_W -> {}
+                }
+                if(!b) {
+                    it.rollback()
+                    throw Exceptions.ErrorUpdatingUserScore("User score not successfully updated")
+                }
+                updatedGame
+            }
+            else throw ErrorUpdatingGame("Play was not successful")
         }
 
-    fun createLobby(user: User): Lobby =
+
+    fun getById(id: UUID): Game =
         transactionManager.run {
-            val lobby = Lobby(UUID.randomUUID(), user.userId)
-            it.lobbiesRepository.insert(lobby)
-            lobby
+            it.gamesRepository.getById(id)
         }
 
+    /*
+    fun createGame(usernameB : String, usernameW : String) : Game {
+        return transactionManager.run {
+            if(!it.usersRepository.doesUserExist(usernameB) || !it.usersRepository.doesUserExist(usernameW))
+                throw UserDoesNotExist("User does not exist")
+
+            val user1 = it.usersRepository.getUserWithUsername(usernameB)
+            val user2 = it.usersRepository.getUserWithUsername(usernameW)
+            val game = Game.create(user1, user2)
+            it.gamesRepository.insert(game) //todo return insert count -> if 0 throw error
+            game
+        }
+    }*/
+
+    fun isGameCreated(gameId: UUID): Boolean =
+        transactionManager.run {
+            it.gamesRepository.doesGameExist(gameId)
+        }
+
+    /*
+    //<-
     // when the other player tries to join the lobby,
     // we create a game and remove the lobby
     fun createGame(host: User, joined: User): Game =
@@ -51,13 +107,5 @@ class GomokuService(private val transactionManager: TransactionManager) {
             updatedGame
         }
 
-    fun getById(id: UUID): Game =
-        transactionManager.run {
-            it.gamesRepository.getById(id)
-        }
-
-    fun deleteLobby(lobby: Lobby) =
-        transactionManager.run {
-            it.lobbiesRepository.delete(lobby)
-        }
+     */
 }

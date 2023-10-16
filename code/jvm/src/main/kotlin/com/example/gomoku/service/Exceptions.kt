@@ -6,7 +6,16 @@ class Exceptions : Exception(){
 
     class WrongUserOrPasswordException(message: String) : Exception(message)
 
-    class NotFound() : Exception()
+    class ErrorUpdatingUserScore(message: String) : Exception(message)
+
+    class NotFound(message: String) : Exception(message)
+
+    class MatchmakingErrorException(message: String) : Exception(message)
+    class DeleteNotSuccessful(message: String) : Exception(message)
+    class ErrorCreatingGameException(message: String) : Exception(message)
+    class ErrorCreatingLobbyException(message: String) : Exception(message) {
+
+    }
 }
 
 

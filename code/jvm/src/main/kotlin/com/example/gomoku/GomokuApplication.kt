@@ -1,8 +1,9 @@
 package com.example.gomoku
 
+import com.example.gomoku.repository.jdbi.mappers.BoardMapper
 import org.jdbi.v3.core.Jdbi
-import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.postgresql.ds.PGSimpleDataSource
+import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -18,14 +19,17 @@ class GomokuApplication {
         val dataSource = PGSimpleDataSource()
         dataSource.setURL(jdbcDatabaseURL)
 
-        return Jdbi.create(dataSource).installPlugin(KotlinPlugin())
-    }
+		return Jdbi.create(dataSource)
+			.installPlugin(KotlinPlugin())
+            .registerColumnMapper(BoardMapper())
+	}
 
-    @Bean
-    fun passwordEncoder() = BCryptPasswordEncoder()
+	@Bean
+	fun passwordEncoder() = BCryptPasswordEncoder()
+
 }
 
 
 fun main(args: Array<String>) {
-    runApplication<GomokuApplication>(*args)
+	runApplication<GomokuApplication>(*args)
 }

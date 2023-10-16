@@ -1,15 +1,19 @@
 package com.example.gomoku
 
-import com.example.gomoku.domain.*
+import com.example.gomoku.domain.player.User
 import com.example.gomoku.repository.TransactionManager
 import com.example.gomoku.repository.UsersRepository
 import com.example.gomoku.service.UserService
+import org.jdbi.v3.core.Jdbi
+import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Bean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -21,6 +25,23 @@ import java.util.UUID
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GomokuApplicationTests {
+
+    @Mock
+    private lateinit var transactionManager: TransactionManager
+
+
+	@Bean
+	final fun jdbiTesting() : Jdbi {
+		val jdbcDatabaseURL =
+			System.getenv("JDBC_DATABASE_URL_TEST")
+				?: "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+		val dataSource = PGSimpleDataSource()
+		dataSource.setURL(jdbcDatabaseURL)
+		return Jdbi.create(dataSource)
+			.installPlugin(KotlinPlugin())
+	}
+
+	private val myJdbi = jdbiTesting()
 
     @LocalServerPort
     var port : Int = 8080

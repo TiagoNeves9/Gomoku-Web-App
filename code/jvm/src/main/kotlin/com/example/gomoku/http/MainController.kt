@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class MainController() {
+
+    @GetMapping(PathTemplate.HOME)
+    fun home() = "Hello Web"
+
     @GetMapping(PathTemplate.AUTHOR_INFO)
     fun getAuthors(): List<Any> {
         return authors + "Game Version = 0.0.X"

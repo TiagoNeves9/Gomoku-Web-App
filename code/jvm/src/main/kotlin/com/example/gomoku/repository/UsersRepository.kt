@@ -18,6 +18,8 @@ interface UsersRepository {
 
     fun doesUserExist(username: String): Boolean
 
+    fun doesUserExist(id: UUID): Boolean
+
     fun updateUserToken(userId: UUID, encodedToken: String)
 
     fun createToken(token: String, userId: UUID, createdInstant: Instant)

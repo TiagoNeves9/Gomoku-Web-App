@@ -1,6 +1,6 @@
 package com.example.gomoku.repository
 
-import com.example.gomoku.domain.UserRanking
+import com.example.gomoku.domain.player.UserRanking
 
 
 interface StatisticsRepository {

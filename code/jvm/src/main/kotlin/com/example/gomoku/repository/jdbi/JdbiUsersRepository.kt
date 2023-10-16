@@ -13,24 +13,25 @@ import java.util.*
 class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
     override fun getAll(): List<User> {
         return handle.createQuery(
-            "select user_id, username, encoded_password from dbo.users"
+            "select id, username, encoded_password from dbo.users"
         )
             .mapTo<User>()
             .list()
     }
 
-    override fun getById(id: UUID): User =
+
+    override fun getById(id : UUID) : User =
         handle.createQuery(
-            "select * from dbo.users where user_id = :user_id"
+            "select * from dbo.users where id = :user_id"
         )
             .bind("user_id", id)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFound("User with id: $id not found!")
 
     override fun storeUser(username: String, encodedPassword: String): Int {
         try {
             return handle.createUpdate(
-                "insert into dbo.Users (user_id, username, encoded_password) " +
+                "insert into dbo.Users (id, username, encoded_password) " +
                         "values (:user_id, :username, :password)"
             )
                 .bind("user_id", UUID.randomUUID())
@@ -48,7 +49,8 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("username", username)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound() //change exception?
+            .singleOrNull() ?: throw Exceptions.NotFound("") //change exception?
+
 
     override fun getUserWithToken(encodedToken: String): User =
         handle.createQuery(
@@ -62,7 +64,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("given_token", encodedToken)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFound("")
 
     override fun doesUserExist(username: String): Boolean =
         handle.createQuery(
@@ -71,6 +73,16 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             .bind("username", username)
             .mapTo<Int>()
             .single() == 1
+
+    override fun doesUserExist(id: UUID): Boolean =
+        handle.createQuery(
+            "select count(*) from dbo.Users where id = :id"
+        )
+            .bind("id", id)
+            .mapTo<Int>()
+            .single() == 1
+
+
 
     override fun updateUserToken(userId: UUID, encodedToken: String) {
         TODO("Not yet implemented")
@@ -90,4 +102,5 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             throw ex
         }
     }
+
 }

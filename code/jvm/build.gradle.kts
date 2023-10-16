@@ -26,11 +26,17 @@ dependencies {
 
 	implementation("org.springframework.security:spring-security-core:6.0.2")
 
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+
+	implementation("org.zalando:problem")
+	implementation("org.zalando:jackson-datatype-problem")
+	implementation("org.zalando:problem-gson")
 }
 
 tasks.withType<KotlinCompile> {

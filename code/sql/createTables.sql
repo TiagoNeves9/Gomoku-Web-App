@@ -1,6 +1,5 @@
 BEGIN TRANSACTION;
 
-
 create schema IF NOT EXISTS dbo;
 
 CREATE TABLE IF NOT EXISTS dbo.Users (
@@ -24,11 +23,10 @@ CREATE TABLE IF NOT EXISTS dbo.Games (
     game_id uuid primary key,
     user1_id uuid references dbo.Users(user_id),
     user2_id uuid references dbo.Users(user_id),
-    board_positions text not null,
-	board_type varchar(10) not null, 
-    current_turn varchar(15),
-    score int,
-    now timestamp not null CHECK (now <= CURRENT_TIMESTAMP)
+    board jsonb not null,
+	game_state varchar(10) not null,
+    last_move timestamp not null CHECK (last_move <= CURRENT_TIMESTAMP),
+    score int
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Statistics (
