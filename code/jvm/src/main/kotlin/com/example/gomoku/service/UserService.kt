@@ -58,6 +58,12 @@ class UserService(
             null
         }
 
+    fun getUserToken(userID : UUID ): String =
+        transactionManager.run {
+            val user = it.usersRepository.getById(userID)
+            val token = it.usersRepository.getUserToken(userID)
+        }
+
     /*AUXILIARY FUNCTIONS*/
     private fun getInstant(): Instant =
         Instant.ofEpochSecond(Instant.now().epochSecond)
@@ -67,4 +73,6 @@ class UserService(
         val expireDate = token.createdAt.plus(30, ChronoUnit.DAYS)
         return expireDate.isAfter(instant)
     }
+
+
 }

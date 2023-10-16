@@ -33,7 +33,7 @@ class UsersController(private val usersService: UserService) {
         return try {
             val createdUser = usersService.createNewUser(user.name, user.password)
             val token = usersService.createToken(user.name, user.password)
-            UserOutputModel(createdUser.username, token)
+            UserOutputModel(createdUser.username, createdUser.userId, token)
         } catch (ex: Exception) {
             throw ex
         }
@@ -42,8 +42,8 @@ class UsersController(private val usersService: UserService) {
     @PostMapping(PathTemplate.LOGIN)
     fun login(@RequestBody user: UserInputModel): UserOutputModel {
         return try {
-            val token = usersService.createToken(user.name, user.password)
-            UserOutputModel(user.name, token)
+            val loggedUser = usersService.getUserCredentials(user.name,user.password)
+            UserOutputModel(user.name, loggedUser.userId, token)
         } catch (ex: Exception) {
             throw ex
         }

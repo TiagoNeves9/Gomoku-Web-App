@@ -7,4 +7,4 @@ data class UserInputModel(val name: String, val password: String)
 
 data class UserInfoOutputModel(val id: UUID, val username: String)
 
-data class UserOutputModel(val username: String, val token: String)
+data class UserOutputModel(val username: String, val id: UUID, val token: String)

@@ -57,5 +57,24 @@ class GomokuApplicationTests {
 
     }
 
+    @Test
+    fun loginUserWebTestClient(){
+        val user = """
+            {
+                "name":"john",
+                "password":"admin"
+            }
+        """
+
+        val client = WebTestClient.bindToServer().baseUrl(url).build()
+        client.post().uri("/users/login")
+            .header("Content-Type","application/json")
+            .bodyValue(user)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath("username").isEqualTo("john")
+    }
+
 
 }

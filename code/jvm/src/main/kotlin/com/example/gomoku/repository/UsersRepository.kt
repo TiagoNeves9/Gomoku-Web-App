@@ -21,4 +21,6 @@ interface UsersRepository {
     fun updateUserToken(userId: UUID, encodedToken: String)
 
     fun createToken(token: String, userId: UUID, createdInstant: Instant)
+
+    fun getUserToken(userID : UUID) : String
 }

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS dbo.Lobbies (
 
 CREATE TABLE IF NOT EXISTS dbo.Tokens (
     encoded_token varchar(255) primary key,
-    generated_at timestamp not null CHECK (generated_at <= CURRENT_TIMESTAMP),
+    generated_at timestamp,
     user_id uuid references dbo.Users(user_id)
 );
 

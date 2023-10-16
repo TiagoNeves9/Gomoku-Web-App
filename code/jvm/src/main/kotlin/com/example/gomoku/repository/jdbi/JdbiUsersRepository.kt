@@ -86,8 +86,20 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
                 .bind("instant", createdInstant)
                 .bind("id", userId)
                 .execute()
+
         } catch (ex: Exception) {
             throw ex
         }
     }
+
+    override fun getUserToken(userID: UUID): String =
+        try {
+            handle.createQuery(
+                " select enconded_token from dbo.Tokens where user_id = :userID "
+            )
+                .bind("userID", userID)
+                .toString()
+        }catch (ex: Exception){
+            throw ex
+        }
 }
