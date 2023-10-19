@@ -58,10 +58,17 @@ class UserService(
             null
         }
 
+    fun getUserCredentials(name : String, pass: String) = User{
+        transactionManager.run {
+            val user = it.usersRepository.getUserCredentials(name,pass)
+        }
+    }
+
     fun getUserToken(userID : UUID ): String =
         transactionManager.run {
             val user = it.usersRepository.getById(userID)
             val token = it.usersRepository.getUserToken(userID)
+            token
         }
 
     /*AUXILIARY FUNCTIONS*/

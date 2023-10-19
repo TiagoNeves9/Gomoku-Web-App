@@ -23,4 +23,6 @@ interface UsersRepository {
     fun createToken(token: String, userId: UUID, createdInstant: Instant)
 
     fun getUserToken(userID : UUID) : String
+
+    fun getUserCredentials(name: String, pass: String) : User
 }

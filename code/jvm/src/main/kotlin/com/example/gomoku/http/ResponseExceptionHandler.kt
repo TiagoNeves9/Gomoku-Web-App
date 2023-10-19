@@ -7,6 +7,8 @@ import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
@@ -15,11 +17,27 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
 
+    override fun handleMethodArgumentNotValid(
+        ex: MethodArgumentNotValidException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        return ErrorJsonModel.response(400, ErrorJsonModel.invalidRequestContent)
+    }
+
+    override fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        return ErrorJsonModel.response(400,ErrorJsonModel.invalidRequestContent)
+    }
+
     @ExceptionHandler (value = [Exceptions.NotFound::class] )
-    fun exceptionHandler() = ResponseEntity
-        .status(404)
-        .contentType(ErrorJsonModel.MEDIA_TYPE)
-        .body(ErrorJsonModel("https://example.org/problems/not-found", "NotFound"))
+    fun exceptionHandler() = ResponseEntity.status(500).build<Unit>()
+
 
 
     override fun handleTypeMismatch(
@@ -28,12 +46,7 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? {
-
-        logger.info("Handling MethodArgumentNotValidException")
-        return ResponseEntity
-            .status(404)
-            .contentType(ErrorJsonModel.MEDIA_TYPE)
-            .body(ErrorJsonModel("https://example.org/problems/not-found", "NotFound"))
+        return ErrorJsonModel.response(400, ErrorJsonModel.invalidRequestContent)
     }
 
 

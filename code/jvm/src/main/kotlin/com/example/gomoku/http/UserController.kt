@@ -3,6 +3,7 @@ package com.example.gomoku.http
 import com.example.gomoku.domain.User
 import com.example.gomoku.http.model.UserInputModel
 import com.example.gomoku.http.model.UserOutputModel
+import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.UserService
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -35,7 +36,7 @@ class UsersController(private val usersService: UserService) {
             val token = usersService.createToken(user.name, user.password)
             UserOutputModel(createdUser.username, createdUser.userId, token)
         } catch (ex: Exception) {
-            throw ex
+            throw Exceptions.UsernameAlreadyInUseException("Username already in use")
         }
     }
 
@@ -43,6 +44,7 @@ class UsersController(private val usersService: UserService) {
     fun login(@RequestBody user: UserInputModel): UserOutputModel {
         return try {
             val loggedUser = usersService.getUserCredentials(user.name,user.password)
+            val token = usersService.getUserToken(loggedUser.userId)
             UserOutputModel(user.name, loggedUser.userId, token)
         } catch (ex: Exception) {
             throw ex
