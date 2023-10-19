@@ -99,7 +99,11 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             )
                 .bind("userID", userID)
                 .toString()
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             throw ex
         }
+
+    override fun getUserCredentials(name: String, pass: String): User {
+        TODO("Not yet implemented")
+    }
 }

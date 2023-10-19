@@ -10,6 +10,6 @@ Now we will not have the states "selecting rules" or "waiting for other player" 
  */
 class Lobby(
     val lobbyId: UUID,
-    val hostUserId: UUID
-    //val rules: List<Rule> //TODO: create rules
+    val hostUserId: UUID,
+    val rules: Rules
 )

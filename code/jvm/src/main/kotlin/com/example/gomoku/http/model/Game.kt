@@ -6,7 +6,10 @@ import com.example.gomoku.domain.board.Cell
 import java.util.*
 
 
-data class GomokuStartInputModel(val userIdB: UUID, val userIdW: UUID)
+data class GomokuStartInputModel(
+    val userId: UUID, val username: String, val encodedPassword: String,
+    val boardDim: Int, val opening: String, val variant: String
+)
 
 data class GomokuPlayInputModel(val userId: UUID, val board: Board, val cell: Cell)
 

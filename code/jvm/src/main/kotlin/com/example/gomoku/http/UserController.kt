@@ -40,7 +40,7 @@ class UsersController(private val usersService: UserService) {
         }
     }
 
-    @PostMapping(PathTemplate.LOGIN)
+    /*@PostMapping(PathTemplate.LOGIN)
     fun login(@RequestBody user: UserInputModel): UserOutputModel {
         return try {
             val loggedUser = usersService.getUserCredentials(user.name,user.password)
@@ -49,5 +49,5 @@ class UsersController(private val usersService: UserService) {
         } catch (ex: Exception) {
             throw ex
         }
-    }
+    }*/
 }

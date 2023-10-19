@@ -13,12 +13,12 @@ class BoardTests {
     @Test
     fun `test serialize BoardRun positions and type`() {
         val map = mapOf(
-            "1A".toCell() to Turn.BLACK_PIECE,
-            "5C".toCell() to Turn.WHITE_PIECE,
-            "11A".toCell() to Turn.BLACK_PIECE,
-            "14E".toCell() to Turn.WHITE_PIECE
+            "1A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
+            "5C".toCell(BOARD_DIM) to Turn.WHITE_PIECE,
+            "11A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
+            "14E".toCell(BOARD_DIM) to Turn.WHITE_PIECE
         )
-        val board = BoardRun(map, Turn.BLACK_PIECE)
+        val board = BoardRun(map, Turn.BLACK_PIECE, BOARD_DIM)
         val serializedPos = board.positionsToString()
         val serializedTpe = board.typeToString()
 
@@ -29,17 +29,17 @@ class BoardTests {
     @Test
     fun `test deserialize BoardRun positions and type`() {
         val map = mapOf(
-            "1A".toCell() to Turn.BLACK_PIECE,
-            "5C".toCell() to Turn.WHITE_PIECE,
-            "11A".toCell() to Turn.BLACK_PIECE,
-            "14E".toCell() to Turn.WHITE_PIECE
+            "1A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
+            "5C".toCell(BOARD_DIM) to Turn.WHITE_PIECE,
+            "11A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
+            "14E".toCell(BOARD_DIM) to Turn.WHITE_PIECE
         )
         val lastTurn = map.values.last()
-        val lastBoard = BoardRun(map, lastTurn)
+        val lastBoard = BoardRun(map, lastTurn, BOARD_DIM)
         val serializedPos = lastBoard.positionsToString()
         val serializedType = lastBoard.typeToString()
 
-        val deSerializedPos = serializedPos.stringToPositions()
+        val deSerializedPos = serializedPos.stringToPositions(BOARD_DIM)
         assertEquals(map, deSerializedPos)
 
         val deSerializedBoard = serializedType.stringToType(
@@ -61,7 +61,7 @@ class BoardTests {
         )
 
         /**     BoardDraw tests     */
-        val boardDraw = BoardDraw(mapOf())
+        val boardDraw = BoardDraw(mapOf(), BOARD_DIM)
         val serializedType1 = boardDraw.typeToString()
         assertEquals("DRAW", serializedType1)
 
@@ -69,7 +69,7 @@ class BoardTests {
         assertTrue(deserializedBoard1 is BoardDraw)
 
         /**     BoardWin tests      */
-        val boardWin = BoardWin(mapOf(), testPlayer)
+        val boardWin = BoardWin(mapOf(), testPlayer, BOARD_DIM)
         val serializedType2 = boardWin.typeToString()
         assertEquals("BLACK_WON", serializedType2)
 

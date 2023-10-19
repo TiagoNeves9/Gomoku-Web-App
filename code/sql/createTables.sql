@@ -11,7 +11,10 @@ CREATE TABLE IF NOT EXISTS dbo.Users (
 
 CREATE TABLE IF NOT EXISTS dbo.Lobbies (
 	lobby_id uuid primary key,
-	host uuid references dbo.Users(user_id)
+	host uuid references dbo.Users(user_id),
+	board_size int not null,
+	opening varchar(15) not null,
+	variant varchar(15) not null
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Tokens (
@@ -28,7 +31,10 @@ CREATE TABLE IF NOT EXISTS dbo.Games (
 	board_type varchar(10) not null, 
     current_turn varchar(15),
     score int,
-    now timestamp not null CHECK (now <= CURRENT_TIMESTAMP)
+    now timestamp not null CHECK (now <= CURRENT_TIMESTAMP),
+	board_size int not null,
+	opening varchar(15) not null,
+	variant varchar(15) not null
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Statistics (

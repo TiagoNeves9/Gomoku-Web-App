@@ -1,11 +1,11 @@
 package com.example.gomoku.http
 
-import com.example.gomoku.domain.Game
-import com.example.gomoku.domain.Player
-import com.example.gomoku.domain.Turn
-import com.example.gomoku.domain.User
+import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.Cell
-import com.example.gomoku.domain.board.toCell
+import com.example.gomoku.domain.board.Column
+import com.example.gomoku.domain.board.Row
+import com.example.gomoku.http.model.CellInputModel
+import com.example.gomoku.http.model.GomokuStartInputModel
 import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.GomokuService
 import org.springframework.http.ResponseEntity
@@ -29,11 +29,15 @@ class GamesController(
     fun home() = "Hello Web"
 
     @PostMapping(PathTemplate.START)
-    fun createOrJoinGame(@RequestBody user: User): Game? {
-        val lobbyOrNull = gomokuService.createOrJoinLobby()
+    fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): Game? {
+        val user = User(input.userId, input.username, input.encodedPassword)
+        val rules =
+            Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
+
+        val lobbyOrNull = gomokuService.createOrJoinLobby(rules)
         return if (lobbyOrNull == null) {
             // create a lobby
-            gomokuService.createLobby(user)
+            gomokuService.createLobby(user, rules)
             null
         } else {
             // host user is trying to join the lobby
@@ -43,16 +47,13 @@ class GamesController(
             gomokuService.deleteLobby(lobbyOrNull)
             val hostUser = usersController.getById(lobbyOrNull.hostUserId)
             Player(hostUser, Turn.BLACK_PIECE)
-            return gomokuService.createGame(hostUser, user)
+            return gomokuService.createGame(lobbyOrNull, hostUser, user)
         }
         //val gameOutModel = GomokuWaitingInputModel(game.id, game.playerB.userId, game.playerW.userId)
         //return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(gameOutModel)
     }
 
     @PostMapping(PathTemplate.PLAY)
-    fun play(@PathVariable("id") gameId: UUID, @RequestBody cellStr: String): Game {
-        val cell = cellStr.toCell()
-        val game = gomokuService.play(gameId, cell)
-        return game
-    }
+    fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): Game =
+        gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
 }

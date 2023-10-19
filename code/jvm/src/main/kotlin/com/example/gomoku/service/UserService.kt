@@ -58,11 +58,11 @@ class UserService(
             null
         }
 
-    fun getUserCredentials(name : String, pass: String) = User{
+    /*fun getUserCredentials(name : String, pass: String) = User{
         transactionManager.run {
             val user = it.usersRepository.getUserCredentials(name,pass)
         }
-    }
+    }*/
 
     fun getUserToken(userID : UUID ): String =
         transactionManager.run {
