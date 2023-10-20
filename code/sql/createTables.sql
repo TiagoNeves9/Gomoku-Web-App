@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS dbo.Games (
 );
 
 CREATE TABLE IF NOT EXISTS dbo.Statistics (
-    user_id uuid not null references dbo.Users(user_id) primary key,
+    username varchar(80) references dbo.Users(username) primary key,
     played_games int default 0 not null,
     score int default 0 not null
 );

@@ -56,6 +56,11 @@ class GomokuService(private val transactionManager: TransactionManager) {
             it.gamesRepository.getById(id)
         }
 
+    fun isGameCreated(gameId: UUID): Boolean =
+        transactionManager.run {
+            it.gamesRepository.doesGameExist(gameId)
+        }
+
     fun deleteLobby(lobby: Lobby) =
         transactionManager.run {
             it.lobbiesRepository.delete(lobby)

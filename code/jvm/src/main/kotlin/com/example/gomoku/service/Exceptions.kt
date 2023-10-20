@@ -7,6 +7,7 @@ class Exceptions : Exception(){
     class WrongUserOrPasswordException(message: String) : Exception(message)
 
     class NotFound() : Exception()
+    class GameDoesNotExistException(message: String) : Exception(message)
 }
 
 

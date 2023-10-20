@@ -4,13 +4,14 @@ import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.Cell
 import com.example.gomoku.domain.board.Column
 import com.example.gomoku.domain.board.Row
-import com.example.gomoku.http.model.CellInputModel
-import com.example.gomoku.http.model.GomokuStartInputModel
+import com.example.gomoku.http.model.*
 import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.GomokuService
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import kotlin.io.path.Path
 
 
 @RestController
@@ -24,9 +25,6 @@ class GamesController(
         .status(404)
         .body("GAME NOT FOUND")
 
-    //TODO("Home page should have a button to go to START page")
-    @GetMapping(PathTemplate.HOME)
-    fun home() = "Hello Web"
 
     @PostMapping(PathTemplate.START)
     fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): Game? {
@@ -54,6 +52,45 @@ class GamesController(
     }
 
     @PostMapping(PathTemplate.PLAY)
-    fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): Game =
-        gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+    fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): Game {
+            return gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+    }
+
+
+
+    @GetMapping(PathTemplate.IS_GAME_CREATED)
+    fun isGameCreated(@PathVariable("id") lobbyId: UUID) : Boolean =
+        gomokuService.isGameCreated(lobbyId)
+
+
+    @GetMapping(PathTemplate.GAME_BY_ID)
+    fun getGameById(@PathVariable("id") gameId : UUID) : SirenModel<OutputModel> {
+        return try {
+            val game = gomokuService.getById(gameId)
+            val gameModel = GameOutputModel(
+                id = game.gameId,
+                userB = game.users.first,
+                userW = game.users.second,
+                turn = game.currentPlayer.first.username,
+                boardSize = game.board.boardSize,
+                boardCells = game.board.positions,
+                links = null
+            )
+            siren(gameModel){
+                clazz("Game")
+                action(
+                    "play",
+                    PathTemplate.play(game.gameId),
+                    HttpMethod.POST,
+                    "application/x-www-form-urlencoded"
+                ){
+                    textField("place piece")
+                }
+            }
+        } catch (ex : Exceptions.GameDoesNotExistException){
+            siren(ErrorOutputModel(404,ex.message)){}
+        }
+
+    }
+
 }

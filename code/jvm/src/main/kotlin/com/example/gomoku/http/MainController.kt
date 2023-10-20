@@ -11,4 +11,8 @@ class MainController() {
     fun getAuthors(): List<Any> {
         return authors + "Game Version = 0.0.X"
     }
+
+    //TODO("Home page should have a button to go to START page")
+    @GetMapping(PathTemplate.HOME)
+    fun home() = "Hello Web"
 }
