@@ -1,7 +1,9 @@
 package com.example.gomoku.service
 
+import com.example.gomoku.domain.AuthenticatedUser
 import com.example.gomoku.domain.Token
 import com.example.gomoku.domain.User
+import com.example.gomoku.http.model.UserOutputModel
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
@@ -58,11 +60,15 @@ class UserService(
             null
         }
 
-    /*fun getUserCredentials(name : String, pass: String) = User{
+    fun getUserCredentials(name : String, pass: String) : UserOutputModel =
         transactionManager.run {
-            val user = it.usersRepository.getUserCredentials(name,pass)
+            val user = it.usersRepository.getUserWithUsername(name)
+            if (!passwordEncoder.matches(pass, user.encodedPassword))
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect")
+            val token = it.usersRepository.getUserToken(user.userId)
+            UserOutputModel(user.username,user.userId,token)
         }
-    }*/
+
 
     fun getUserToken(userID : UUID ): String =
         transactionManager.run {

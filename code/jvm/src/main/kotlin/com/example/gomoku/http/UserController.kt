@@ -40,14 +40,13 @@ class UsersController(private val usersService: UserService) {
         }
     }
 
-    /*@PostMapping(PathTemplate.LOGIN)
+    @PostMapping(PathTemplate.LOGIN)
     fun login(@RequestBody user: UserInputModel): UserOutputModel {
         return try {
             val loggedUser = usersService.getUserCredentials(user.name,user.password)
-            val token = usersService.getUserToken(loggedUser.userId)
-            UserOutputModel(user.name, loggedUser.userId, token)
+            loggedUser
         } catch (ex: Exception) {
             throw ex
         }
-    }*/
+    }
 }

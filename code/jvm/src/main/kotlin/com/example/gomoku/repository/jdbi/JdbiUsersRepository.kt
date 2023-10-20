@@ -95,15 +95,13 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
     override fun getUserToken(userID: UUID): String =
         try {
             handle.createQuery(
-                " select enconded_token from dbo.Tokens where user_id = :userID "
+                " select t.encoded_token from dbo.Tokens t where user_id = :userID "
             )
                 .bind("userID", userID)
-                .toString()
+                .mapTo<String>()
+                .single()
+
         } catch (ex: Exception) {
             throw ex
         }
-
-    override fun getUserCredentials(name: String, pass: String): User {
-        TODO("Not yet implemented")
-    }
 }
