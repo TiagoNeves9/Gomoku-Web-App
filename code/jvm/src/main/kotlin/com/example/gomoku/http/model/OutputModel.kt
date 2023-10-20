@@ -35,6 +35,7 @@ data class LobbyOutputModel(
     val rules: Rules
 ) : OutputModel
 
+data class MessageOutputModel(val waitMessage : String) : OutputModel
 
 /*
 * Error

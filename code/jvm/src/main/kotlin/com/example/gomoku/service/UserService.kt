@@ -1,6 +1,5 @@
 package com.example.gomoku.service
 
-import com.example.gomoku.domain.AuthenticatedUser
 import com.example.gomoku.domain.Token
 import com.example.gomoku.domain.User
 import com.example.gomoku.http.model.UserOutputModel

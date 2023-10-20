@@ -103,8 +103,31 @@ class GamesController(
     }*/
 
     @GetMapping(PathTemplate.IS_GAME_CREATED)
-    fun isGameCreated(@PathVariable("id") lobbyId: UUID): Boolean =
-        gomokuService.isGameCreated(lobbyId)
+    fun isGameCreated(@PathVariable("id") lobbyId: UUID) : SirenModel<OutputModel> {
+        return try {
+            if(gomokuService.isGameCreated(lobbyId)){
+                siren(MessageOutputModel("Game has been created! ")){
+                    clazz("Check if game is created! ")
+                    action(
+                        "game",
+                        PathTemplate.gameById(lobbyId),
+                        HttpMethod.GET,
+                        "application/x-www-form-urlencoded"
+                    ){
+                        textField("get game")
+                    }
+                }
+            } else {
+                siren(MessageOutputModel("Waiting for another player to join! ")){
+                    clazz("Check if game is created! ")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                }
+            }
+        } catch (ex: Exception) {
+            siren(ErrorOutputModel(404, "Game was not been created! ")){}
+        }
+    }
+
 
     @GetMapping(PathTemplate.GAME_BY_ID)
     fun getGameById(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
