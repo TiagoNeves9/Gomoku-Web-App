@@ -21,7 +21,7 @@ data class Game(
 
         return if (newBoard.checkWin(cell))
             this.copy(board = BoardWin(newBoard.positions, this.currentPlayer, this.rules.boardDim))
-        else if (newBoard.checkDraw())
+        else if (newBoard.checkDraw(this.board.boardSize))
             this.copy(board = BoardDraw(newBoard.positions, this.rules.boardDim))
         else this.copy(
             board = newBoard,

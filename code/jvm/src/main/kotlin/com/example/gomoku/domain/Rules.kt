@@ -14,13 +14,13 @@ fun String.toOpening(): Opening =
         else -> throw Exception()
     }
 
+enum class Variant {
+    FREESTYLE, SWAP_AFTER_FIRST
+}
+
 fun String.toVariant(): Variant =
     when (this.uppercase()) {
         "FREESTYLE" -> Variant.FREESTYLE
         "SWAP_AFTER_FIRST" -> Variant.SWAP_AFTER_FIRST
         else -> throw Exception()
     }
-
-enum class Variant {
-    FREESTYLE, SWAP_AFTER_FIRST
-}

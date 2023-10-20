@@ -10,7 +10,7 @@ const val N_ON_ROW = 5
 
 sealed class Board(val positions: Map<Cell, Turn>, val boardSize: Int) {
     init {
-        check(BOARD_DIM >= N_ON_ROW) { "Board dimension must be >= to $N_ON_ROW" }
+        check(boardSize >= N_ON_ROW) { "Board dimension must be >= to $N_ON_ROW" }
     }
 
     fun addPiece(cell: Cell): BoardRun {
@@ -101,7 +101,7 @@ class BoardRun(positions: Map<Cell, Turn>, val turn: Turn, boardSize: Int) : Boa
                         checkWinInDir(lastMove, Direction.UP_RIGHT, Direction.DOWN_LEFT, boardSize)
                 )
 
-    fun checkDraw(): Boolean = positions.size == BOARD_DIM * BOARD_DIM
+    fun checkDraw(boardSize: Int): Boolean = positions.size == boardSize * boardSize
 
     private fun checkWinInDir(lastMove: Cell, dir1: Direction, dir2: Direction, boardSize: Int): Boolean {
         val line =
