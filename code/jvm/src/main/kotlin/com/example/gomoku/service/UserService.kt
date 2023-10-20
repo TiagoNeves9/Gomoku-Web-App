@@ -27,9 +27,12 @@ class UserService(
     fun createNewUser(username: String, password: String): User {
         val passwordEncoded = passwordEncoder.encode(password)
         return transactionManager.run {
+            if(it.usersRepository.doesUserExist(username))
+                throw Exceptions.UsernameAlreadyInUseException("Username $username already in use! ")
+
             val storedCount = it.usersRepository.storeUser(username, passwordEncoded)
             if (storedCount == 1) it.usersRepository.getUserWithUsername(username)
-            else throw Exceptions.UsernameAlreadyInUseException("Username already in use")
+            else throw Exceptions.ErrorCreatingUser("Error creating user! ")
         }
     }
 
@@ -62,9 +65,13 @@ class UserService(
 
     fun getUserCredentials(name : String, pass: String) : UserOutputModel =
         transactionManager.run {
+            if(!it.usersRepository.doesUserExist(name))
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect! ")
+
             val user = it.usersRepository.getUserWithUsername(name)
             if (!passwordEncoder.matches(pass, user.encodedPassword))
-                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect")
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect! ")
+
             val token = it.usersRepository.getUserToken(user.userId)
             UserOutputModel(user.username,user.userId,token)
         }

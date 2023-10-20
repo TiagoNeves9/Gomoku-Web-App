@@ -27,33 +27,70 @@ class GamesController(
 
 
     @PostMapping(PathTemplate.START)
-    fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): Game? {
+    fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): SirenModel<OutputModel> {
         val user = User(input.userId, input.username, input.encodedPassword)
         val rules =
             Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
 
         val lobbyOrNull = gomokuService.createOrJoinLobby(rules)
-        return if (lobbyOrNull == null) {
+        if (lobbyOrNull == null) {
             // create a lobby
-            gomokuService.createLobby(user, rules)
-            null
+            val lobby = gomokuService.createLobby(user, rules)
+            val lobbyModel = LobbyOutputModel(
+                lobby.lobbyId,
+                lobby.hostUserId,
+                lobby.rules
+            )
+            return siren(lobbyModel){
+                clazz("Lobby")
+            }
         } else {
             // host user is trying to join the lobby
-            if (lobbyOrNull.hostUserId == user.userId) return null
+            if (lobbyOrNull.hostUserId == user.userId)
+                siren(ErrorOutputModel(405, "User can't join his own lobby! ")){}
 
             // join the unique lobby, start a game and remove the lobby
             gomokuService.deleteLobby(lobbyOrNull)
             val hostUser = usersController.getById(lobbyOrNull.hostUserId)
             Player(hostUser, Turn.BLACK_PIECE)
-            return gomokuService.createGame(lobbyOrNull, hostUser, user)
+
+            val game = gomokuService.createGame(lobbyOrNull, hostUser, user)
+            val gameModel = GameOutputModel(
+                id = game.gameId,
+                userB = game.users.first,
+                userW = game.users.second,
+                turn = game.currentPlayer.first.username,
+                boardSize = game.board.boardSize,
+                boardCells = game.board.positions,
+                links = null
+            )
+            return siren(gameModel){
+                clazz("Game")
+            }
         }
         //val gameOutModel = GomokuWaitingInputModel(game.id, game.playerB.userId, game.playerW.userId)
         //return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(gameOutModel)
     }
 
     @PostMapping(PathTemplate.PLAY)
-    fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): Game {
-            return gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+    fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): SirenModel<OutputModel> {
+        return try {
+            val updatedGame =  gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+            val gameModel = GameOutputModel(
+                id = updatedGame.gameId,
+                userB = updatedGame.users.first,
+                userW = updatedGame.users.second,
+                turn = updatedGame.currentPlayer.first.username,
+                boardSize = updatedGame.board.boardSize,
+                boardCells = updatedGame.board.positions,
+                links = null
+            )
+            siren(gameModel){
+                clazz("Game")
+            }
+        } catch (ex : Exceptions.GameDoesNotExistException){
+            siren(ErrorOutputModel(404,ex.message)){}
+        }
     }
 
 

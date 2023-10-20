@@ -8,6 +8,7 @@ class Exceptions : Exception(){
 
     class NotFound() : Exception()
     class GameDoesNotExistException(message: String) : Exception(message)
+    class ErrorCreatingUser(message: String) : Exception(message)
 }
 
 

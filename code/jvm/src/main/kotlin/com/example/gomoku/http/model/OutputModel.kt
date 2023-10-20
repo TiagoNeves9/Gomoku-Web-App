@@ -1,6 +1,7 @@
 package com.example.gomoku.http.model
 
 import com.example.gomoku.domain.Game
+import com.example.gomoku.domain.Rules
 import com.example.gomoku.domain.Turn
 import com.example.gomoku.domain.User
 import com.example.gomoku.domain.board.Board
@@ -26,6 +27,12 @@ data class GameOutputModel(
     val boardSize : Int,
     val boardCells: Map<Cell, Turn>,
     val links: List<LinkOutputModel>?
+) : OutputModel
+
+data class LobbyOutputModel(
+    val lobbyId: UUID,
+    val hostUserId: UUID,
+    val rules: Rules
 ) : OutputModel
 
 
