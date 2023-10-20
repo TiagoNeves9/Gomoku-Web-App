@@ -9,5 +9,7 @@ interface LobbiesRepository {
 
     fun getLobby(rules: Rules): Lobby?
 
+    fun getAll(): List<Lobby>
+
     fun delete(lobby: Lobby)
 }

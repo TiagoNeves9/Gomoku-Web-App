@@ -5,14 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 
+const val SYSTEM_VERSION = "0.0.1"
+
 @RestController
 class MainController() {
-    @GetMapping(PathTemplate.AUTHOR_INFO)
-    fun getAuthors(): List<Any> {
-        return authors + "Game Version = 0.0.X"
-    }
-
     //TODO("Home page should have a button to go to START page")
     @GetMapping(PathTemplate.HOME)
     fun home() = "Hello Web"
+
+    @GetMapping(PathTemplate.ABOUT)
+    fun getAuthors(): List<Any> = authors + "Game Version = $SYSTEM_VERSION"
 }

@@ -21,9 +21,7 @@ class UsersController(private val usersService: UserService) {
     * */
 
     @GetMapping(PathTemplate.USERS)
-    fun getAll(): List<User> {
-        return usersService.getAll()
-    }
+    fun getAll(): List<User> = usersService.getAll()
 
     @GetMapping(PathTemplate.USER_BY_ID)
     fun getById(@PathVariable id: UUID): User /*UserInfoOutputModel*/ {
@@ -42,34 +40,34 @@ class UsersController(private val usersService: UserService) {
             val createdUser = usersService.createNewUser(user.name, user.password)
             val token = usersService.createToken(user.name, user.password)
             val userModel = UserOutputModel(createdUser.username, createdUser.userId, token)
-            siren(userModel){
+            siren(userModel) {
                 clazz("user signup")
                 link(PathTemplate.home(), LinkRelations.HOME)
                 link(PathTemplate.start(), LinkRelations.LOBBY)
             }
         } catch (ex: Exceptions.UsernameAlreadyInUseException) {
-            siren(ErrorOutputModel(409, ex.message)){}
-        } catch (ex : Exceptions.ErrorCreatingUser) {
-            siren(ErrorOutputModel(400, ex.message)){}
+            siren(ErrorOutputModel(409, ex.message)) {}
+        } catch (ex: Exceptions.ErrorCreatingUser) {
+            siren(ErrorOutputModel(400, ex.message)) {}
         }
     }
 
     @PostMapping(PathTemplate.LOGIN)
     fun login(@RequestBody user: UserInputModel): SirenModel<OutputModel> {
         return try {
-            val loggedUser = usersService.getUserCredentials(user.name,user.password)
+            val loggedUser = usersService.getUserCredentials(user.name, user.password)
             val userModel = UserOutputModel(
                 loggedUser.username,
                 loggedUser.id,
                 loggedUser.token
             )
-            siren(userModel){
+            siren(userModel) {
                 clazz("user login")
                 link(PathTemplate.home(), LinkRelations.HOME)
                 link(PathTemplate.start(), LinkRelations.LOBBY)
             }
         } catch (ex: Exceptions.WrongUserOrPasswordException) {
-            siren(ErrorOutputModel(403, ex.message)){}
+            siren(ErrorOutputModel(403, ex.message)) {}
         }
     }
 }

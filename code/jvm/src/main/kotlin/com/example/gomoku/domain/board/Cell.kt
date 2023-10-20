@@ -1,5 +1,7 @@
 package com.example.gomoku.domain.board
 
+import kotlin.math.max
+
 
 class Cell private constructor(val row: Row, val col: Column) {
     val rowIndex: Int = row.index
@@ -77,3 +79,9 @@ fun cellsInDir(from: Cell, dir: Direction, boardSize: Int): List<Cell> {
     }
     return line
 }
+
+fun Cell.distance(other: Cell): Int =
+    max(
+        kotlin.math.abs(this.rowIndex - other.rowIndex),
+        kotlin.math.abs(this.colIndex - other.colIndex)
+    )

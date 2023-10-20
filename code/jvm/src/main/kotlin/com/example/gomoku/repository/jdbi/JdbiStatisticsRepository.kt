@@ -1,6 +1,6 @@
 package com.example.gomoku.repository.jdbi
 
-import com.example.gomoku.domain.UserRanking
+import com.example.gomoku.domain.UserStatistics
 import com.example.gomoku.repository.StatisticsRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -8,10 +8,23 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepository {
     data class StatisticsModel(val username: String, val playedGames: Int, val score: Int) {
-        fun getUserRanking() = UserRanking(username, playedGames, score)
+        fun getUserRanking() = UserStatistics(username, playedGames, score)
     }
 
-    override fun getRankings(): List<UserRanking> =
+    override fun insertUserStatistics(userStatistics: UserStatistics) {
+        handle.createUpdate(
+            """
+                insert into dbo.statistics(username, played_games, score) 
+                values (:username, :nGames, :score)
+                """
+        )
+            .bind("username", userStatistics.user)
+            .bind("nGames", userStatistics.nGames)
+            .bind("score", userStatistics.score)
+            .execute()
+    }
+
+    override fun getRankings(): List<UserStatistics> =
         handle.createQuery(
             "select username, played_games, score from dbo.statistics order by score DESC"
         ).mapTo<StatisticsModel>()
@@ -22,18 +35,19 @@ class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepositor
 
     override fun getNumberOfGames(): Int =
         handle.createQuery(
-            "select count(id) from dbo.games"
+            "select count(game_id) from dbo.games"
         )
             .mapTo<Int>()
             .first()
 
-    override fun getUserRanking(username: String): UserRanking =
+    override fun getUserRanking(username: String): UserStatistics =
         handle.createQuery(
             "select username, played_games, score from dbo.statistics where username =:username"
         )
             .bind("username", username)
             .mapTo<StatisticsModel>()
-            .first().getUserRanking()
+            .first()
+            .getUserRanking()
 
     override fun updateUserRanking(username: String, score: Int): Boolean =
         handle.createUpdate(

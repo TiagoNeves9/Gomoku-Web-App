@@ -1,14 +1,16 @@
 package com.example.gomoku.repository
 
-import com.example.gomoku.domain.UserRanking
+import com.example.gomoku.domain.UserStatistics
 
 
 interface StatisticsRepository {
-    fun getRankings(): List<UserRanking>
+    fun insertUserStatistics(userStatistics: UserStatistics)
+
+    fun getRankings(): List<UserStatistics>
 
     fun getNumberOfGames(): Int
 
-    fun getUserRanking(username: String): UserRanking
+    fun getUserRanking(username: String): UserStatistics
 
     fun updateUserRanking(username: String, score: Int): Boolean
 }

@@ -6,11 +6,13 @@ import java.util.*
 
 
 interface GamesRepository {
+    fun insert(game: Game)
+
     fun getById(id: UUID): Game
 
-    fun update(game: Game)
+    fun getAll(): List<Game>
 
-    fun insert(game: Game)
+    fun update(game: Game)
 
     fun doesGameExist(id: UUID): Boolean
 }

@@ -54,6 +54,13 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
             .map { rs, _ -> myMapToLobby(rs) }
             .singleOrNull()
 
+    override fun getAll(): List<Lobby> =
+        handle.createQuery(
+            "select * from dbo.Lobbies"
+        )
+            .map { rs, _ -> myMapToLobby(rs) }
+            .list()
+
     override fun delete(lobby: Lobby) {
         handle.createUpdate(
             """

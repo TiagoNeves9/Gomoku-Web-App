@@ -19,12 +19,10 @@ class GamesController(
     private val gomokuService: GomokuService,
     private val usersController: UsersController
 ) {
-    //TODO
     @ExceptionHandler(value = [Exceptions.NotFound::class])
     fun exceptionHandler() = ResponseEntity
         .status(404)
         .body("GAME NOT FOUND")
-
 
     @PostMapping(PathTemplate.START)
     fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): SirenModel<OutputModel> {
@@ -41,13 +39,13 @@ class GamesController(
                 lobby.hostUserId,
                 lobby.rules
             )
-            return siren(lobbyModel){
+            return siren(lobbyModel) {
                 clazz("Lobby")
             }
         } else {
             // host user is trying to join the lobby
             if (lobbyOrNull.hostUserId == user.userId)
-                siren(ErrorOutputModel(405, "User can't join his own lobby! ")){}
+                siren(ErrorOutputModel(405, "User can't join his own lobby! ")) {}
 
             // join the unique lobby, start a game and remove the lobby
             gomokuService.deleteLobby(lobbyOrNull)
@@ -64,7 +62,7 @@ class GamesController(
                 boardCells = game.board.positions,
                 links = null
             )
-            return siren(gameModel){
+            return siren(gameModel) {
                 clazz("Game")
             }
         }
@@ -72,10 +70,16 @@ class GamesController(
         //return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(gameOutModel)
     }
 
+    @GetMapping(PathTemplate.LOBBIES)
+    fun getLobbies(): List<Lobby> = gomokuService.getLobbies()
+
+    @GetMapping(PathTemplate.GAMES)
+    fun getGames(): List<Game> = gomokuService.getGames()
+
     @PostMapping(PathTemplate.PLAY)
     fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): SirenModel<OutputModel> {
         return try {
-            val updatedGame =  gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+            val updatedGame = gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
             val gameModel = GameOutputModel(
                 id = updatedGame.gameId,
                 userB = updatedGame.users.first,
@@ -85,23 +89,25 @@ class GamesController(
                 boardCells = updatedGame.board.positions,
                 links = null
             )
-            siren(gameModel){
+            siren(gameModel) {
                 clazz("Game")
             }
-        } catch (ex : Exceptions.GameDoesNotExistException){
-            siren(ErrorOutputModel(404,ex.message)){}
+        } catch (ex: Exceptions.GameDoesNotExistException) {
+            siren(ErrorOutputModel(404, ex.message)) {}
         }
     }
 
-
+    /*@GetMapping(PathTemplate.SPECTATE)
+    fun spectate(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
+        TODO()
+    }*/
 
     @GetMapping(PathTemplate.IS_GAME_CREATED)
-    fun isGameCreated(@PathVariable("id") lobbyId: UUID) : Boolean =
+    fun isGameCreated(@PathVariable("id") lobbyId: UUID): Boolean =
         gomokuService.isGameCreated(lobbyId)
 
-
     @GetMapping(PathTemplate.GAME_BY_ID)
-    fun getGameById(@PathVariable("id") gameId : UUID) : SirenModel<OutputModel> {
+    fun getGameById(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
         return try {
             val game = gomokuService.getById(gameId)
             val gameModel = GameOutputModel(
@@ -113,21 +119,19 @@ class GamesController(
                 boardCells = game.board.positions,
                 links = null
             )
-            siren(gameModel){
+            siren(gameModel) {
                 clazz("Game")
                 action(
                     "play",
                     PathTemplate.play(game.gameId),
                     HttpMethod.POST,
                     "application/x-www-form-urlencoded"
-                ){
+                ) {
                     textField("place piece")
                 }
             }
-        } catch (ex : Exceptions.GameDoesNotExistException){
-            siren(ErrorOutputModel(404,ex.message)){}
+        } catch (ex: Exceptions.GameDoesNotExistException) {
+            siren(ErrorOutputModel(404, ex.message)) {}
         }
-
     }
-
 }

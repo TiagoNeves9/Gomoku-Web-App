@@ -39,6 +39,35 @@ class JdbiGamesRepository(
         return Game(gameId, users, board, currentPlayer, score, now, rules)
     }
 
+    override fun insert(game: Game) {
+        //TODO we are not saving the board
+        handle.createUpdate(
+            """
+                insert into 
+                dbo.games(
+                game_id, user1_id, user2_id, board_positions, board_type, 
+                current_turn, score, now, board_size, opening, variant
+                )
+                values (
+                :game_id, :user1_id, :user2_id, :board_positions, :board_type, 
+                :current_turn, :score, :now, :board_size, :opening, :variant
+                )
+                """
+        )
+            .bind("game_id", game.gameId)
+            .bind("user1_id", game.users.first.userId)
+            .bind("user2_id", game.users.second.userId)
+            .bind("board_positions", game.board.positionsToString())
+            .bind("board_type", game.board.typeToString())
+            .bind("current_turn", game.currentPlayer.second)
+            .bind("score", game.score)
+            .bind("now", game.now)
+            .bind("board_size", game.rules.boardDim)
+            .bind("opening", game.rules.opening.toString())
+            .bind("variant", game.rules.variant.toString())
+            .execute()
+    }
+
     override fun getById(id: UUID): Game =
         handle.createQuery(
             "select * from dbo.Games where game_id = :id"
@@ -46,6 +75,11 @@ class JdbiGamesRepository(
             .bind("id", id)
             .map { rs, _ -> myMapToGame(rs) }
             .singleOrNull() ?: throw Exception()
+
+    override fun getAll(): List<Game> =
+        handle.createQuery("select * from dbo.Games")
+            .map { rs, _ -> myMapToGame(rs) }
+            .list()
 
     override fun update(game: Game) {
         handle.createUpdate(
@@ -82,34 +116,6 @@ class JdbiGamesRepository(
         opening varchar(15) not null,
         variant varchar(15) not null
     );*/
-    override fun insert(game: Game) {
-        //TODO we are not saving the board
-        handle.createUpdate(
-            """
-                insert into 
-                dbo.games(
-                game_id, user1_id, user2_id, board_positions, board_type, 
-                current_turn, score, now, board_size, opening, variant
-                )
-                values (
-                :game_id, :user1_id, :user2_id, :board_positions, :board_type, 
-                :current_turn, :score, :now, :board_size, :opening, :variant
-                )
-                """
-        )
-            .bind("game_id", game.gameId)
-            .bind("user1_id", game.users.first.userId)
-            .bind("user2_id", game.users.second.userId)
-            .bind("board_positions", game.board.positionsToString())
-            .bind("board_type", game.board.typeToString())
-            .bind("current_turn", game.currentPlayer.second)
-            .bind("score", game.score)
-            .bind("now", game.now)
-            .bind("board_size", game.rules.boardDim)
-            .bind("opening", game.rules.opening.toString())
-            .bind("variant", game.rules.variant.toString())
-            .execute()
-    }
 
     override fun doesGameExist(id: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.games where id = :id")

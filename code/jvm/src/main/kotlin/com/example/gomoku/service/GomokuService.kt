@@ -24,6 +24,16 @@ class GomokuService(private val transactionManager: TransactionManager) {
             lobby
         }
 
+    fun getLobbies(): List<Lobby> =
+        transactionManager.run {
+            it.lobbiesRepository.getAll()
+        }
+
+    fun getGames(): List<Game> =
+        transactionManager.run {
+            it.gamesRepository.getAll()
+        }
+
     // when the other player tries to join the lobby,
     // we create a game and remove the lobby
     fun createGame(lobby: Lobby, host: User, joined: User): Game =

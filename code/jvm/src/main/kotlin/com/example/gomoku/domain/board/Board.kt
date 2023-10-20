@@ -103,11 +103,15 @@ class BoardRun(positions: Map<Cell, Turn>, val turn: Turn, boardSize: Int) : Boa
 
     fun checkDraw(boardSize: Int): Boolean = positions.size == boardSize * boardSize
 
-    private fun checkWinInDir(lastMove: Cell, dir1: Direction, dir2: Direction, boardSize: Int): Boolean {
+    private fun checkWinInDir(
+        lastMove: Cell, dir1: Direction, dir2: Direction, boardSize: Int
+    ): Boolean {
         val line =
-            cellsInDir(lastMove, dir1, boardSize).reversed() + lastMove + cellsInDir(lastMove, dir2, boardSize)
-        // we reverse the first part of the list because we want
-        // to check the line from left/top to right/bottom
+            cellsInDir(lastMove, dir1, boardSize).reversed() +
+                    lastMove +
+                    cellsInDir(lastMove, dir2, boardSize)
+        /*  we reverse the first part of the list because we want
+            to check the line from left/top to right/bottom     */
         return checkWinInLine(line)
     }
 
