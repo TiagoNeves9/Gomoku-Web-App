@@ -11,4 +11,5 @@ which has the responsibility of ensuring all the game rules are followed,
 as well as storing the game states and final outcomes.
 
 YAML : https://github.com/isel-leic-daw/2023-daw-leic53d-2023-daw-leic53d-g09/blob/main/docs/GomokuAPI.yaml
+
 Relatório : https://github.com/isel-leic-daw/2023-daw-leic53d-2023-daw-leic53d-g09/blob/main/docs/Relat%C3%B3rio%20de%20Projeto-G09-DAW.docx
