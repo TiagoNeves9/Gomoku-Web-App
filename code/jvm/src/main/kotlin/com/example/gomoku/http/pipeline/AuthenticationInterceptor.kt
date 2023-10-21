@@ -14,19 +14,22 @@ class AuthenticationInterceptor(
 ) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        if (handler is HandlerMethod && handler.methodParameters.any(){
-            it.parameterType == AuthenticatedUser::class.java
-        }
-            ){
-            val user = authorizationHeaderProcessor
-                .processAuthorizationHeaderValue(request.getHeader(NAME_AUTHORIZATION_HEADER))
-            return if (user == null){
-                response.status = 401
-                response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, RequestTokenProcessor.SCHEME)
-                false
-            }else{
-                AuthenticatedUserArgumentResolver.addUserTo(user,request)
-                true
+        if (handler is HandlerMethod)  {
+
+            val method = handler.method
+            val controller = handler.beanType
+
+            if (method.isAnnotationPresent(Authenticated::class.java) || controller.isAnnotationPresent(Authenticated::class.java)) {
+                val user = authorizationHeaderProcessor
+                    .processAuthorizationHeaderValue(request.getHeader(NAME_AUTHORIZATION_HEADER))
+                return if (user == null){
+                    response.status = 401
+                    response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, RequestTokenProcessor.SCHEME)
+                    false
+                }else{
+                    AuthenticatedUserArgumentResolver.addUserTo(user,request)
+                    true
+                }
             }
         }
         return true
@@ -36,3 +39,4 @@ class AuthenticationInterceptor(
         private const val NAME_WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
     }
 }
+

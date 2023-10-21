@@ -24,8 +24,8 @@ class AuthenticatedUserArgumentResolver : HandlerMethodArgumentResolver {
         binderFactory: WebDataBinderFactory?
     ): Any? {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-            ?: throw Exceptions.NotFound()
-        return getUserFrom(request) ?: throw Exceptions.NotFound()
+            ?: throw Exceptions.NotFoundException()
+        return getUserFrom(request) ?: throw Exceptions.NotFoundException()
     }
 
     companion object {

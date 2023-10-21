@@ -2,6 +2,7 @@ package com.example.gomoku.domain.board
 
 import com.example.gomoku.domain.Player
 import com.example.gomoku.domain.Turn
+import com.example.gomoku.service.Exceptions
 
 
 const val BOARD_DIM = 15
@@ -18,7 +19,7 @@ sealed class Board(val positions: Map<Cell, Turn>, val boardSize: Int) {
 
         //TODO: Catch do error em vez de throw
         return if (cell.toString() in this.positions.map { it.key.toString() })
-            throw IllegalArgumentException("Square already occupied!")
+            throw Exceptions.WrongPlayException("Square already occupied!")
         else {
             val newMap: Map<Cell, Turn> = this.positions + mapOf(cell to this.turn)
             BoardRun(newMap, this.turn.other(), boardSize)

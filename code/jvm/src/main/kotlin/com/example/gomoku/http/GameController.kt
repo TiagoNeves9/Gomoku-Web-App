@@ -5,13 +5,13 @@ import com.example.gomoku.domain.board.Cell
 import com.example.gomoku.domain.board.Column
 import com.example.gomoku.domain.board.Row
 import com.example.gomoku.http.model.*
+import com.example.gomoku.http.pipeline.Authenticated
 import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.GomokuService
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import kotlin.io.path.Path
 
 
 @RestController
@@ -19,11 +19,12 @@ class GamesController(
     private val gomokuService: GomokuService,
     private val usersController: UsersController
 ) {
-    @ExceptionHandler(value = [Exceptions.NotFound::class])
+    @ExceptionHandler(value = [Exceptions.NotFoundException::class])
     fun exceptionHandler() = ResponseEntity
         .status(404)
         .body("GAME NOT FOUND")
 
+    @Authenticated
     @PostMapping(PathTemplate.START)
     fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): SirenModel<OutputModel> {
         val user = User(input.userId, input.username, input.encodedPassword)
@@ -76,6 +77,7 @@ class GamesController(
     @GetMapping(PathTemplate.GAMES)
     fun getGames(): List<Game> = gomokuService.getGames()
 
+    @Authenticated
     @PostMapping(PathTemplate.PLAY)
     fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): SirenModel<OutputModel> {
         return try {
@@ -94,6 +96,12 @@ class GamesController(
             }
         } catch (ex: Exceptions.GameDoesNotExistException) {
             siren(ErrorOutputModel(404, ex.message)) {}
+        } catch (ex : Exceptions.PlayNotAllowedException) {
+            siren(ErrorOutputModel(405, ex.message)) {}
+        } catch (ex: Exceptions.WrongPlayException) {
+            siren(ErrorOutputModel(405, ex.message)){}
+        } catch (ex: Exception) {
+            siren(ErrorOutputModel(400, ex.message)){}
         }
     }
 
@@ -102,6 +110,7 @@ class GamesController(
         TODO()
     }*/
 
+    @Authenticated
     @GetMapping(PathTemplate.IS_GAME_CREATED)
     fun isGameCreated(@PathVariable("id") lobbyId: UUID) : SirenModel<OutputModel> {
         return try {
@@ -124,11 +133,11 @@ class GamesController(
                 }
             }
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(404, "Game was not been created! ")){}
+            siren(ErrorOutputModel(404, "Game has not been created! ")){}
         }
     }
 
-
+    @Authenticated
     @GetMapping(PathTemplate.GAME_BY_ID)
     fun getGameById(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
         return try {

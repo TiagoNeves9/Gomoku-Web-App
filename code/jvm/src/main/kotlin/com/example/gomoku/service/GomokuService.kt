@@ -55,6 +55,10 @@ class GomokuService(private val transactionManager: TransactionManager) {
     fun play(gameID: UUID, cell: Cell): Game =
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
+
+            if(cell.colIndex < 0 || cell.rowIndex < 0)
+                throw Exceptions.PlayNotAllowedException("Error placing cell! Location not allowed! ")
+
             val updatedGame = game.computeNewGame(cell)
             if(updatedGame.board is BoardWin){
                 it.statisticsRepository.updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)

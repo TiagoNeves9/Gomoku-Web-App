@@ -47,7 +47,7 @@ class UsersController(private val usersService: UserService) {
             }
         } catch (ex: Exceptions.UsernameAlreadyInUseException) {
             siren(ErrorOutputModel(409, ex.message)) {}
-        } catch (ex: Exceptions.ErrorCreatingUser) {
+        } catch (ex: Exceptions.ErrorCreatingUserException) {
             siren(ErrorOutputModel(400, ex.message)) {}
         }
     }

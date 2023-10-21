@@ -35,7 +35,7 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
         return ErrorJsonModel.response(400,ErrorJsonModel.invalidRequestContent)
     }
 
-    @ExceptionHandler (value = [Exceptions.NotFound::class] )
+    @ExceptionHandler (value = [Exceptions.NotFoundException::class] )
     fun exceptionHandler() = ResponseEntity.status(500).build<Unit>()
 
 

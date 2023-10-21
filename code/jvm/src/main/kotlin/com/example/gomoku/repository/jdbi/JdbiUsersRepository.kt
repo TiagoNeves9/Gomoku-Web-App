@@ -25,7 +25,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("user_id", id)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFoundException()
 
     override fun storeUser(username: String, encodedPassword: String): Int {
         try {
@@ -48,7 +48,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("username", username)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound() //change exception?
+            .singleOrNull() ?: throw Exceptions.NotFoundException() //change exception?
 
     override fun getUserWithToken(encodedToken: String): User =
         handle.createQuery(
@@ -62,7 +62,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
         )
             .bind("given_token", encodedToken)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFound()
+            .singleOrNull() ?: throw Exceptions.NotFoundException()
 
     override fun doesUserExist(username: String): Boolean =
         handle.createQuery(

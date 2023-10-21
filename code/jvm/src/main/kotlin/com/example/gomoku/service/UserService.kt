@@ -28,7 +28,7 @@ class UserService(
                 it.statisticsRepository.insertUserStatistics(userStatistics)
                 it.usersRepository.getUserWithUsername(username)
             }
-            else throw Exceptions.ErrorCreatingUser("Error creating user! ")
+            else throw Exceptions.ErrorCreatingUserException("Error creating user! ")
         }
     }
 
