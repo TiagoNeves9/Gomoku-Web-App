@@ -38,7 +38,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
                 .bind("password", encodedPassword)
                 .execute()
         } catch (ex: UnableToExecuteStatementException) {
-            throw Exception() //change to uh exception UsernameAlreadyExists ?
+            throw Exception()
         }
     }
 
@@ -56,7 +56,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             select user_id, username, encoded_password
             from dbo.Users as users 
             inner join dbo.Tokens as tokens 
-            on users.id = tokens.user_id
+            on users.user_id = tokens.user_id
             where encoded_password = :given_token
            """
         )
@@ -71,10 +71,6 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             .bind("username", username)
             .mapTo<Int>()
             .single() == 1
-
-    override fun updateUserToken(userId: UUID, encodedToken: String) {
-        TODO("Not yet implemented")
-    }
 
     override fun createToken(token: String, userId: UUID, createdInstant: Instant) {
         try {

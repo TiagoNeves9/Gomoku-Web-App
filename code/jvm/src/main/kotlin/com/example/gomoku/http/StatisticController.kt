@@ -1,6 +1,8 @@
 package com.example.gomoku.http
 
 import com.example.gomoku.domain.UserStatistics
+import com.example.gomoku.http.model.OutputModel
+import com.example.gomoku.http.model.RankingOutputModel
 import com.example.gomoku.service.StatisticService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,10 +16,15 @@ class StatisticController(val statisticService: StatisticService) {
 
     /* Present also number of total played games? */
     @GetMapping(PathTemplate.RANKINGS)
-    fun getRankings(): List<UserStatistics> {
-        val nTotalGames = statisticService.getNumberOfGames()
-        //TODO - make response with rankings and nTotalGames
-        return statisticService.getRankings()
+    fun getRankings():  SirenModel<OutputModel> {
+        val rankings = statisticService.getRankings()
+        return siren(
+            RankingOutputModel(
+            rankingList = rankings
+        )
+        ){
+            clazz("Rankings")
+        }
     }
 
     @GetMapping(PathTemplate.USER_RANKING)

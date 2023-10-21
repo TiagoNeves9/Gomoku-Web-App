@@ -56,8 +56,12 @@ class GomokuService(private val transactionManager: TransactionManager) {
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
             val updatedGame = game.computeNewGame(cell)
-            if(updatedGame.board is BoardWin)
+            if(updatedGame.board is BoardWin){
                 it.statisticsRepository.updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)
+                val userLost = if(updatedGame.currentPlayer.first != updatedGame.users.first) updatedGame.users.first
+                                else updatedGame.users.second
+                it.statisticsRepository.updateUserRanking(userLost.username, 0)
+            }
             else if(updatedGame.board is BoardDraw) {
                 it.statisticsRepository.updateUserRanking(game.users.first.username , updatedGame.score/2)
                 it.statisticsRepository.updateUserRanking(game.users.second.username , updatedGame.score/2)

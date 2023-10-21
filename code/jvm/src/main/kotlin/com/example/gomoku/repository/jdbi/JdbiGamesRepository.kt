@@ -118,7 +118,7 @@ class JdbiGamesRepository(
     );*/
 
     override fun doesGameExist(id: UUID): Boolean =
-        handle.createQuery("select count(*) from dbo.games where id = :id")
+        handle.createQuery("select count(*) from dbo.games where game_id = :id")
             .bind("id", id)
             .mapTo<Int>()
             .single() == 1

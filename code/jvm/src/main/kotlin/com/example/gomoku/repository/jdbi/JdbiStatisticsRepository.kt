@@ -51,7 +51,7 @@ class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepositor
 
     override fun updateUserRanking(username: String, score: Int): Boolean =
         handle.createUpdate(
-            "update dbo.statistics set score=:score where username = :username"
+            "update dbo.statistics set score = score + :score, played_games = played_games+1 where username = :username"
         )
             .bind("username", username)
             .bind("score", score)

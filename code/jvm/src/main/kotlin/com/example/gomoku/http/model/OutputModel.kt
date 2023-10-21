@@ -1,9 +1,6 @@
 package com.example.gomoku.http.model
 
-import com.example.gomoku.domain.Game
-import com.example.gomoku.domain.Rules
-import com.example.gomoku.domain.Turn
-import com.example.gomoku.domain.User
+import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.Board
 import com.example.gomoku.domain.board.Cell
 import java.net.URI
@@ -33,6 +30,10 @@ data class LobbyOutputModel(
     val lobbyId: UUID,
     val hostUserId: UUID,
     val rules: Rules
+) : OutputModel
+
+data class RankingOutputModel(
+    val rankingList : List<UserStatistics>
 ) : OutputModel
 
 data class MessageOutputModel(val waitMessage : String) : OutputModel
