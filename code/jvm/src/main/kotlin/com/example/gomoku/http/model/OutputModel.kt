@@ -6,12 +6,13 @@ import com.example.gomoku.domain.board.Cell
 import java.net.URI
 import java.util.*
 
+
 interface OutputModel
 
 data class LinkOutputModel(
     private val targetUri: URI,
     private val relation: LinkRelation
-) {
+) : OutputModel {
     val href = targetUri.toASCIIString()
     val rel = relation.value
 }
@@ -21,9 +22,8 @@ data class GameOutputModel(
     val userB: User,
     val userW: User,
     val turn: String,
-    val boardSize : Int,
-    val boardCells: Map<Cell, Turn>,
-    val links: List<LinkOutputModel>?
+    val rules: Rules,
+    val boardCells: Map<Cell, Turn>
 ) : OutputModel
 
 data class LobbyOutputModel(
@@ -33,13 +33,13 @@ data class LobbyOutputModel(
 ) : OutputModel
 
 data class RankingOutputModel(
-    val rankingList : List<UserStatistics>
+    val rankingList: List<UserStatistics>
 ) : OutputModel
 
-data class MessageOutputModel(val waitMessage : String) : OutputModel
+data class MessageOutputModel(val waitMessage: String) : OutputModel
 
 /*
 * Error
 * */
 
-data class ErrorOutputModel(val statusCode : Int, val msg : String?) : OutputModel
+data class ErrorOutputModel(val statusCode: Int, val msg: String?) : OutputModel

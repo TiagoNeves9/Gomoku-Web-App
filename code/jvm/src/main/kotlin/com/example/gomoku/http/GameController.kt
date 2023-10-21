@@ -1,9 +1,7 @@
 package com.example.gomoku.http
 
 import com.example.gomoku.domain.*
-import com.example.gomoku.domain.board.Cell
-import com.example.gomoku.domain.board.Column
-import com.example.gomoku.domain.board.Row
+import com.example.gomoku.domain.board.*
 import com.example.gomoku.http.model.*
 import com.example.gomoku.http.pipeline.Authenticated
 import com.example.gomoku.service.Exceptions
@@ -24,9 +22,13 @@ class GamesController(
         .status(404)
         .body("GAME NOT FOUND")
 
-    @Authenticated
+    //@Authenticated
     @PostMapping(PathTemplate.START)
     fun createOrJoinGame(@RequestBody input: GomokuStartInputModel): SirenModel<OutputModel> {
+        check(input.boardDim == BOARD_DIM || input.boardDim == BIG_BOARD_DIM) {
+            "Board dimension must be $BOARD_DIM or $BIG_BOARD_DIM!"
+        }
+
         val user = User(input.userId, input.username, input.encodedPassword)
         val rules =
             Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
@@ -59,16 +61,11 @@ class GamesController(
                 userB = game.users.first,
                 userW = game.users.second,
                 turn = game.currentPlayer.first.username,
-                boardSize = game.board.boardSize,
-                boardCells = game.board.positions,
-                links = null
+                rules = game.rules,
+                boardCells = game.board.positions
             )
-            return siren(gameModel) {
-                clazz("Game")
-            }
+            return siren(gameModel) { clazz("Game") }
         }
-        //val gameOutModel = GomokuWaitingInputModel(game.id, game.playerB.userId, game.playerW.userId)
-        //return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(gameOutModel)
     }
 
     @GetMapping(PathTemplate.LOBBIES)
@@ -77,7 +74,7 @@ class GamesController(
     @GetMapping(PathTemplate.GAMES)
     fun getGames(): List<Game> = gomokuService.getGames()
 
-    @Authenticated
+    //@Authenticated
     @PostMapping(PathTemplate.PLAY)
     fun play(@PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): SirenModel<OutputModel> {
         return try {
@@ -87,53 +84,65 @@ class GamesController(
                 userB = updatedGame.users.first,
                 userW = updatedGame.users.second,
                 turn = updatedGame.currentPlayer.first.username,
-                boardSize = updatedGame.board.boardSize,
-                boardCells = updatedGame.board.positions,
-                links = null
+                rules = updatedGame.rules,
+                boardCells = updatedGame.board.positions
             )
-            siren(gameModel) {
-                clazz("Game")
-            }
+            siren(gameModel) { clazz("Game") }
         } catch (ex: Exceptions.GameDoesNotExistException) {
             siren(ErrorOutputModel(404, ex.message)) {}
-        } catch (ex : Exceptions.PlayNotAllowedException) {
+        } catch (ex: Exceptions.PlayNotAllowedException) {
             siren(ErrorOutputModel(405, ex.message)) {}
         } catch (ex: Exceptions.WrongPlayException) {
-            siren(ErrorOutputModel(405, ex.message)){}
+            siren(ErrorOutputModel(405, ex.message)) {}
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(400, ex.message)){}
+            siren(ErrorOutputModel(400, ex.message)) {}
         }
     }
 
-    /*@GetMapping(PathTemplate.SPECTATE)
+    @GetMapping(PathTemplate.SPECTATE)
     fun spectate(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
-        TODO()
-    }*/
+        return try {
+            if (gomokuService.isGameCreated(gameId)) {
+                val game = gomokuService.getById(gameId)
+                val gameModel = GameOutputModel(
+                    id = game.gameId,
+                    userB = game.users.first,
+                    userW = game.users.second,
+                    turn = game.currentPlayer.first.username,
+                    rules = game.rules,
+                    boardCells = game.board.positions
+                )
+                siren(gameModel) {
+                    clazz("Game")
+                }
+            } else siren(ErrorOutputModel(404, "Game was not been created! ")) {}
+        } catch (ex: Exceptions.GameDoesNotExistException) {
+            siren(ErrorOutputModel(404, "Game was not been created! ")) {}
+        }
+    }
 
     @Authenticated
     @GetMapping(PathTemplate.IS_GAME_CREATED)
-    fun isGameCreated(@PathVariable("id") lobbyId: UUID) : SirenModel<OutputModel> {
+    fun isGameCreated(@PathVariable("id") lobbyId: UUID): SirenModel<OutputModel> {
         return try {
-            if(gomokuService.isGameCreated(lobbyId)){
-                siren(MessageOutputModel("Game has been created! ")){
+            if (gomokuService.isGameCreated(lobbyId)) {
+                siren(MessageOutputModel("Game has been created! ")) {
                     clazz("Check if game is created! ")
                     action(
                         "game",
                         PathTemplate.gameById(lobbyId),
                         HttpMethod.GET,
                         "application/x-www-form-urlencoded"
-                    ){
+                    ) {
                         textField("get game")
                     }
                 }
-            } else {
-                siren(MessageOutputModel("Waiting for another player to join! ")){
-                    clazz("Check if game is created! ")
-                    link(PathTemplate.home(), LinkRelations.HOME)
-                }
+            } else siren(MessageOutputModel("Waiting for another player to join! ")) {
+                clazz("Check if game is created! ")
+                link(PathTemplate.home(), LinkRelations.HOME)
             }
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(404, "Game has not been created! ")){}
+            siren(ErrorOutputModel(404, "Game has not been created! ")) {}
         }
     }
 
@@ -147,9 +156,8 @@ class GamesController(
                 userB = game.users.first,
                 userW = game.users.second,
                 turn = game.currentPlayer.first.username,
-                boardSize = game.board.boardSize,
-                boardCells = game.board.positions,
-                links = null
+                rules = game.rules,
+                boardCells = game.board.positions
             )
             siren(gameModel) {
                 clazz("Game")

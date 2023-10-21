@@ -18,7 +18,9 @@ sealed class Board(val positions: Map<Cell, Turn>, val boardSize: Int) {
         check(this is BoardRun) { "Game finished." }
 
         //TODO: Catch do error em vez de throw
-        return if (cell.toString() in this.positions.map { it.key.toString() })
+        return if (cell.rowIndex !in 0 until boardSize || cell.colIndex !in 0 until boardSize)
+            throw Exceptions.PlayNotAllowedException("Invalid cell (outside of the board dimensions)!")
+        else if (cell.toString() in this.positions.map { it.key.toString() })
             throw Exceptions.WrongPlayException("Square already occupied!")
         else {
             val newMap: Map<Cell, Turn> = this.positions + mapOf(cell to this.turn)
@@ -135,11 +137,11 @@ class BoardDraw(positions: Map<Cell, Turn>, boardSize: Int) : Board(positions, b
 
 fun createBoard(firstTurn: Turn = Turn.BLACK_PIECE, boardSize: Int) = BoardRun(mapOf(), firstTurn, boardSize)
 
-val exampleMap = mapOf(
+/*val exampleMap = mapOf(
     "1A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
     "5C".toCell(BOARD_DIM) to Turn.WHITE_PIECE,
     "2B".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
     "5D".toCell(BOARD_DIM) to Turn.WHITE_PIECE,
     "11A".toCell(BOARD_DIM) to Turn.BLACK_PIECE,
     "14E".toCell(BOARD_DIM) to Turn.WHITE_PIECE
-)
+)*/

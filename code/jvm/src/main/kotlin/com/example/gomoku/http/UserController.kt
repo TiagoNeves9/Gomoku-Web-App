@@ -24,10 +24,7 @@ class UsersController(private val usersService: UserService) {
     fun getAll(): List<User> = usersService.getAll()
 
     @GetMapping(PathTemplate.USER_BY_ID)
-    fun getById(@PathVariable id: UUID): User /*UserInfoOutputModel*/ {
-        return usersService.getById(id)
-        //return UserInfoOutputModel(user.userId, user.username)
-    }
+    fun getById(@PathVariable id: UUID): User = usersService.getById(id)
 
     /*
     * todo:

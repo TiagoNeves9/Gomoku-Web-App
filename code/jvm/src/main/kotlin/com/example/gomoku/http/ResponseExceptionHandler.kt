@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
+
 @ControllerAdvice
 class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
-
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
         headers: HttpHeaders,
@@ -32,13 +32,11 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? {
-        return ErrorJsonModel.response(400,ErrorJsonModel.invalidRequestContent)
+        return ErrorJsonModel.response(400, ErrorJsonModel.invalidRequestContent)
     }
 
-    @ExceptionHandler (value = [Exceptions.NotFoundException::class] )
+    @ExceptionHandler(value = [Exceptions.NotFoundException::class])
     fun exceptionHandler() = ResponseEntity.status(500).build<Unit>()
-
-
 
     override fun handleTypeMismatch(
         ex: TypeMismatchException,
@@ -48,6 +46,4 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any>? {
         return ErrorJsonModel.response(400, ErrorJsonModel.invalidRequestContent)
     }
-
-
 }

@@ -53,7 +53,7 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
     override fun getUserWithToken(encodedToken: String): User =
         handle.createQuery(
             """
-            select user_id, username, encoded_password
+            select users.user_id, username, encoded_password
             from dbo.Users as users 
             inner join dbo.Tokens as tokens 
             on users.user_id = tokens.user_id

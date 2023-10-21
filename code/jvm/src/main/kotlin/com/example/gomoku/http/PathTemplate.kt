@@ -5,6 +5,7 @@ import org.springframework.web.util.UriTemplate
 import java.net.URI
 import java.util.*
 
+
 object PathTemplate {
     const val HOME = "/"
 

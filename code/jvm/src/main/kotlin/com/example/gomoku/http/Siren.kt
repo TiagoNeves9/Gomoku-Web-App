@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.http.HttpMethod
 import java.net.URI
 
+
 data class SirenModel<T>(
     @get:JsonProperty("class")
     val clazz: List<String>,
@@ -39,29 +40,29 @@ data class FieldModel(
     val value: String? = null,
 )
 
-class SirenBuilderScope<T>(
-    val properties: T,
-) {
+class SirenBuilderScope<T>(val properties: T) {
     private val links = mutableListOf<LinkModel>()
     private val entities = mutableListOf<EntityModel<*>>()
     private val classes = mutableListOf<String>()
     private val actions = mutableListOf<ActionModel>()
 
-    fun clazz(value: String) {
-        classes.add(value)
-    }
+    fun clazz(value: String) = classes.add(value)
 
-    fun link(href: URI, rel: LinkRelation) {
+    fun link(href: URI, rel: LinkRelation) =
         links.add(LinkModel(listOf(rel.value), href.toASCIIString()))
-    }
 
-    fun <U> entity(value: U, rel: LinkRelation, block: EntityBuilderScope<U>.() -> Unit) {
+    fun <U> entity(
+        value: U, rel: LinkRelation, block: EntityBuilderScope<U>.() -> Unit
+    ) {
         val scope = EntityBuilderScope(value, listOf(rel.value))
         scope.block()
         entities.add(scope.build())
     }
 
-    fun action(name: String, href: URI, method: HttpMethod, type: String, block: ActionBuilderScope.() -> Unit) {
+    fun action(
+        name: String, href: URI, method: HttpMethod,
+        type: String, block: ActionBuilderScope.() -> Unit
+    ) {
         val scope = ActionBuilderScope(name, href, method, type)
         scope.block()
         actions.add(scope.build())
@@ -82,9 +83,8 @@ class EntityBuilderScope<T>(
 ) {
     private val links = mutableListOf<LinkModel>()
 
-    fun link(href: URI, rel: LinkRelation) {
+    fun link(href: URI, rel: LinkRelation) =
         links.add(LinkModel(listOf(rel.value), href.toASCIIString()))
-    }
 
     fun build(): EntityModel<T> = EntityModel(
         properties = properties,
@@ -101,17 +101,12 @@ class ActionBuilderScope(
 ) {
     private val fields = mutableListOf<FieldModel>()
 
-    fun textField(name: String) {
-        fields.add(FieldModel(name, "text"))
-    }
+    fun textField(name: String) = fields.add(FieldModel(name, "text"))
 
-    fun numberField(name: String) {
-        fields.add(FieldModel(name, "number"))
-    }
+    fun numberField(name: String) = fields.add(FieldModel(name, "number"))
 
-    fun hiddenField(name: String, value: String) {
+    fun hiddenField(name: String, value: String) =
         fields.add(FieldModel(name, "hidden", value))
-    }
 
     fun build() = ActionModel(name, href.toASCIIString(), method.name(), type, fields)
 }

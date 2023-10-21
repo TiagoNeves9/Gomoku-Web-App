@@ -26,7 +26,8 @@ class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepositor
 
     override fun getRankings(): List<UserStatistics> =
         handle.createQuery(
-            "select username, played_games, score from dbo.statistics order by score DESC"
+            "select username, played_games, score " +
+                    "from dbo.statistics order by score DESC"
         ).mapTo<StatisticsModel>()
             .list()
             .map {
@@ -42,7 +43,8 @@ class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepositor
 
     override fun getUserRanking(username: String): UserStatistics =
         handle.createQuery(
-            "select username, played_games, score from dbo.statistics where username =:username"
+            "select username, played_games, score from dbo.statistics " +
+                    "where username =:username"
         )
             .bind("username", username)
             .mapTo<StatisticsModel>()
@@ -51,7 +53,9 @@ class JdbiStatisticsRepository(private val handle: Handle) : StatisticsRepositor
 
     override fun updateUserRanking(username: String, score: Int): Boolean =
         handle.createUpdate(
-            "update dbo.statistics set score = score + :score, played_games = played_games+1 where username = :username"
+            "update dbo.statistics " +
+                    "set score = score + :score, played_games = played_games + 1 " +
+                    "where username = :username"
         )
             .bind("username", username)
             .bind("score", score)

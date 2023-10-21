@@ -34,16 +34,16 @@ class GomokuService(private val transactionManager: TransactionManager) {
 
     // when the other player tries to join the lobby,
     // we create a game and remove the lobby
-    fun createGame(lobby: Lobby, host: User, joined: User): Game =
+    fun createGame(lobby: Lobby, host: User, joined: User, score: Int = 100): Game =
         transactionManager.run {
             val hostPlayer = Player(host, Turn.BLACK_PIECE)
             val game = Game(
                 lobby.lobbyId, //game ID is the same as lobby ID
                 Pair(host, joined),
-                //createBoard(hostPlayer.second),
-                BoardRun(exampleMap, hostPlayer.second, lobby.rules.boardDim),
+                createBoard(hostPlayer.second, lobby.rules.boardDim),
+                //BoardRun(exampleMap, hostPlayer.second, lobby.rules.boardDim),
                 hostPlayer,
-                0,
+                score,
                 Instant.now(),
                 lobby.rules
             )
@@ -56,19 +56,20 @@ class GomokuService(private val transactionManager: TransactionManager) {
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
 
-            if(cell.colIndex < 0 || cell.rowIndex < 0)
-                throw Exceptions.PlayNotAllowedException("Error placing cell! Location not allowed! ")
-
             val updatedGame = game.computeNewGame(cell)
-            if(updatedGame.board is BoardWin){
-                it.statisticsRepository.updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)
-                val userLost = if(updatedGame.currentPlayer.first != updatedGame.users.first) updatedGame.users.first
-                                else updatedGame.users.second
-                it.statisticsRepository.updateUserRanking(userLost.username, 0)
-            }
-            else if(updatedGame.board is BoardDraw) {
-                it.statisticsRepository.updateUserRanking(game.users.first.username , updatedGame.score/2)
-                it.statisticsRepository.updateUserRanking(game.users.second.username , updatedGame.score/2)
+            if (updatedGame.board is BoardWin) {
+                it.statisticsRepository
+                    .updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)
+                val losingUser =
+                    if (updatedGame.currentPlayer.first != updatedGame.users.first)
+                        updatedGame.users.first
+                    else updatedGame.users.second
+                it.statisticsRepository.updateUserRanking(losingUser.username, 0)
+            } else if (updatedGame.board is BoardDraw) {
+                it.statisticsRepository
+                    .updateUserRanking(game.users.first.username, updatedGame.score / 2)
+                it.statisticsRepository
+                    .updateUserRanking(game.users.second.username, updatedGame.score / 2)
             }
             it.gamesRepository.update(updatedGame)
             updatedGame
