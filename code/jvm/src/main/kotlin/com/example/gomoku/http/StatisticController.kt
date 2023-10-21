@@ -23,7 +23,6 @@ class StatisticController(val statisticService: StatisticService) {
         ) { clazz("Rankings") }
     }
 
-    //TODO not working
     @GetMapping(PathTemplate.USER_RANKING)
     fun getUserRanking(@PathVariable username: String): UserStatistics =
         statisticService.getUserRanking(username)
