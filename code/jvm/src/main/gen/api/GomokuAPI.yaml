@@ -1,0 +1,477 @@
+openapi: 3.0.3
+info:
+  description: G09 Gomoku API
+  title: G09 Gomoku API
+  version: 1.0.0
+servers:
+- url: https://2023_daw_leic53d_2023_daw_leic53d_g09
+paths:
+  /users:
+    get:
+      operationId: getAll
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: OK
+      summary: GET users
+      x-accepts: '*/*'
+  /users/login:
+    post:
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST users/login
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /users/signup:
+    post:
+      operationId: insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST users/signup
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /users/{id}:
+    get:
+      operationId: getById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+      summary: "GET users/{id}"
+      x-accepts: '*/*'
+  /games:
+    get:
+      operationId: getGames
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Game'
+                type: array
+          description: OK
+      summary: GET games
+      x-accepts: '*/*'
+  /games/start:
+    post:
+      operationId: createOrJoinGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GomokuStartInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST games/start
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /games/{id}:
+    get:
+      operationId: getGameById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET games/{id}"
+      x-accepts: '*/*'
+    post:
+      operationId: play
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CellInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "POST games/{id}"
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /lobbies:
+    get:
+      operationId: getLobbies
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Lobby'
+                type: array
+          description: OK
+      summary: GET lobbies
+      x-accepts: '*/*'
+  /lobbies/{id}:
+    get:
+      operationId: isGameCreated
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET lobbies/{id}"
+      x-accepts: '*/*'
+  /rankings:
+    get:
+      operationId: getRankings
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserStatistics'
+                type: array
+          description: OK
+      summary: GET rankings
+      x-accepts: '*/*'
+  /rankings/{username}:
+    get:
+      operationId: getUserRanking
+      parameters:
+      - explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatistics'
+          description: OK
+      summary: "GET rankings/{username}"
+      x-accepts: '*/*'
+  /:
+    get:
+      operationId: home
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+      summary: 'GET '
+      x-accepts: '*/*'
+  /about:
+    get:
+      operationId: getAuthors
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Object'
+                type: array
+          description: OK
+      summary: GET about
+      x-accepts: '*/*'
+components:
+  schemas:
+    User:
+      example:
+        encodedPassword: encodedPassword
+        userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        userId:
+          format: uuid
+          type: string
+        username:
+          type: string
+        encodedPassword:
+          type: string
+      type: object
+    UserInputModel:
+      example:
+        password: password
+        name: name
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      type: object
+    OutputModel:
+      properties: {}
+      type: object
+    Row:
+      example:
+        number: 0
+        index: 6
+      properties:
+        number:
+          format: int32
+          type: integer
+        index:
+          format: int32
+          type: integer
+      type: object
+    Column:
+      properties: {}
+      type: object
+    Cell:
+      example:
+        col: "{}"
+        colIndex: 5
+        rowIndex: 1
+        row:
+          number: 0
+          index: 6
+      properties:
+        row:
+          $ref: '#/components/schemas/Row'
+        col:
+          properties: {}
+          type: object
+        rowIndex:
+          format: int32
+          type: integer
+        colIndex:
+          format: int32
+          type: integer
+      type: object
+    Board:
+      example:
+        boardSize: 5
+        positions:
+          col: "{}"
+          colIndex: 5
+          rowIndex: 1
+          row:
+            number: 0
+            index: 6
+      properties:
+        positions:
+          $ref: '#/components/schemas/Cell'
+        boardSize:
+          format: int32
+          type: integer
+      type: object
+    Instant:
+      properties: {}
+      type: object
+    Rules:
+      example:
+        boardDim: 7
+        variant: FREESTYLE
+        opening: FREESTYLE
+      properties:
+        boardDim:
+          format: int32
+          type: integer
+        opening:
+          enum:
+          - FREESTYLE
+          - PRO
+          type: string
+        variant:
+          enum:
+          - FREESTYLE
+          - SWAP_AFTER_FIRST
+          type: string
+      type: object
+    Game:
+      example:
+        gameId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        score: 2
+        currentPlayer:
+          encodedPassword: encodedPassword
+          userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        now: "{}"
+        rules:
+          boardDim: 7
+          variant: FREESTYLE
+          opening: FREESTYLE
+        users:
+          encodedPassword: encodedPassword
+          userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        board:
+          boardSize: 5
+          positions:
+            col: "{}"
+            colIndex: 5
+            rowIndex: 1
+            row:
+              number: 0
+              index: 6
+      properties:
+        gameId:
+          format: uuid
+          type: string
+        users:
+          $ref: '#/components/schemas/User'
+        board:
+          $ref: '#/components/schemas/Board'
+        currentPlayer:
+          $ref: '#/components/schemas/User'
+        score:
+          format: int32
+          type: integer
+        now:
+          properties: {}
+          type: object
+        rules:
+          $ref: '#/components/schemas/Rules'
+      type: object
+    GomokuStartInputModel:
+      example:
+        boardDim: 0
+        encodedPassword: encodedPassword
+        variant: variant
+        userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        opening: opening
+        username: username
+      properties:
+        userId:
+          format: uuid
+          type: string
+        username:
+          type: string
+        encodedPassword:
+          type: string
+        boardDim:
+          format: int32
+          type: integer
+        opening:
+          type: string
+        variant:
+          type: string
+      type: object
+    CellInputModel:
+      example:
+        row: 0
+      properties:
+        row:
+          format: int32
+          type: integer
+      type: object
+    Lobby:
+      example:
+        hostUserId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rules:
+          boardDim: 7
+          variant: FREESTYLE
+          opening: FREESTYLE
+        lobbyId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        lobbyId:
+          format: uuid
+          type: string
+        hostUserId:
+          format: uuid
+          type: string
+        rules:
+          $ref: '#/components/schemas/Rules'
+      type: object
+    UserStatistics:
+      example:
+        score: 6
+        nGames: 0
+        user: user
+      properties:
+        user:
+          type: string
+        nGames:
+          format: int32
+          type: integer
+        score:
+          format: int32
+          type: integer
+      type: object
+    Object:
+      example: {}
+      properties: {}
+      type: object
+
