@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class StatisticController(val statisticService: StatisticService) {
+
     fun insertUserStatistics(username: String, score: Int = 0) =
         statisticService.insertUserStatistics(username, score)
 

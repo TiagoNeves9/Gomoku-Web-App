@@ -2,6 +2,7 @@ package com.example.gomoku.service
 
 import com.example.gomoku.domain.Token
 import com.example.gomoku.domain.User
+import com.example.gomoku.domain.UserStatistics
 import com.example.gomoku.http.model.UserOutputModel
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -22,7 +23,11 @@ class UserService(
                 throw Exceptions.UsernameAlreadyInUseException("Username $username already in use! ")
 
             val storedCount = it.usersRepository.storeUser(username, passwordEncoded)
-            if (storedCount == 1) it.usersRepository.getUserWithUsername(username)
+            if (storedCount == 1) {
+                val userStatistics = UserStatistics(username, 0, 0)
+                it.statisticsRepository.insertUserStatistics(userStatistics)
+                it.usersRepository.getUserWithUsername(username)
+            }
             else throw Exceptions.ErrorCreatingUser("Error creating user! ")
         }
     }
