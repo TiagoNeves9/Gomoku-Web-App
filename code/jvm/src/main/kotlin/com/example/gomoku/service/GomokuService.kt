@@ -1,9 +1,7 @@
 package com.example.gomoku.service
 
 import com.example.gomoku.domain.*
-import com.example.gomoku.domain.board.BoardRun
-import com.example.gomoku.domain.board.Cell
-import com.example.gomoku.domain.board.exampleMap
+import com.example.gomoku.domain.board.*
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -53,10 +51,17 @@ class GomokuService(private val transactionManager: TransactionManager) {
             game
         }
 
+    //todo: check if the game to scores and game is successful
     fun play(gameID: UUID, cell: Cell): Game =
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
             val updatedGame = game.computeNewGame(cell)
+            if(updatedGame.board is BoardWin)
+                it.statisticsRepository.updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)
+            else if(updatedGame.board is BoardDraw) {
+                it.statisticsRepository.updateUserRanking(game.users.first.username , updatedGame.score/2)
+                it.statisticsRepository.updateUserRanking(game.users.second.username , updatedGame.score/2)
+            }
             it.gamesRepository.update(updatedGame)
             updatedGame
         }

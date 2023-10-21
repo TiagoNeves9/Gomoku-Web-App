@@ -55,9 +55,9 @@ class UserService(
             it.usersRepository.getUserWithUsername(username)
         }
 
-    fun getUserByToken(token: String): User? =
+    fun getUserByToken(token: String): User =
         transactionManager.run {
-            null
+            it.usersRepository.getUserWithToken(token)
         }
 
     fun getUserCredentials(name: String, pass: String): UserOutputModel =
