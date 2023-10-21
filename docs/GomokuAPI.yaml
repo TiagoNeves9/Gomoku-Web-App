@@ -62,14 +62,14 @@ paths:
     get:
       operationId: getById
       parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           content:
@@ -116,14 +116,14 @@ paths:
     get:
       operationId: getGameById
       parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           content:
@@ -136,14 +136,14 @@ paths:
     post:
       operationId: play
       parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       requestBody:
         content:
           application/json:
@@ -178,14 +178,14 @@ paths:
     get:
       operationId: isGameCreated
       parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           content:
@@ -213,13 +213,13 @@ paths:
     get:
       operationId: getUserRanking
       parameters:
-      - explode: false
-        in: path
-        name: username
-        required: true
-        schema:
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          style: simple
       responses:
         "200":
           content:
