@@ -40,7 +40,6 @@ class JdbiGamesRepository(
     }
 
     override fun insert(game: Game) {
-        //TODO we are not saving the board
         handle.createUpdate(
             """
                 insert into 

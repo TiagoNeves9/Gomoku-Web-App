@@ -51,7 +51,6 @@ class GomokuService(private val transactionManager: TransactionManager) {
             game
         }
 
-    //todo: check if the game to scores and game is successful
     fun play(gameID: UUID, cell: Cell): Game =
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)

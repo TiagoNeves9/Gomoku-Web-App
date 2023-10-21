@@ -24,7 +24,6 @@ data class User(val userId: UUID, val username: String, val encodedPassword: Str
 enum class Turn {
     BLACK_PIECE, WHITE_PIECE;
 
-    //TODO Does turn needs score?
     fun other() =
         if (this == WHITE_PIECE) BLACK_PIECE
         else WHITE_PIECE
