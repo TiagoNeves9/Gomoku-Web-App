@@ -23,7 +23,8 @@ data class GameOutputModel(
     val userW: User,
     val turn: String,
     val rules: Rules,
-    val boardCells: Map<Cell, Turn>
+    val boardCells: Map<Cell, Turn>,
+    val boardState: String
 ) : OutputModel
 
 data class LobbyOutputModel(

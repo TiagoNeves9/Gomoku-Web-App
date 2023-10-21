@@ -33,6 +33,7 @@ class JdbiGamesRepository(
         val currentPlayer =
             if (turn == Turn.BLACK_PIECE) Player(user1, turn)
             else Player(user2, turn)
+        // TODO improve this, not always BoardRun
         val board = BoardRun(boardPositionsStr.stringToPositions(boardSize), turn, boardSize)
         val rules = Rules(boardSize, openingStr.toOpening(), variantStr.toVariant())
 

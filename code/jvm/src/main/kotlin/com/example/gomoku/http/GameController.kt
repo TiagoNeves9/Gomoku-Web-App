@@ -62,7 +62,8 @@ class GamesController(
                 userW = game.users.second,
                 turn = game.currentPlayer.first.username,
                 rules = game.rules,
-                boardCells = game.board.positions
+                boardCells = game.board.positions,
+                boardState = game.board.typeToString()
             )
             return siren(gameModel) { clazz("Game") }
         }
@@ -85,7 +86,8 @@ class GamesController(
                 userW = updatedGame.users.second,
                 turn = updatedGame.currentPlayer.first.username,
                 rules = updatedGame.rules,
-                boardCells = updatedGame.board.positions
+                boardCells = updatedGame.board.positions,
+                boardState = updatedGame.board.typeToString()
             )
             siren(gameModel) { clazz("Game") }
         } catch (ex: Exceptions.GameDoesNotExistException) {
@@ -110,11 +112,10 @@ class GamesController(
                     userW = game.users.second,
                     turn = game.currentPlayer.first.username,
                     rules = game.rules,
-                    boardCells = game.board.positions
+                    boardCells = game.board.positions,
+                    boardState = game.board.typeToString()
                 )
-                siren(gameModel) {
-                    clazz("Game")
-                }
+                siren(gameModel) { clazz("Game") }
             } else siren(ErrorOutputModel(404, "Game was not been created! ")) {}
         } catch (ex: Exceptions.GameDoesNotExistException) {
             siren(ErrorOutputModel(404, "Game was not been created! ")) {}
@@ -146,7 +147,7 @@ class GamesController(
         }
     }
 
-    @Authenticated
+    //@Authenticated
     @GetMapping(PathTemplate.GAME_BY_ID)
     fun getGameById(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
         return try {
@@ -157,7 +158,8 @@ class GamesController(
                 userW = game.users.second,
                 turn = game.currentPlayer.first.username,
                 rules = game.rules,
-                boardCells = game.board.positions
+                boardCells = game.board.positions,
+                boardState = game.board.typeToString()
             )
             siren(gameModel) {
                 clazz("Game")
