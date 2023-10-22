@@ -1,7 +1,7 @@
 package com.example.gomoku
 
+import com.example.gomoku.http.pipeline.AuthInterceptor
 import com.example.gomoku.http.pipeline.AuthenticatedUserArgumentResolver
-import com.example.gomoku.http.pipeline.AuthenticationInterceptor
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.postgresql.ds.PGSimpleDataSource
@@ -34,7 +34,7 @@ class GomokuApplication {
 
 @Configuration
 class PipelineConfigurer(
-    val authenticationInterceptor: AuthenticationInterceptor,
+    val authenticationInterceptor: AuthInterceptor,
     val authenticatedUserArgumentResolver: AuthenticatedUserArgumentResolver
 ): WebMvcConfigurer{
     override fun addInterceptors(registry: InterceptorRegistry) {

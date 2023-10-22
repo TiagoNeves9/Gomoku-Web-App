@@ -31,6 +31,8 @@ class AuthenticatedUserArgumentResolver : HandlerMethodArgumentResolver {
     companion object {
         private const val KEY = "AuthenticatedUserArgumentResolver"
 
+        fun getKey() = KEY
+
         fun addUserTo(user: AuthenticatedUser, request: HttpServletRequest) {
             return request.setAttribute(KEY, user)
         }

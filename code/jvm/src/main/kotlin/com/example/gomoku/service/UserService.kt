@@ -60,7 +60,7 @@ class UserService(
             it.usersRepository.getUserWithUsername(username)
         }
 
-    fun getUserByToken(token: String): User =
+    fun getUserByToken(token: String): User? =
         transactionManager.run {
             it.usersRepository.getUserWithToken(token)
         }

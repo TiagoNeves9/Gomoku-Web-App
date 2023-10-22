@@ -14,7 +14,7 @@ interface UsersRepository {
 
     fun getUserWithUsername(username: String): User
 
-    fun getUserWithToken(encodedToken: String): User
+    fun getUserWithToken(encodedToken: String): User?
 
     fun doesUserExist(username: String): Boolean
 

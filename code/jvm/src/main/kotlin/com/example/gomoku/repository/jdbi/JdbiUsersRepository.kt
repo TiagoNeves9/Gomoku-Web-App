@@ -50,19 +50,19 @@ class JdbiUsersRepository(private val handle: Handle) : UsersRepository {
             .mapTo<User>()
             .singleOrNull() ?: throw Exceptions.NotFoundException() //change exception?
 
-    override fun getUserWithToken(encodedToken: String): User =
+    override fun getUserWithToken(encodedToken: String): User? =
         handle.createQuery(
             """
             select users.user_id, username, encoded_password
             from dbo.Users as users 
             inner join dbo.Tokens as tokens 
             on users.user_id = tokens.user_id
-            where encoded_password = :given_token
+            where tokens.encoded_token = :given_token
            """
         )
             .bind("given_token", encodedToken)
             .mapTo<User>()
-            .singleOrNull() ?: throw Exceptions.NotFoundException()
+            .singleOrNull()
 
     override fun doesUserExist(username: String): Boolean =
         handle.createQuery(
