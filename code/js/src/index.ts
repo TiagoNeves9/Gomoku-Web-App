@@ -1,3 +1,3 @@
-import {demo} from './callCounter'
+import { RenderApp } from './Router'
 
-demo()
+RenderApp()
