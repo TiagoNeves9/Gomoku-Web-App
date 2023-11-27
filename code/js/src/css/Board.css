@@ -1,0 +1,30 @@
+#board {
+    display: grid;
+    grid-template-columns: repeat(15, 50px);
+    grid-template-rows: repeat(15, 50px);
+    place-content: center;
+    width: 765px;
+    height: 765px;
+    background-color: black;
+}
+
+#board .cell {
+    width: 50px;
+    height: 50px;
+    place-content: center;
+    background-image: url(../../public/images/cellview.png);
+    background-size: cover;
+}
+
+#board .black-stone  {
+    width: 50px;
+    height: 50px;
+    place-content: center;
+    background-image: url(../../public/images/blackstone.png), url(../../public/images/cellview.png);
+    background-color: transparent;
+    background-size: cover;
+}
+
+#board .white-stone {
+    background-image: url(../../public/images/whitestone.png), url(../../public/images/cellview.png);
+}
