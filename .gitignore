@@ -119,3 +119,4 @@ dist
 **/build
 *.bkp
 *.tmp
+code/js/package-lock.json
