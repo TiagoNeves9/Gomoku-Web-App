@@ -91,7 +91,7 @@ export function Game() {
         <div>
             <h1> GOMOKU </h1>
             <Board/>
-            <h1><Link to="/home"> Home </Link></h1>
+            <h1><Link to="/"> Home </Link></h1>
         </div>
     )
 }
