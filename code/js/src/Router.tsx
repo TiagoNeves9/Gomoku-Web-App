@@ -18,8 +18,8 @@ export const router = createBrowserRouter(
                 <h1 style={{color: 'red'}}>Error Page</h1>
             </div>,
             element:
-            <div> 
-                <AppScreen/> //Switch board to navbar?
+            <div>
+                <App/> //Switch to navbar?
             </div>
             /*  use navigation bar here <-
             children: [
@@ -35,7 +35,7 @@ export const router = createBrowserRouter(
                     path: "game",
                     element: <Game />
                 }
-                
+
                 {
                     path: "register",
                     element: <RegisterScreen />
@@ -44,7 +44,7 @@ export const router = createBrowserRouter(
                     path: "about",
                     element: <AboutScreen />
                 }
-                
+
             ]*/
         },
         {
@@ -54,10 +54,6 @@ export const router = createBrowserRouter(
         {
             path: "game",
             element: <Game/>
-        },
-        {
-            path: "app",
-            element: <AppScreen />
         },
         {
             path: "login",
@@ -83,5 +79,5 @@ export default function App() {
         <StrictMode>
             <RouterProvider router={router} />
         </StrictMode>
-    ) 
+    )
 }
