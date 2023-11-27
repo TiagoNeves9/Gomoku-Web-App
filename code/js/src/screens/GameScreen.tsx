@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import '..css/Board.css'
+import '../css/Board.css'
 import { GameService } from "../services/GameService";
 
 type ContextType = {
