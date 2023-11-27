@@ -14,9 +14,9 @@ const useStyles = makeStyles(
     })
 );
 
-function CallLoginScreen() {
+function CallRegisterScreen() {
     const classes = useStyles();
-    const [inputs, setInputs] = useState({ username: '', password: '' });
+    const [inputs, setInputs] = useState({ username: '', password: '', confirmPassword: '' });
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
@@ -25,15 +25,21 @@ function CallLoginScreen() {
         setInputs({ ...inputs, [name]: e.currentTarget.value });
     }
 
-    async function acceptSubmit(logIn: boolean) {
+    async function acceptSubmit(register: boolean) {
         if (!submitting) {
             setSubmitting(true);
-            const { username, password } = inputs;
-            //TODO: send to server
+            const { username, password, confirmPassword } = inputs;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                setSubmitting(false); // Release the button
+                return;
+            }
+
             navigate('/home');
         }
     }
-
+        
     return <>
         <Box component="form">
             <FormControl className={classes.formControl}>
@@ -50,16 +56,23 @@ function CallLoginScreen() {
                     value={inputs.password} onChange={acceptChange}
                 />
             </FormControl>
-            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>Log in</Button>
+            <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="confirmPassword" className={classes.labelSpacing}>Confirm Password</InputLabel>
+                <OutlinedInput
+                    id="confirmPassword" name="confirmPassword" type="password" label="Confirm Password"
+                    value={inputs.confirmPassword} onChange={acceptChange}
+                />
+            </FormControl>
+            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>Register</Button>
         </Box>
     </>
 }
 
-export const LoginScreen = () => {
+export const RegisterScreen = () => {
     return (
         <div>
-            <Typography>Login</Typography>
-            <CallLoginScreen />
+            <Typography>Register</Typography>
+            <CallRegisterScreen />
         </div>
     );
 }
