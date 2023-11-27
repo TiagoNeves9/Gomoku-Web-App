@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export function App() {
@@ -12,8 +12,9 @@ export function App() {
     return (
         <div>
             <h1>App</h1>
-            <button onClick={() => handleOnClick("login")}>Login</button>
-            <button onClick={() => handleOnClick("register")}>Register</button>
+            <Link to="/login">Login</Link>
+            <text> | </text>
+            <Link to="/register">Register</Link>
         </div>
     )
 }

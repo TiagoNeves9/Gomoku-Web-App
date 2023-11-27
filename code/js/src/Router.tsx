@@ -4,6 +4,8 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { HomeScreen } from "./screens/HomeScreen";
 import { LoginScreen } from "./screens/LoginScreen";
+import { AppScreen } from "./screens/AppScreen";
+import { ProfileScreen } from "./screens/ProfileScreen";
 
 
 export const router = createBrowserRouter(
@@ -11,26 +13,18 @@ export const router = createBrowserRouter(
         {
             path: "/",
             element: <App />,
-            children: [
-                {
-                    path: "home",
-                    element: <HomeScreen />
-                },
-                {
-                    path: "login",
-                    element: <LoginScreen />
-                },
-                /*
-                {
-                    path: "register",
-                    element: <RegisterScreen />
-                },
-                {
-                    path: "about",
-                    element: <AboutScreen />
-                }
-                */
-            ]
+        },
+        {
+            path: "app",
+            element: <AppScreen />
+        },
+        {
+            path: "login",
+            element: <LoginScreen />
+        },
+        {
+            path: "profile",
+            element: <ProfileScreen />
         }
     ]
 )

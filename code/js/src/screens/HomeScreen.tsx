@@ -12,6 +12,7 @@ export const HomeScreen = () => {
                 <Link to="/register"> to register if you don't have an account</Link>
             </text>
             <Link to="/about">About</Link>
+            <Link to="/app">App</Link>
         </div>
     )
 }
