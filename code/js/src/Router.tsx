@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { HomeScreen } from "./screens/HomeScreen";
 import { LoginScreen } from "./screens/LoginScreen";
+import { RegisterScreen } from "./screens/RegisterScreen";
 import { AppScreen } from "./screens/AppScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 
@@ -21,6 +22,10 @@ export const router = createBrowserRouter(
         {
             path: "login",
             element: <LoginScreen />
+        },
+        {
+            path: "register",
+            element: <RegisterScreen />
         },
         {
             path: "profile",
