@@ -1,7 +1,7 @@
 import React, { StrictMode } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {  Game } from "./screens/GameScreen";
+import { Game } from "./screens/GameScreen";
 import { AppScreen } from "./screens/AppScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
@@ -19,7 +19,7 @@ export const router = createBrowserRouter(
             </div>,
             element:
             <div>
-                <App/> //Switch to navbar?
+                <AppScreen/> //Switch to navbar?
             </div>
             /*  use navigation bar here <-
             children: [
@@ -46,10 +46,6 @@ export const router = createBrowserRouter(
                 }
 
             ]*/
-        },
-        {
-            path: "app",
-            element: <AppScreen />
         },
         {
             path: "game",

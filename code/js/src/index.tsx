@@ -5,7 +5,7 @@ import  App  from './Router'
 
 //import "./index.css";
 
-const root = createRoot(document.getElementById("the-div"));
+const root = createRoot(document.getElementById("the-div")); //index.html div id might be different
 
 root.render(
     <App />
