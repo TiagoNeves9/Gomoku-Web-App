@@ -1,6 +1,6 @@
 import React from "react";
 
-export function ProfileScreen() {
+export const ProfileScreen = () => {
     return (
         <div>
             <h1>Profile</h1>

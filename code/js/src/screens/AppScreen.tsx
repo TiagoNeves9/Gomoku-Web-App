@@ -1,19 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 
 export function AppScreen() {
     return (
         <div>
-            <Link to="/ranking">
-                <button>Rankings</button>
-            </Link>
-            <Link to="/game">
-                <button>Play</button>
-            </Link>
-            <Link to="/profile">
-                <button>Profile</button>
-            </Link>
+            <title>Welcome to Gomoku application</title>
+            <h1>Made by G09</h1>
+            <text>
+                To get started, click <b><Link to="/login">here</Link></b> to log in
+                or <b><Link to="/register">here</Link></b> to register if you don't have an account.
+            </text> <br /> <br />
+
+            <Link to="/about">About</Link> <br /> <br />
+
+            <Link to="/app">App</Link>
         </div>
-    );
+    )
 }

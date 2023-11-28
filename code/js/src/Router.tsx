@@ -14,43 +14,15 @@ export const router = createBrowserRouter(
         {
             path: "/",
             errorElement: <div>
-                <Link to="/"> Home </Link>
-                <h1 style={{color: 'red'}}>Error Page</h1>
+                <Link to="/"> Return </Link>
+                <h1 style={{ color: 'red' }}>Error Page</h1>
             </div>,
-            element:
-            <div>
-                <AppScreen/> //Switch to navbar?
-            </div>
-            /*  use navigation bar here <-
-            children: [
-                {
-                    path: "home",
-                    element: <HomeScreen />
-                },
-                {
-                    path: "login",
-                    element: <LoginScreen />
-                },
-                {
-                    path: "game",
-                    element: <Game />
-                }
-
-                {
-                    path: "register",
-                    element: <RegisterScreen />
-                },
-                {
-                    path: "about",
-                    element: <AboutScreen />
-                }
-
-            ]*/
-        },
+            element: <AppScreen /> //Switch to navbar?
+        },/*
         {
             path: "game",
-            element: <Game/>
-        },
+            element: <Game />
+        },*/
         {
             path: "login",
             element: <LoginScreen />
