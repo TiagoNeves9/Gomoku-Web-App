@@ -4,8 +4,9 @@ import com.example.gomoku.domain.UserStatistics
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
 
+
 @Component
-class StatisticService(var transactionManager: TransactionManager) {
+class StatisticsService(var transactionManager: TransactionManager) {
     fun insertUserStatistics(username: String, score: Int = 0) {
         transactionManager.run {
             val userStatistics = UserStatistics(username, 0, score)

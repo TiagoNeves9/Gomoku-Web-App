@@ -15,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
+const val SYSTEM_VERSION = "0.0.1"
+
 @SpringBootApplication
 class GomokuApplication {
     @Bean
@@ -33,10 +35,10 @@ class GomokuApplication {
 }
 
 @Configuration
-class PipelineConfigurer(
+class PipelineConfigurator(
     val authenticationInterceptor: AuthInterceptor,
     val authenticatedUserArgumentResolver: AuthenticatedUserArgumentResolver
-): WebMvcConfigurer{
+) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authenticationInterceptor)
     }
@@ -44,7 +46,6 @@ class PipelineConfigurer(
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(authenticatedUserArgumentResolver)
     }
-
 }
 
 

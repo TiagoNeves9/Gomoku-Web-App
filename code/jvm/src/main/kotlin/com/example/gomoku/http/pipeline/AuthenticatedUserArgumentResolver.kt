@@ -13,7 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class AuthenticatedUserArgumentResolver : HandlerMethodArgumentResolver {
-
+    // TODO .parameterType == gives a warning/error
     override fun supportsParameter(parameter: MethodParameter) =
         parameter.parameterType == AuthenticatedUser::class.java
 

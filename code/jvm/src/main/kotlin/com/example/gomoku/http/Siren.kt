@@ -79,7 +79,7 @@ class SirenBuilderScope<T>(val properties: T) {
 
 class EntityBuilderScope<T>(
     val properties: T,
-    val rel: List<String>,
+    private val rel: List<String>,
 ) {
     private val links = mutableListOf<LinkModel>()
 

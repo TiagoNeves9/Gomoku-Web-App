@@ -2,7 +2,6 @@ package com.example.gomoku.http
 
 import com.example.gomoku.http.model.ErrorJsonModel
 import com.example.gomoku.service.Exceptions
-
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode

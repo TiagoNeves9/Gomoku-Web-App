@@ -1,5 +1,4 @@
 package com.example.gomoku.http.model
 
-class LinkRelation(
-    val value: String
-)
+
+class LinkRelation(val value: String)

@@ -6,11 +6,11 @@ import java.util.*
 
 
 interface UsersRepository {
-    fun storeUser(username: String, encodedPassword: String): Int
+    fun getAll(): List<User>
 
     fun getById(id: UUID): User
 
-    fun getAll(): List<User>
+    fun storeUser(username: String, encodedPassword: String): Int
 
     fun getUserWithUsername(username: String): User
 

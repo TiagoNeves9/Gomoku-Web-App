@@ -26,17 +26,19 @@ class GamesController(
 
     @Authenticated
     @PostMapping(PathTemplate.START)
-    fun createOrJoinGame(request: HttpServletRequest, @RequestBody input: GomokuStartInputModel): SirenModel<OutputModel> {
+    fun createOrJoinGame(
+        request: HttpServletRequest,
+        @RequestBody input: GomokuStartInputModel
+    ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")){}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
 
         check(input.boardDim == BOARD_DIM || input.boardDim == BIG_BOARD_DIM) {
             "Board dimension must be $BOARD_DIM or $BIG_BOARD_DIM!"
         }
 
         val user = User(input.userId, input.username, input.encodedPassword)
-        val rules =
-            Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
+        val rules = Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
 
         val lobbyOrNull = gomokuService.createOrJoinLobby(rules)
         if (lobbyOrNull == null) {
@@ -53,7 +55,7 @@ class GamesController(
         } else {
             // host user is trying to join the lobby
             if (lobbyOrNull.hostUserId == user.userId)
-                siren(ErrorOutputModel(405, "User can't join his own lobby! ")) {}
+                siren(ErrorOutputModel(405, "User can't join his own lobby!")) {}
 
             // join the unique lobby, start a game and remove the lobby
             gomokuService.deleteLobby(lobbyOrNull)
@@ -82,9 +84,13 @@ class GamesController(
 
     @Authenticated
     @PostMapping(PathTemplate.PLAY)
-    fun play(request: HttpServletRequest, @PathVariable("id") gameId: UUID, @RequestBody cell: CellInputModel): SirenModel<OutputModel> {
+    fun play(
+        request: HttpServletRequest,
+        @PathVariable("id") gameId: UUID,
+        @RequestBody cell: CellInputModel
+    ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")){}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
 
         return try {
             val updatedGame = gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
@@ -132,9 +138,12 @@ class GamesController(
 
     @Authenticated
     @GetMapping(PathTemplate.IS_GAME_CREATED)
-    fun isGameCreated(request: HttpServletRequest, @PathVariable("id") lobbyId: UUID): SirenModel<OutputModel> {
+    fun isGameCreated(
+        request: HttpServletRequest,
+        @PathVariable("id") lobbyId: UUID
+    ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")){}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
 
         return try {
             if (gomokuService.isGameCreated(lobbyId)) {
@@ -160,9 +169,12 @@ class GamesController(
 
     @Authenticated
     @GetMapping(PathTemplate.GAME_BY_ID)
-    fun getGameById(request: HttpServletRequest, @PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
+    fun getGameById(
+        request: HttpServletRequest,
+        @PathVariable("id") gameId: UUID
+    ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")){}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
         return try {
             val game = gomokuService.getById(gameId)
             val gameModel = GameOutputModel(

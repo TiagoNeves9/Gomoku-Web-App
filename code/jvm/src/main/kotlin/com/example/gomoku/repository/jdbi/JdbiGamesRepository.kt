@@ -1,8 +1,7 @@
 package com.example.gomoku.repository.jdbi
 
 import com.example.gomoku.domain.*
-import com.example.gomoku.domain.board.BoardRun
-import com.example.gomoku.domain.board.stringToPositions
+import com.example.gomoku.domain.board.*
 import com.example.gomoku.repository.GamesRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -18,6 +17,7 @@ class JdbiGamesRepository(
         val user1Id = rs.getObject("user1_id", UUID::class.java)
         val user2Id = rs.getObject("user2_id", UUID::class.java)
         val boardPositionsStr = rs.getString("board_positions")
+        val boardType = rs.getString("board_type")
         val currentTurnStr = rs.getString("current_turn")
         val score = rs.getInt("score")
         val now = rs.getTimestamp("now").toInstant()
@@ -33,8 +33,31 @@ class JdbiGamesRepository(
         val currentPlayer =
             if (turn == Turn.BLACK_PIECE) Player(user1, turn)
             else Player(user2, turn)
-        // TODO improve this, not always BoardRun
-        val board = BoardRun(boardPositionsStr.stringToPositions(boardSize), turn, boardSize)
+
+        val board = when (boardType) {
+            "RUNNING" -> "RUNNING".stringToType(
+                BoardRun(boardPositionsStr.stringToPositions(boardSize), turn, boardSize),
+                currentPlayer
+            )
+
+            "DRAW" -> "DRAW".stringToType(
+                BoardDraw(boardPositionsStr.stringToPositions(boardSize), boardSize),
+                currentPlayer
+            )
+
+            "BLACK_WON" -> "BLACK_WON".stringToType(
+                BoardWin(boardPositionsStr.stringToPositions(boardSize), currentPlayer, boardSize),
+                currentPlayer
+            )
+
+            "WHITE_WON" -> "WHITE_WON".stringToType(
+                BoardWin(boardPositionsStr.stringToPositions(boardSize), currentPlayer, boardSize),
+                currentPlayer
+            )
+
+            else -> throw Exception("Invalid board type!")
+        }
+
         val rules = Rules(boardSize, openingStr.toOpening(), variantStr.toVariant())
 
         return Game(gameId, users, board, currentPlayer, score, now, rules)

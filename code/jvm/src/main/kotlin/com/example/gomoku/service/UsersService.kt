@@ -13,13 +13,15 @@ import java.util.UUID
 
 
 @Component
-class UserService(
-    var transactionManager: TransactionManager, var passwordEncoder: BCryptPasswordEncoder
+class UsersService(
+    var transactionManager: TransactionManager,
+    var passwordEncoder: BCryptPasswordEncoder
 ) {
     fun createNewUser(username: String, password: String): User {
         val passwordEncoded = passwordEncoder.encode(password)
+
         return transactionManager.run {
-            if(it.usersRepository.doesUserExist(username))
+            if (it.usersRepository.doesUserExist(username))
                 throw Exceptions.UsernameAlreadyInUseException("Username $username already in use! ")
 
             val storedCount = it.usersRepository.storeUser(username, passwordEncoded)
@@ -27,8 +29,7 @@ class UserService(
                 val userStatistics = UserStatistics(username, 0, 0)
                 it.statisticsRepository.insertUserStatistics(userStatistics)
                 it.usersRepository.getUserWithUsername(username)
-            }
-            else throw Exceptions.ErrorCreatingUserException("Error creating user! ")
+            } else throw Exceptions.ErrorCreatingUserException("Error creating user! ")
         }
     }
 
@@ -48,6 +49,7 @@ class UserService(
             val user = it.usersRepository.getUserWithUsername(username)
             if (!passwordEncoder.matches(password, user.encodedPassword))
                 throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect!")
+
             val token = UUID.randomUUID().toString() //change this?
             val createdInstant = Instant.now()
             it.usersRepository.createToken(token, user.userId, createdInstant)
@@ -67,7 +69,7 @@ class UserService(
 
     fun getUserCredentials(name: String, pass: String): UserOutputModel =
         transactionManager.run {
-            if(!it.usersRepository.doesUserExist(name))
+            if (!it.usersRepository.doesUserExist(name))
                 throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect! ")
 
             val user = it.usersRepository.getUserWithUsername(name)
@@ -95,6 +97,4 @@ class UserService(
         val expireDate = token.createdAt.plus(30, ChronoUnit.DAYS)
         return expireDate.isAfter(instant)
     }
-
-
 }

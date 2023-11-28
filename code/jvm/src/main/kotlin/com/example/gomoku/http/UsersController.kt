@@ -6,13 +6,13 @@ import com.example.gomoku.http.model.OutputModel
 import com.example.gomoku.http.model.UserInputModel
 import com.example.gomoku.http.model.UserOutputModel
 import com.example.gomoku.service.Exceptions
-import com.example.gomoku.service.UserService
+import com.example.gomoku.service.UsersService
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
 
 @RestController
-class UsersController(private val usersService: UserService) {
+class UsersController(private val usersService: UsersService) {
     /*
     * TODO:
     *  CHANGE EXCEPTIONS
