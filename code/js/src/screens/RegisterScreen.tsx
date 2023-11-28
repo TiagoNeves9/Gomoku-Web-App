@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeStyles } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const useStyles = makeStyles(
@@ -39,7 +39,7 @@ function CallRegisterScreen() {
             navigate('/home');
         }
     }
-        
+
     return <>
         <Box component="form">
             <FormControl className={classes.formControl}>
@@ -52,18 +52,24 @@ function CallRegisterScreen() {
             <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="password" className={classes.labelSpacing}>Password</InputLabel>
                 <OutlinedInput
-                    id="password" name="password" type="password" label="Password"
+                    id="password" name="password"
+                    type="password" label="Password"
                     value={inputs.password} onChange={acceptChange}
                 />
             </FormControl>
             <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="confirmPassword" className={classes.labelSpacing}>Confirm Password</InputLabel>
+                <InputLabel htmlFor="confirmPassword" className={classes.labelSpacing}>
+                    Confirm Password
+                </InputLabel>
                 <OutlinedInput
-                    id="confirmPassword" name="confirmPassword" type="password" label="Confirm Password"
+                    id="confirmPassword" name="confirmPassword"
+                    type="password" label="Confirm Password"
                     value={inputs.confirmPassword} onChange={acceptChange}
                 />
             </FormControl>
-            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>Register</Button>
+            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>
+                Register
+            </Button>
         </Box>
     </>
 }
@@ -71,6 +77,7 @@ function CallRegisterScreen() {
 export const RegisterScreen = () => {
     return (
         <div>
+            <Link to="/"> Return </Link> <br /> <br />
             <Typography>Register</Typography>
             <CallRegisterScreen />
         </div>

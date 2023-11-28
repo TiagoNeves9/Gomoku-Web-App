@@ -1,12 +1,13 @@
 import React, { StrictMode } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Game } from "./screens/GameScreen";
 import { AppScreen } from "./screens/AppScreen";
+import { LoginScreen } from "./screens/LoginScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
+import { HomeScreen } from "./screens/HomeScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import RankingScreen from "./screens/RankingScreen";
-import { LoginScreen } from "./screens/LoginScreen";
+import { Game } from "./screens/GameScreen";
 
 
 export const router = createBrowserRouter(
@@ -18,11 +19,7 @@ export const router = createBrowserRouter(
                 <h1 style={{ color: 'red' }}>Error Page</h1>
             </div>,
             element: <AppScreen /> //Switch to navbar?
-        },/*
-        {
-            path: "game",
-            element: <Game />
-        },*/
+        },
         {
             path: "login",
             element: <LoginScreen />
@@ -32,13 +29,21 @@ export const router = createBrowserRouter(
             element: <RegisterScreen />
         },
         {
+            path: "home",
+            element: <HomeScreen />
+        },
+        {
             path: "profile",
             element: <ProfileScreen />
         },
         {
             path: "ranking",
             element: <RankingScreen />
-        }
+        }/*,
+        {
+            path: "game",
+            element: <Game />
+        },*/
     ]
 )
 

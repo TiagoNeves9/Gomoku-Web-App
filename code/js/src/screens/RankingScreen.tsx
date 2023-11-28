@@ -1,8 +1,6 @@
-import React, { useState, ChangeEvent } from "react";
-
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 
-export default function RankingScreen(){
+export default function RankingScreen() {
     return <div> Rankings </div>
 }

@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeStyles } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const useStyles = makeStyles(
@@ -46,11 +46,14 @@ function CallLoginScreen() {
             <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="password" className={classes.labelSpacing}>Password</InputLabel>
                 <OutlinedInput
-                    id="password" name="password" type="password" label="Password"
+                    id="password" name="password"
+                    type="password" label="Password"
                     value={inputs.password} onChange={acceptChange}
                 />
             </FormControl>
-            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>Log in</Button>
+            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>
+                Log in
+            </Button>
         </Box>
     </>
 }
@@ -58,6 +61,7 @@ function CallLoginScreen() {
 export const LoginScreen = () => {
     return (
         <div>
+            <Link to="/"> Return </Link> <br /> <br />
             <Typography>Login</Typography>
             <CallLoginScreen />
         </div>
