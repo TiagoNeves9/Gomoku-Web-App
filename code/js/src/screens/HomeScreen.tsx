@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export const HomeScreen = () => {
     return (
         <div>
-            <Link to="/ranking">
+            <Link to="/rankings">
                 <button>Rankings</button>
             </Link>
             <Link to="/game">
