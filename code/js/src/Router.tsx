@@ -7,6 +7,7 @@ import { RegisterScreen } from "./screens/RegisterScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import { RankingsScreen } from "./screens/RankingsScreen";
+import { AboutScreen } from "./screens/AboutScreen";
 import { Game } from "./screens/GameScreen";
 
 
@@ -39,7 +40,12 @@ export const router = createBrowserRouter(
         {
             path: "rankings",
             element: <RankingsScreen />
-        }/*,
+        },
+        {
+            path: "about",
+            element: <AboutScreen />
+        }
+        /*,
         {
             path: "game",
             element: <Game />

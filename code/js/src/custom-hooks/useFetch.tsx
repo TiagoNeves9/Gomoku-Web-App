@@ -30,7 +30,7 @@ export function useFetch<T>({ uri }: { uri: string }): { data: T | null; error: 
             }
         }
 
-        fetchData();
+        fetchData().then();
 
         return () => {
             canceled = true;
