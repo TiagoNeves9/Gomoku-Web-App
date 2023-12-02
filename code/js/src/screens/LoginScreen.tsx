@@ -1,6 +1,16 @@
 import React, { useState, ChangeEvent } from "react";
 import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeStyles } from "@material-ui/core";
 import { useNavigate, Link } from "react-router-dom";
+import { _fetch } from "../custom-hooks/useFetch";
+import { User } from "../domain/Users";
+import { UserHome } from "./UserHome";
+
+type ContextType = {
+    user: User | null;
+    setUser? : (user: User | null) => void;
+};
+
+export const AuthContext = React.createContext<ContextType>({  user: null, setUser: () => {} });
 
 
 const useStyles = makeStyles(
@@ -14,10 +24,15 @@ const useStyles = makeStyles(
     })
 );
 
+async function login(username: string, password:string): Promise<{properties: { username: string; id: string; token: string }}>{
+    return await _fetch("api/users/login", "POST", { name: username , password: password });
+}
+
 function CallLoginScreen() {
     const classes = useStyles();
     const [inputs, setInputs] = useState({ username: '', password: '' });
     const [submitting, setSubmitting] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
 
     async function acceptChange(e: ChangeEvent<HTMLInputElement>) {
@@ -28,9 +43,15 @@ function CallLoginScreen() {
     async function acceptSubmit(logIn: boolean) {
         if (!submitting) {
             setSubmitting(true);
-            const { username, password } = inputs;
-            //TODO: send to server
-            navigate('/home');
+            try {
+                const user = await login(inputs.username, inputs.password);
+                console.log(user.properties);
+                
+                console.log("user " + user);
+                navigate("/userhome");
+            }finally {
+                setSubmitting(false);
+            }
         }
     }
 
@@ -54,8 +75,11 @@ function CallLoginScreen() {
             <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>
                 Log in
             </Button>
+            <AuthContext.Provider value={{ user, setUser }}>
+            </AuthContext.Provider>
         </Box>
     </>
+
 }
 
 export const LoginScreen = () => {
@@ -67,3 +91,5 @@ export const LoginScreen = () => {
         </div>
     );
 }
+
+

@@ -30,7 +30,7 @@ export function useFetch<T>({ uri }: { uri: string }): { data: T | null; error: 
             }
         }
 
-        fetchData().then();
+        fetchData();
 
         return () => {
             canceled = true;
@@ -39,3 +39,22 @@ export function useFetch<T>({ uri }: { uri: string }): { data: T | null; error: 
 
     return { data, error, loading };
 }
+
+export async function _fetch(uri: string, method: string = "GET", body?: Object) {
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    const options = {
+        method,
+        headers,
+    };
+
+    if(body) options['body'] = JSON.stringify(body);
+
+    const response = await fetch(uri, options);
+    const content = await response.json();
+
+    return content;
+}
+

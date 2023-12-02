@@ -9,6 +9,7 @@ import { ProfileScreen } from "./screens/ProfileScreen";
 import { RankingsScreen } from "./screens/RankingsScreen";
 import { AboutScreen } from "./screens/AboutScreen";
 import { Game } from "./screens/GameScreen";
+import { UserHome } from "./screens/UserHome";
 
 
 export const router = createBrowserRouter(
@@ -44,6 +45,10 @@ export const router = createBrowserRouter(
         {
             path: "about",
             element: <AboutScreen />
+        },
+        {
+            path: "userhome",
+            element: <UserHome />
         }
         /*,
         {
