@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
 
-export function useFetch<T>({ uri }: { uri: string }): { data: T | null; error: Error | null; loading: boolean } {
+export function useFetch<T>(
+    { uri }: { uri: string }
+): { data: T | null; error: Error | null; loading: boolean } {
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -50,11 +52,10 @@ export async function _fetch(uri: string, method: string = "GET", body?: Object)
         headers,
     };
 
-    if(body) options['body'] = JSON.stringify(body);
+    if (body) options['body'] = JSON.stringify(body);
 
     const response = await fetch(uri, options);
     const content = await response.json();
 
     return content;
 }
-

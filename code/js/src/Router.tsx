@@ -7,8 +7,8 @@ import { RegisterScreen } from "./screens/RegisterScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import { RankingsScreen } from "./screens/RankingsScreen";
+import { PlayScreen } from "./screens/PlayScreen";
 import { AboutScreen } from "./screens/AboutScreen";
-import { Game } from "./screens/GameScreen";
 import { UserHome } from "./screens/UserHome";
 
 
@@ -35,12 +35,16 @@ export const router = createBrowserRouter(
             element: <HomeScreen />
         },
         {
-            path: "profile",
-            element: <ProfileScreen />
-        },
-        {
             path: "rankings",
             element: <RankingsScreen />
+        },
+        {
+            path: "play",
+            element: <PlayScreen />
+        },
+        {
+            path: "profile",
+            element: <ProfileScreen />
         },
         {
             path: "about",

@@ -8,7 +8,7 @@ export const HomeScreen = () => {
             <Link to="/rankings">
                 <button>Rankings</button>
             </Link>
-            <Link to="/game">
+            <Link to="/play">
                 <button>Play</button>
             </Link>
             <Link to="/profile">
