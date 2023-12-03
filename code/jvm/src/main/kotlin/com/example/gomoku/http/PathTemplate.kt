@@ -25,6 +25,7 @@ object PathTemplate {
     const val RANKINGS = "/rankings"
     const val USER_RANKING = "/rankings/{username}"
 
+    const val AUTHORS = "/authors"
     const val ABOUT = "/about"
 
     fun home(): URI = URI(HOME)

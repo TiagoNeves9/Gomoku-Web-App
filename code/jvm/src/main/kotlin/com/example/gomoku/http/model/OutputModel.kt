@@ -1,16 +1,12 @@
 package com.example.gomoku.http.model
 
-import com.example.gomoku.domain.Rules
-import com.example.gomoku.domain.Turn
-import com.example.gomoku.domain.User
-import com.example.gomoku.domain.UserStatistics
+import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.Cell
 import java.net.URI
 import java.util.*
 
 
 interface OutputModel
-
 data class LinkOutputModel(
     private val targetUri: URI,
     private val relation: LinkRelation
@@ -36,6 +32,11 @@ data class LobbyOutputModel(
     val opening: String,
     val variant: String
 ) : OutputModel
+
+
+data class AuthorsOutputModel(val authors: List<Author>) : OutputModel
+
+data class AboutOutputModel(val version: String) : OutputModel
 
 data class LobbiesOutputModel(val lobbyList: List<LobbyOutputModel>) : OutputModel
 
