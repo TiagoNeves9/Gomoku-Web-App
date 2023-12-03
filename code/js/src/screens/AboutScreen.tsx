@@ -1,28 +1,27 @@
-import {useFetch} from "../custom-hooks/useFetch";
+import { useFetch } from "../custom-hooks/useFetch";
 import React from "react";
-import {Author} from "../domain/Authors";
+import { Author } from "../domain/Authors";
+import { Link } from "react-router-dom";
 
 export function AboutScreen() {
-    const { data: authors, loading, error } =
-        useFetch<Author[]>({ uri: "api/about" });
-    if (loading)
-        return <div>Loading...</div>;
+    const { data: content, loading, error } = useFetch<{
+        properties: {
+            version: string;
+        }
+    }>({ uri: "api/about" });
 
-    if (error || !authors)
+    if (loading) return <div>Loading...</div>;
+
+    if (error || !content || !content.properties || !content.properties.version)
         return <div>Error fetching data...</div>;
+
+    const { version } = content.properties;
 
     return (
         <div>
-            <h1>Authors</h1>
-            <ul>
-                {authors.map((author, index) => (
-                    <li key={index}>
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'left' }}>{author.name}</span>
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'center' }}>{author.number}</span>
-                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{author.email}</span>
-                    </li>
-                ))}
-            </ul>
+            <Link to="/home">Return</Link>
+            <h1>About</h1>
+            <p>Version: {version}</p>
         </div>
     )
 }

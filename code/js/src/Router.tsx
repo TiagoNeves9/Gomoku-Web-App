@@ -5,11 +5,12 @@ import { AppScreen } from "./screens/AppScreen";
 import { LoginScreen } from "./screens/LoginScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
 import { HomeScreen } from "./screens/HomeScreen";
-import { ProfileScreen } from "./screens/ProfileScreen";
-import { RankingsScreen } from "./screens/RankingsScreen";
 import { PlayScreen } from "./screens/PlayScreen";
+import { RankingsScreen } from "./screens/RankingsScreen";
+import { AuthorsScreen } from "./screens/AuthorsScreen";
 import { AboutScreen } from "./screens/AboutScreen";
 import { UserHome } from "./screens/UserHome";
+import { ProfileScreen } from "./screens/ProfileScreen";
 
 
 export const router = createBrowserRouter(
@@ -35,12 +36,20 @@ export const router = createBrowserRouter(
             element: <HomeScreen />
         },
         {
+            path: "play",
+            element: <PlayScreen />
+        },
+        {
             path: "rankings",
             element: <RankingsScreen />
         },
         {
-            path: "play",
-            element: <PlayScreen />
+            path: "authors",
+            element: <AuthorsScreen />
+        },
+        {
+            path: "about",
+            element: <AboutScreen />
         },
         {
             path: "profile",
