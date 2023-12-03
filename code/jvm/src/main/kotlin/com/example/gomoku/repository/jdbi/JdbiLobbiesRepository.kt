@@ -4,6 +4,7 @@ import com.example.gomoku.domain.Lobby
 import com.example.gomoku.domain.Rules
 import com.example.gomoku.domain.toOpening
 import com.example.gomoku.domain.toVariant
+import com.example.gomoku.http.model.LobbyOutputModel
 import com.example.gomoku.repository.LobbiesRepository
 import org.jdbi.v3.core.Handle
 import java.sql.ResultSet
@@ -11,7 +12,7 @@ import java.util.*
 
 
 class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
-    private fun myMapToLobby(rs: ResultSet): Lobby {
+    private fun myMapToLobby(rs: ResultSet): LobbyOutputModel {
         val lobbyIdStr = rs.getString("lobby_id")
         val hostUserIdStr = rs.getString("host")
         val boardSize = rs.getInt("board_size")
@@ -20,9 +21,9 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
 
         val lobbyId = UUID.fromString(lobbyIdStr)
         val hostUserId = UUID.fromString(hostUserIdStr)
-        val rules = Rules(boardSize, opening.toOpening(), variant.toVariant())
+        //val rules = Rules(boardSize, opening.toOpening(), variant.toVariant())
 
-        return Lobby(lobbyId, hostUserId, rules)
+        return LobbyOutputModel(lobbyId, hostUserId, boardSize, opening, variant)
     }
 
     override fun insert(lobby: Lobby) {
@@ -41,7 +42,7 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
     }
 
     //Get the unique lobby (if exists)
-    override fun getLobby(rules: Rules): Lobby? =
+    override fun getLobby(rules: Rules): LobbyOutputModel? =
         handle.createQuery(
             "select * from dbo.Lobbies " +
                     "where board_size = :board_size " +
@@ -54,14 +55,14 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
             .map { rs, _ -> myMapToLobby(rs) }
             .singleOrNull()
 
-    override fun getAll(): List<Lobby> =
+    override fun getAll(): List<LobbyOutputModel> =
         handle.createQuery(
             "select * from dbo.Lobbies"
         )
             .map { rs, _ -> myMapToLobby(rs) }
             .list()
 
-    override fun delete(lobby: Lobby) {
+    override fun delete(lobby: LobbyOutputModel) {
         handle.createUpdate(
             """
                 delete from dbo.Lobbies

@@ -32,10 +32,14 @@ data class GameOutputModel(
 data class LobbyOutputModel(
     val lobbyId: UUID,
     val hostUserId: UUID,
-    val rules: Rules
+    val boardDim: Int,
+    val opening: String,
+    val variant: String
 ) : OutputModel
 
-data class RankingOutputModel(val rankingList: List<UserStatistics>) : OutputModel
+data class LobbiesOutputModel(val lobbyList: List<LobbyOutputModel>) : OutputModel
+
+data class RankingsOutputModel(val rankingList: List<UserStatistics>) : OutputModel
 
 data class MessageOutputModel(val waitMessage: String) : OutputModel
 

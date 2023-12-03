@@ -2,7 +2,7 @@ package com.example.gomoku.http
 
 import com.example.gomoku.domain.UserStatistics
 import com.example.gomoku.http.model.OutputModel
-import com.example.gomoku.http.model.RankingOutputModel
+import com.example.gomoku.http.model.RankingsOutputModel
 import com.example.gomoku.service.StatisticsService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,7 +19,7 @@ class StatisticController(val statisticService: StatisticsService) {
     fun getRankings(): SirenModel<OutputModel> {
         val rankings = statisticService.getRankings()
         return siren(
-            RankingOutputModel(rankingList = rankings)
+            RankingsOutputModel(rankingList = rankings)
         ) { clazz("Rankings") }
     }
 

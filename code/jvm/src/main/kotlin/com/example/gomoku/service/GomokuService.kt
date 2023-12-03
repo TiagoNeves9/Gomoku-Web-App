@@ -2,6 +2,7 @@ package com.example.gomoku.service
 
 import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.*
+import com.example.gomoku.http.model.LobbyOutputModel
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -10,7 +11,7 @@ import java.util.*
 
 @Component
 class GomokuService(private val transactionManager: TransactionManager) {
-    fun createOrJoinLobby(rules: Rules): Lobby? =
+    fun createOrJoinLobby(rules: Rules): LobbyOutputModel? =
         transactionManager.run {
             it.lobbiesRepository.getLobby(rules)
         }
@@ -22,7 +23,7 @@ class GomokuService(private val transactionManager: TransactionManager) {
             lobby
         }
 
-    fun getLobbies(): List<Lobby> =
+    fun getLobbies(): List<LobbyOutputModel> =
         transactionManager.run {
             it.lobbiesRepository.getAll()
         }
@@ -34,18 +35,19 @@ class GomokuService(private val transactionManager: TransactionManager) {
 
     // when the other player tries to join the lobby,
     // we create a game and remove the lobby
-    fun createGame(lobby: Lobby, host: User, joined: User, score: Int = 100): Game =
+    fun createGame(lobby: LobbyOutputModel, host: User, joined: User, score: Int = 100): Game =
         transactionManager.run {
             val hostPlayer = Player(host, Turn.BLACK_PIECE)
+            val rules = Rules(lobby.boardDim, lobby.opening.toOpening(), lobby.variant.toVariant())
             val game = Game(
                 lobby.lobbyId, //game ID is the same as lobby ID
                 Pair(host, joined),
-                createBoard(hostPlayer.second, lobby.rules.boardDim),
+                createBoard(hostPlayer.second, lobby.boardDim),
                 //BoardRun(exampleMap, hostPlayer.second, lobby.rules.boardDim),
                 hostPlayer,
                 score,
                 Instant.now(),
-                lobby.rules
+                rules
             )
             it.gamesRepository.insert(game)
             game
@@ -84,7 +86,7 @@ class GomokuService(private val transactionManager: TransactionManager) {
             it.gamesRepository.doesGameExist(gameId)
         }
 
-    fun deleteLobby(lobby: Lobby) =
+    fun deleteLobby(lobby: LobbyOutputModel) =
         transactionManager.run {
             it.lobbiesRepository.delete(lobby)
         }

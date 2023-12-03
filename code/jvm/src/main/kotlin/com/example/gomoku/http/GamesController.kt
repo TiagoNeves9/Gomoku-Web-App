@@ -47,7 +47,9 @@ class GamesController(
             val lobbyModel = LobbyOutputModel(
                 lobby.lobbyId,
                 lobby.hostUserId,
-                lobby.rules
+                lobby.rules.boardDim,
+                lobby.rules.opening.toString(),
+                lobby.rules.variant.toString()
             )
             return siren(lobbyModel) {
                 clazz("Lobby")
@@ -77,7 +79,12 @@ class GamesController(
     }
 
     @GetMapping(PathTemplate.LOBBIES)
-    fun getLobbies(): List<Lobby> = gomokuService.getLobbies()
+    fun getLobbies(): SirenModel<OutputModel> {
+        val lobbies = gomokuService.getLobbies()
+        return siren(
+            LobbiesOutputModel(lobbyList = lobbies)
+        ) { clazz("Lobbies") }
+    }
 
     @GetMapping(PathTemplate.GAMES)
     fun getGames(): List<Game> = gomokuService.getGames()
