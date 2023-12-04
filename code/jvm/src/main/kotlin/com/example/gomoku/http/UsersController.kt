@@ -7,6 +7,9 @@ import com.example.gomoku.http.model.UserInputModel
 import com.example.gomoku.http.model.UserOutputModel
 import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.UsersService
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -25,6 +28,12 @@ class UsersController(private val usersService: UsersService) {
 
     @GetMapping(PathTemplate.USER_BY_ID)
     fun getById(@PathVariable id: UUID): User = usersService.getById(id)
+
+    @GetMapping(PathTemplate.COOCKIE)
+    fun checkCoockie(request: HttpServletRequest): Array<out Cookie>?{
+        val cookies = request.cookies
+        return cookies
+    }
 
     /*
     * todo:

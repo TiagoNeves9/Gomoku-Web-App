@@ -32,56 +32,77 @@ async function login(
 }
 
 function CallLoginScreen() {
+    const currentUser = useContext(AuthContext);
     const classes = useStyles();
     const [inputs, setInputs] = useState({ username: '', password: '' });
     const [submitting, setSubmitting] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
+    const [error, setError] = useState(undefined)
+    const [redirect, setRedirect] = useState(false);
+    const location = useLocation();
     const navigate = useNavigate();
+
+    if(redirect) {
+        return <Navigate to={location.state?.source?.pathname || "/userhome"} replace={true}/>
+    }
 
     async function acceptChange(e: ChangeEvent<HTMLInputElement>) {
         const name = e.currentTarget.name;
         setInputs({ ...inputs, [name]: e.currentTarget.value });
     }
 
-    async function acceptSubmit(logIn: boolean) {
-        if (!submitting) {
-            setSubmitting(true);
-            try {
-                const user = await login(inputs.username, inputs.password);
-                console.log(user.properties);
+    async function acceptSubmit(ev: React.FormEvent<HTMLFormElement>) {
+        ev.preventDefault();
+        setSubmitting(true);
 
-                console.log("user " + user);
-                navigate("/userhome");
-            } finally {
-                setSubmitting(false);
+        try {
+            const resp = await login(inputs.username, inputs.password);
+            console.log(resp);
+            if (resp) {
+                const playerID = resp.properties.id;
+                currentUser.setUser({ username: resp.properties.username, id: playerID, token: resp.properties.token });
+                setRedirect(true);
+                <Navigate to={location.state?.source?.pathname || "/rankings/" + resp.properties.username} replace={true}/>
+            } else {
+                setError(<p>Login failed. Please check your credentials.</p>);
             }
+        } catch (error) {
+            setError(<p>An error occurred during login.</p>);
+        } finally {
+            setSubmitting(false);
         }
     }
 
     return <>
-        <Box component="form">
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="username" className={classes.labelSpacing}>Username</InputLabel>
-                <OutlinedInput
-                    id="username" name="username" label="Username"
-                    value={inputs.username} onChange={acceptChange}
-                />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="password" className={classes.labelSpacing}>Password</InputLabel>
-                <OutlinedInput
-                    id="password" name="password"
-                    type="password" label="Password"
-                    value={inputs.password} onChange={acceptChange}
-                />
-            </FormControl>
-            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>
-                Log in
-            </Button>
-            <AuthContext.Provider value={{ user, setUser }}>
-            </AuthContext.Provider>
-        </Box>
+        <Layout>
+            <NavBar/>
+            {!submitting?
+                <form onSubmit={acceptSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 40 }}>
+                    <fieldset disabled={submitting}>
+                        <h1 style ={{textAlign: 'center'}}>Login</h1>
+                        <div>
+                            <label htmlFor="username">Username</label>
+                            <input id="username" type="text" name="username" value={inputs.username} onChange={acceptChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password</label>
+                            <input id="password" type="password" name="password" value={inputs.password} onChange={acceptChange} />
+                        </div>
+                        <div>
+                            <p></p>
+                            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                            <button  type="submit" disabled={!inputs.username || !inputs.password}>Login</button>
+                            </div>
+                            <p></p>
+                            <a>Don't have an account?</a> <a href="/players">Signup</a>
+                        </div>
+                    </fieldset>
+                    {error}
+                </form>:
+                null
+            }
+        </Layout>
     </>
+}
 
 }
 

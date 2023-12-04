@@ -60,9 +60,9 @@ export const router = createBrowserRouter(
             element: <AboutScreen />
         },
         {
-            path: "userhome",
-            element: <UserHome />
-        }
+            path: "rankings/username",
+            element: <UserRankingScreen />
+        },
         /*,
         {
             path: "game",
