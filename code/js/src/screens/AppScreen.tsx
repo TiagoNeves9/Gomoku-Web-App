@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../services/Auth";
+
+
 
 
 export function AppScreen() {
+    
     return (
         <div>
             <title>Welcome to Gomoku application</title>
@@ -17,4 +21,8 @@ export function AppScreen() {
             <Link to="/app">App</Link>
         </div>
     )
+}
+
+function useContext(AuthContext: any) {
+    throw new Error("Function not implemented.");
 }

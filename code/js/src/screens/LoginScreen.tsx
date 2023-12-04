@@ -1,17 +1,13 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useContext } from "react";
 import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeStyles }
     from "@material-ui/core";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation, Navigate } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
 import { User } from "../domain/Users";
+import NavBar, { Layout } from "./utils";
+import { AuthContext } from "../services/Auth";
 
 
-type ContextType = {
-    user: User | null;
-    setUser?: (user: User | null) => void;
-};
-
-export const AuthContext = React.createContext<ContextType>({ user: null, setUser: () => { } });
 
 
 const useStyles = makeStyles(
@@ -58,10 +54,11 @@ function CallLoginScreen() {
             const resp = await login(inputs.username, inputs.password);
             console.log(resp);
             if (resp) {
-                const playerID = resp.properties.id;
-                currentUser.setUser({ username: resp.properties.username, id: playerID, token: resp.properties.token });
-                setRedirect(true);
-                <Navigate to={location.state?.source?.pathname || "/rankings/" + resp.properties.username} replace={true}/>
+                
+                console.log(resp.properties)
+                currentUser.user = { username: resp.properties.username, id: resp.properties.id, token: resp.properties.token };
+                console.log(currentUser.user)
+                navigate("/home");
             } else {
                 setError(<p>Login failed. Please check your credentials.</p>);
             }
@@ -104,7 +101,6 @@ function CallLoginScreen() {
     </>
 }
 
-}
 
 export const LoginScreen = () => {
     return (

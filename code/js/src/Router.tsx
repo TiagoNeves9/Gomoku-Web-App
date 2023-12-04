@@ -9,8 +9,8 @@ import { PlayScreen } from "./screens/PlayScreen";
 import { RankingsScreen } from "./screens/RankingsScreen";
 import { AuthorsScreen } from "./screens/AuthorsScreen";
 import { AboutScreen } from "./screens/AboutScreen";
-import { UserHome } from "./screens/UserHome";
 import { ProfileScreen } from "./screens/ProfileScreen";
+import { UserHome } from "./screens/UserHomeScreen";
 
 
 export const router = createBrowserRouter(
@@ -60,9 +60,9 @@ export const router = createBrowserRouter(
             element: <AboutScreen />
         },
         {
-            path: "rankings/username",
-            element: <UserRankingScreen />
-        },
+            path: "/userhome/{username}",
+            element: <UserHome />
+        }
         /*,
         {
             path: "game",
