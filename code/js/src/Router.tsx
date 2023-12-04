@@ -10,7 +10,6 @@ import { RankingsScreen } from "./screens/RankingsScreen";
 import { AuthorsScreen } from "./screens/AuthorsScreen";
 import { AboutScreen } from "./screens/AboutScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
-import { UserHome } from "./screens/UserHomeScreen";
 
 
 export const router = createBrowserRouter(

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useFetch } from "../custom-hooks/useFetch";
+import NavBar, { Layout } from "./utils";
 
 
 export const RankingsScreen = () => {
@@ -18,17 +19,19 @@ export const RankingsScreen = () => {
 
     return (
         <div>
-            <Link to="/"> Return Home </Link>
-            <h1>Rankings</h1>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
-                {rankingList.map((user, index) => (
-                    <li key={index} style={{ marginBottom: '10px' }}>
-                        <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
-                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
-                    </li>
-                ))}
-            </ul>
+            <Layout>
+                <NavBar />
+                <h1>Rankings</h1>
+                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    {rankingList.map((user, index) => (
+                        <li key={index} style={{ marginBottom: '10px' }}>
+                            <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
+                            <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
+                            <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
+                        </li>
+                    ))}
+                </ul>
+            </Layout>
         </div>
     );
 };

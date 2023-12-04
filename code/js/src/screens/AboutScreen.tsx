@@ -2,6 +2,7 @@ import { useFetch } from "../custom-hooks/useFetch";
 import React from "react";
 import { Author } from "../domain/Authors";
 import { Link } from "react-router-dom";
+import NavBar, { Layout } from "./utils";
 
 export function AboutScreen() {
     const { data: content, loading, error } = useFetch<{
@@ -19,9 +20,11 @@ export function AboutScreen() {
 
     return (
         <div>
-            <Link to="/">Return to home</Link>
-            <h1>About</h1>
-            <p>Version: {version}</p>
+            <Layout>
+                <NavBar />
+                <h1>About</h1>
+                <p>Version: {version}</p>
+            </Layout>
         </div>
     )
 }

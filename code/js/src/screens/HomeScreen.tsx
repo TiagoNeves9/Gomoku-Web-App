@@ -20,19 +20,7 @@ export const HomeScreen = () => {
             <Link to="/rankings">
                 <button>Rankings</button>
             </Link>
-            <Link to="/authors">
-                <button>Authors</button>
-            </Link>
-            <Link to="/about">
-                <button>About</button>
-            </Link>
         </div>
         </Layout>
     );
 }
-
-/* 
-<Link to="/profile">
-                <button>Profile</button>
-            </Link>
-*/

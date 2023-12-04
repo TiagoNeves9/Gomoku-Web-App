@@ -12,7 +12,6 @@ export function Layout(props){
 
 function NavBar(){
     const check =  React.useContext(AuthInContextCookie).loggedInState.state
-    const auth =  React.useContext(AuthInContextCookie).loggedInState.auth
     const location = useLocation()
     const currentUser = React.useContext(AuthContext)
     return(
@@ -20,13 +19,13 @@ function NavBar(){
             <div>
                 {!check?
                     <>
-                        <ul style={{listStyleType: 'none', margin: 0, padding: 0, overflow: 'hidden', backgroundColor: '#3e73b6'}}>
+                        <ul style={{listStyleType: 'none', margin: 0, padding: 0, overflow: 'hidden', backgroundColor: '#a36615'}}>
                             <li style={{float: 'left'}}>
                                 <Link to={"/"} state={{source: location.pathname}} style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}} replace={true}>
                                     Home </Link>
                             </li>
                             <li style={{float: 'left'}}>
-                                <Link to = "/about" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>About us</Link>
+                                <Link to = "/about" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>About App</Link>
                             </li>
                         {!currentUser.user?
                             <>
