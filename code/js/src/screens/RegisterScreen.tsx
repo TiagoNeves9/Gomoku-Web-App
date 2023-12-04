@@ -4,6 +4,7 @@ import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeSt
 import { useNavigate, Link } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
 import { AuthContext } from "../services/Auth";
+import NavBar, { Layout } from "./utils";
 
 
 const useStyles = makeStyles(
@@ -36,7 +37,10 @@ function CallRegisterScreen() {
         setInputs({ ...inputs, [name]: e.currentTarget.value });
     }
 
-    async function acceptSubmit(register: boolean) {
+    async function acceptSubmit(ev: React.FormEvent<HTMLFormElement>) {
+        ev.preventDefault()
+        setSubmitting(true)
+
         if (!submitting) {
             setSubmitting(true);
             const { username, password, confirmPassword } = inputs;
@@ -65,44 +69,40 @@ function CallRegisterScreen() {
     }
 
     return <>
-        <Box component="form">
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="username" className={classes.labelSpacing}>Username</InputLabel>
-                <OutlinedInput
-                    id="username" name="username" label="Username"
-                    value={inputs.username} onChange={acceptChange}
-                />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="password" className={classes.labelSpacing}>Password</InputLabel>
-                <OutlinedInput
-                    id="password" name="password"
-                    type="password" label="Password"
-                    value={inputs.password} onChange={acceptChange}
-                />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="confirmPassword" className={classes.labelSpacing}>
-                    Confirm Password
-                </InputLabel>
-                <OutlinedInput
-                    id="confirmPassword" name="confirmPassword"
-                    type="password" label="Confirm Password"
-                    value={inputs.confirmPassword} onChange={acceptChange}
-                />
-            </FormControl>
-            <Button variant="contained" disabled={submitting} onClick={() => acceptSubmit(true)}>
-                Register
-            </Button>
-        </Box>
+        <Layout>
+            <NavBar/>
+            {!submitting?
+                <form onSubmit={acceptSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 40 }}>
+                    <fieldset disabled={submitting}>
+                        <h1>Signup</h1>
+                        <div>
+                            <label htmlFor="username">Username</label>
+                            <input id="username" type="text" name="username" value={inputs.username} onChange={acceptChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password</label>
+                            <input id="password" type="password" name="password" value={inputs.password} onChange={acceptChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" type="password" name="confirmPassword" value={inputs.confirmPassword} onChange={acceptChange} />
+                        </div>
+                        <div>
+                            <button type="submit" disabled={!inputs.username || inputs.password.length < 8}>SignUp</button>
+                            <a>Already have an account?</a> <a href="/login">LogIn</a>
+                        </div>
+                    </fieldset>
+                    {error}
+                </form>:
+                null
+            }
+        </Layout>
     </>
 }
 
 export const RegisterScreen = () => {
     return (
         <div>
-            <Link to="/"> Return Home </Link> <br /> <br />
-            <Typography>Register</Typography>
             <CallRegisterScreen />
         </div>
     );

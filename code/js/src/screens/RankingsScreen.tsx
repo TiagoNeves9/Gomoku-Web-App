@@ -18,20 +18,20 @@ export const RankingsScreen = () => {
     const { rankingList } = content.properties;
 
     return (
-        <div>
-            <Layout>
-                <NavBar />
-                <h1>Rankings</h1>
+        <Layout>
+            <NavBar />
+            <div id="rankings">
+                <h1 className="h1">Rankings</h1>
                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                     {rankingList.map((user, index) => (
-                        <li key={index} style={{ marginBottom: '10px' }}>
+                        <li key={index} style={{ marginBottom: '10px' }} className="ranking">
                             <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
                             <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
                             <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
                         </li>
                     ))}
                 </ul>
-            </Layout>
-        </div>
+            </div>
+        </Layout>
     );
 };

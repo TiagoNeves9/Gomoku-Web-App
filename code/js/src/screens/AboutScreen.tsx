@@ -19,12 +19,13 @@ export function AboutScreen() {
     const { version } = content.properties;
 
     return (
-        <div>
-            <Layout>
-                <NavBar />
-                <h1>About</h1>
-                <p>Version: {version}</p>
-            </Layout>
-        </div>
+        <Layout>
+            <NavBar />
+            <div id="about">
+            <h1 className="h1">About Application</h1>
+            <p className="version">Version: {version}</p>
+            </div>
+        </Layout>
+        
     )
 }

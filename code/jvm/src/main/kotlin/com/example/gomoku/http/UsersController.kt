@@ -73,7 +73,7 @@ class UsersController(private val usersService: UsersService) {
                 link(PathTemplate.start(), LinkRelations.LOBBY)
             }
         } catch (ex: Exceptions.WrongUserOrPasswordException) {
-            siren(ErrorOutputModel(403, ex.message)) {}
+             throw ex
         }
     }
 }

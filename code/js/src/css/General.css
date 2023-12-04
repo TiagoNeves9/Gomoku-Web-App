@@ -1,0 +1,125 @@
+#app {
+    background-color: #fdf9f9;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 1;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#app .h1{
+    font-family: 'Roboto', sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+#app .h2{
+    font-family: 'Roboto', sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+#about {
+    background-color: #fdf9f9;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 1;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#about .h1{
+    font-family: 'Roboto', sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    top : 0;
+}
+
+#about .version{
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+#authors {
+    background-color: #fdf9f9;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 1;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#authors .h1{
+    font-family: 'Roboto', sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+#authors .li{
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    margin: 10px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #fff; 
+}
+
+#rankings {
+    background-color: #fdf9f9;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 1;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#rankings .h1{
+    font-family: 'Roboto', sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+#rankings .ranking{
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    margin: 10px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #fff; 
+}

@@ -54,7 +54,6 @@ function CallLoginScreen() {
             const resp = await login(inputs.username, inputs.password);
             console.log(resp);
             if (resp) {
-                
                 console.log(resp.properties)
                 currentUser.user = { username: resp.properties.username, id: resp.properties.id, token: resp.properties.token };
                 console.log(currentUser.user)
@@ -63,7 +62,7 @@ function CallLoginScreen() {
                 setError(<p>Login failed. Please check your credentials.</p>);
             }
         } catch (error) {
-            setError(<p>An error occurred during login.</p>);
+            setError(<p>An error occurred during login. </p>);
         } finally {
             setSubmitting(false);
         }

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
-const val SYSTEM_VERSION = "0.0.1"
+const val SYSTEM_VERSION = "1.0.0"
 
 @SpringBootApplication
 class GomokuApplication {
