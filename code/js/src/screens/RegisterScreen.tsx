@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useContext } from "react";
 import { Box, Button, FormControl, InputLabel, OutlinedInput, Typography, makeStyles }
     from "@material-ui/core";
 import { useNavigate, Link } from "react-router-dom";
+import { _fetch } from "../custom-hooks/useFetch";
+import { AuthContext } from "../services/Auth";
 
 
 const useStyles = makeStyles(
@@ -15,7 +17,15 @@ const useStyles = makeStyles(
     })
 );
 
+async function signup(
+    username: string, password: string
+): Promise<{ properties: { username: string; id: string; token: string } }> {
+    return await _fetch("api/users/signup", "POST", { name: username, password: password });
+}
+
 function CallRegisterScreen() {
+    const currentUser = useContext(AuthContext);
+    const [error, setError] = useState(undefined)
     const classes = useStyles();
     const [inputs, setInputs] = useState({ username: '', password: '', confirmPassword: '' });
     const [submitting, setSubmitting] = useState(false);
@@ -36,8 +46,21 @@ function CallRegisterScreen() {
                 setSubmitting(false); // Release the button
                 return;
             }
+        try {    
+            const resp = await signup(username, password);
 
-            navigate('/home');
+            if (resp) {
+                currentUser.user = { username: resp.properties.username, id: resp.properties.id, token: resp.properties.token };
+                navigate("/home");
+            } else {
+                setError(<p>Login failed. Please check your credentials.</p>);
+            }
+            
+            } catch (error) {
+                setError(<p>An error occurred during login.</p>);
+            } finally {
+                setSubmitting(false);
+            } 
         }
     }
 
@@ -78,7 +101,7 @@ function CallRegisterScreen() {
 export const RegisterScreen = () => {
     return (
         <div>
-            <Link to="/"> Return </Link> <br /> <br />
+            <Link to="/"> Return Home </Link> <br /> <br />
             <Typography>Register</Typography>
             <CallRegisterScreen />
         </div>

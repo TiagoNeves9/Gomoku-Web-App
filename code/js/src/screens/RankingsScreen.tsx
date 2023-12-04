@@ -18,7 +18,7 @@ export const RankingsScreen = () => {
 
     return (
         <div>
-            <Link to="/home"> Return </Link>
+            <Link to="/"> Return Home </Link>
             <h1>Rankings</h1>
             <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {rankingList.map((user, index) => (

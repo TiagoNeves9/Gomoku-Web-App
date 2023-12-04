@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../services/Auth";
+import NavBar, { Layout } from "./utils";
 
 
 export const HomeScreen = () => {
@@ -9,6 +10,8 @@ export const HomeScreen = () => {
     console.log(currentUser.user)
 
     return (
+        <Layout>
+            <NavBar />
         <div>
             <h1>Welcome to Gomoku application {currentUser.user ? currentUser.user.username : ""}</h1>
             <Link to="/play">
@@ -24,6 +27,7 @@ export const HomeScreen = () => {
                 <button>About</button>
             </Link>
         </div>
+        </Layout>
     );
 }
 

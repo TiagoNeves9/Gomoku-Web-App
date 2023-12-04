@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link, useLocation} from "react-router-dom";
-import { AuthContainer, AuthInContextCookie } from '../services/Auth';
+import { AuthContainer, AuthContext, AuthInContextCookie } from '../services/Auth';
 
 export function Layout(props){
     return(
@@ -12,7 +12,9 @@ export function Layout(props){
 
 function NavBar(){
     const check =  React.useContext(AuthInContextCookie).loggedInState.state
+    const auth =  React.useContext(AuthInContextCookie).loggedInState.auth
     const location = useLocation()
+    const currentUser = React.useContext(AuthContext)
     return(
         <AuthContainer>
             <div>
@@ -24,17 +26,31 @@ function NavBar(){
                                     Home </Link>
                             </li>
                             <li style={{float: 'left'}}>
-                                <Link to = "/about_us" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>About us</Link>
+                                <Link to = "/about" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>About us</Link>
                             </li>
-
+                        {!currentUser.user?
+                            <>
                             <li style={{float: 'right'}}>
                                 <Link to = "/login" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Login</Link>
                             </li>
                             <li style={{float: 'right'}}>
-                                <Link to = "/players" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Signup</Link>
+                                <Link to = "/register" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Signup</Link>
                             </li>
+                            </>
+                            : 
+                            <>
+                            <li style={{float: 'right'}}>
+                                <Link to = "/home" className='active' style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>UserHome</Link>
+                            </li>
+                            </>
+                        }    
                             <li style={{float: 'left'}}>
-                                <Link to = "/ranking" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Ranking</Link>
+                                <Link to = "/rankings" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Rankings</Link>
+                            </li>
+                          
+   
+                            <li style={{float: 'left'}}>
+                                <Link to = "/authors" className="active" style={{display: 'block', color: 'white', textAlign: 'center', padding: '14px 16px', textDecoration: 'none'}}>Authors</Link>
                             </li>
                         </ul>
                     </>

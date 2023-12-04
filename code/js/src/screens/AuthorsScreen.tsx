@@ -23,7 +23,7 @@ export const AuthorsScreen = () => {
 
     return (
         <div>
-            <Link to="/home">Return</Link>
+            <Link to="/">Return Home</Link>
             <h1>Authors</h1>
             <ul>
                 {authors.map((author, index) => (

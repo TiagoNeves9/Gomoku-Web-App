@@ -105,7 +105,7 @@ function CallLoginScreen() {
 export const LoginScreen = () => {
     return (
         <div>
-            <Link to="/"> Return </Link> <br /> <br />
+            <Link to="/"> Return Home </Link> <br /> <br />
             <Typography>Login</Typography>
             <CallLoginScreen />
         </div>

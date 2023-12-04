@@ -19,7 +19,7 @@ export function AboutScreen() {
 
     return (
         <div>
-            <Link to="/home">Return</Link>
+            <Link to="/">Return to home</Link>
             <h1>About</h1>
             <p>Version: {version}</p>
         </div>

@@ -55,14 +55,6 @@ export const router = createBrowserRouter(
             path: "profile",
             element: <ProfileScreen />
         },
-        {
-            path: "about",
-            element: <AboutScreen />
-        },
-        {
-            path: "/userhome/{username}",
-            element: <UserHome />
-        }
         /*,
         {
             path: "game",
