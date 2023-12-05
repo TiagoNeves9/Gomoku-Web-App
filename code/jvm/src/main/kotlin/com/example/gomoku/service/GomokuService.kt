@@ -90,4 +90,11 @@ class GomokuService(private val transactionManager: TransactionManager) {
         transactionManager.run {
             it.lobbiesRepository.delete(lobby)
         }
+
+    fun deleteUserLobby(userId: UUID) : Boolean {
+        return transactionManager.run {
+            val deleted = it.lobbiesRepository.deleteUserLobby(userId)
+            deleted == 1
+        }
+    }
 }

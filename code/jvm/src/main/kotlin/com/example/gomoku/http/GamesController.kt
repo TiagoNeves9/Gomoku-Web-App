@@ -30,14 +30,14 @@ class GamesController(
         request: HttpServletRequest,
         @RequestBody input: GomokuStartInputModel
     ): SirenModel<OutputModel> {
-        request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
 
         check(input.boardDim == BOARD_DIM || input.boardDim == BIG_BOARD_DIM) {
             "Board dimension must be $BOARD_DIM or $BIG_BOARD_DIM!"
         }
 
-        val user = User(input.userId, input.username, input.encodedPassword)
+        val user = User(aUser.user.userId, aUser.user.username, aUser.user.encodedPassword)
         val rules = Rules(input.boardDim, input.opening.toOpening(), input.variant.toVariant())
 
         val lobbyOrNull = gomokuService.createOrJoinLobby(rules)
@@ -206,6 +206,21 @@ class GamesController(
             }
         } catch (ex: Exceptions.GameDoesNotExistException) {
             siren(ErrorOutputModel(404, ex.message)) {}
+        }
+    }
+
+
+    @Authenticated
+    @DeleteMapping(PathTemplate.LEAVE_LOBBY)
+    fun leaveLobby(request: HttpServletRequest) : SirenModel<OutputModel> {
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+        return try {
+            val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
+            if(wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
+            else throw Exceptions.ErrorLeavingLobby("Leaving")
+        } catch (ex: Exception) {
+            throw ex
         }
     }
 }

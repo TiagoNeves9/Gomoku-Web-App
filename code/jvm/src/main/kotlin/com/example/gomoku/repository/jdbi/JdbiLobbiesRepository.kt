@@ -6,6 +6,7 @@ import com.example.gomoku.domain.toOpening
 import com.example.gomoku.domain.toVariant
 import com.example.gomoku.http.model.LobbyOutputModel
 import com.example.gomoku.repository.LobbiesRepository
+import com.example.gomoku.service.Exceptions
 import org.jdbi.v3.core.Handle
 import java.sql.ResultSet
 import java.util.*
@@ -71,5 +72,22 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
         )
             .bind("lobby_id", lobby.lobbyId)
             .execute()
+    }
+
+    override fun deleteUserLobby(userId: UUID) : Int {
+        val lobby = handle.createQuery(
+            "select * from dbo.lobbies where host =:userId"
+        )
+            .bind("userId", userId)
+            .map{ rs, _ -> myMapToLobby(rs) }
+            .singleOrNull()
+
+        if(lobby != null) {
+            return handle.createUpdate(
+                "DELETE from dbo.lobbies where lobby_id =:id"
+            )
+                .bind("id", lobby.lobbyId)
+                .execute()
+        } else throw Exceptions.UserHasNoLobby("Lobby does not exist!")
     }
 }

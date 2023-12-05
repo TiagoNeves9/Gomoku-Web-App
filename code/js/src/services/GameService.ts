@@ -1,33 +1,9 @@
 import { Game } from "../domain/Game";
-
-export async function getData(url) {
-    console.log(url);
-    
-    const response = await fetch(url, {
-      method: "GET", 
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    });
-    return response.json();
-}
-
-async function postData(url, data = {}) {
-    const response = await fetch(url, {
-      method: "POST", 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data), 
-    });
-    return response.json();
-  }
-
+import { getData, postData } from "./FetchData";
 
 export const GameService = {
     getGame: function(id): Promise<any> {
-        const url = `/games/${id}`;
+        const url = `/api/games/${id}`;
         return getData(url)
         .then((response) => {
             if (response.statusCode == 404) {
@@ -52,7 +28,7 @@ export const GameService = {
     },
 
     play: function(id, cellKey): Promise<any> {
-        const url = `/games/${id}`;
+        const url = `/api/games/${id}`;
         return postData(url, cellKey)
         .then((response) => {
             if (response.status < 500 && response.status >= 400)
@@ -76,7 +52,7 @@ export const GameService = {
     },
 
     getGames: function() : Promise<any> {
-        const url = `/games`;
+        const url = `/api/games`;
         return getData(url)
         .then((response) => {
             const gamesJson = JSON.stringify(response, null, 2);

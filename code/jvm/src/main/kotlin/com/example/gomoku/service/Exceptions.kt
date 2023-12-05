@@ -16,4 +16,6 @@ class Exceptions : Exception() {
     class PlayNotAllowedException(message: String) : Exception(message)
 
     class WrongPlayException(message: String) : Exception(message)
+    class UserHasNoLobby(message: String) : Exception(message)
+    class ErrorLeavingLobby(message: String) : Exception(message)
 }

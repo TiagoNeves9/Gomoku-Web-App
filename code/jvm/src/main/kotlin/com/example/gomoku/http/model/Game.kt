@@ -7,7 +7,6 @@ import java.util.*
 
 
 data class GomokuStartInputModel(
-    val userId: UUID, val username: String, val encodedPassword: String,
     val boardDim: Int, val opening: String, val variant: String
 )
 
