@@ -29,10 +29,9 @@ class UsersController(private val usersService: UsersService) {
     @GetMapping(PathTemplate.USER_BY_ID)
     fun getById(@PathVariable id: UUID): User = usersService.getById(id)
 
-    @GetMapping(PathTemplate.COOCKIE)
-    fun checkCoockie(request: HttpServletRequest): Array<out Cookie>?{
-        val cookies = request.cookies
-        return cookies
+    @GetMapping(PathTemplate.COOKIE)
+    fun checkCookie(request: HttpServletRequest): Array<out Cookie>? {
+        return request.cookies
     }
 
     /*

@@ -22,7 +22,7 @@ object PathTemplate {
     const val USER_BY_ID = "/users/{id}"
     const val CREATE_USER = "/users/signup"
     const val LOGIN = "/users/login"
-    const val COOCKIE = "/users/cookie"
+    const val COOKIE = "/users/cookie"
 
     const val RANKINGS = "/rankings"
     const val USER_RANKING = "/rankings/{username}"
