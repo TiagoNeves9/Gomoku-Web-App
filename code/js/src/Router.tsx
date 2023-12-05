@@ -2,14 +2,14 @@ import React, { StrictMode } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AppScreen } from "./screens/AppScreen";
-import { LoginScreen } from "./screens/LoginScreen";
-import { RegisterScreen } from "./screens/RegisterScreen";
 import { HomeScreen } from "./screens/HomeScreen";
-import { PlayScreen } from "./screens/PlayScreen";
 import { RankingsScreen } from "./screens/RankingsScreen";
 import { AuthorsScreen } from "./screens/AuthorsScreen";
 import { AboutScreen } from "./screens/AboutScreen";
+import { LoginScreen } from "./screens/LoginScreen";
+import { RegisterScreen } from "./screens/RegisterScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
+import { PlayScreen } from "./screens/PlayScreen";
 import { LobbyScreen } from "./screens/LobbyScreen";
 
 
@@ -24,20 +24,8 @@ export const router = createBrowserRouter(
             element: <AppScreen /> //Switch to navbar?
         },
         {
-            path: "login",
-            element: <LoginScreen />
-        },
-        {
-            path: "register",
-            element: <RegisterScreen />
-        },
-        {
             path: "home",
             element: <HomeScreen />
-        },
-        {
-            path: "play",
-            element: <PlayScreen />
         },
         {
             path: "rankings",
@@ -52,8 +40,20 @@ export const router = createBrowserRouter(
             element: <AboutScreen />
         },
         {
+            path: "login",
+            element: <LoginScreen />
+        },
+        {
+            path: "register",
+            element: <RegisterScreen />
+        },
+        {
             path: "profile",
             element: <ProfileScreen />
+        },
+        {
+            path: "play",
+            element: <PlayScreen />
         },
         {
             path: "lobby",

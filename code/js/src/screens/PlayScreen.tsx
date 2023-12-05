@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { useFetch } from "../custom-hooks/useFetch";
 
 
 export const PlayScreen = () => {
+    const navigate = useNavigate();
+
     const { data: content, loading, error } = useFetch<{
         properties: {
             lobbyList: {
@@ -16,8 +18,11 @@ export const PlayScreen = () => {
         }
     }>({ uri: "api/lobbies" });
 
-    const [selectedLobby, setSelectedLobby] = useState<string | null>(null);
+    const handleCreateLobby = () => {
+        navigate("/lobby");
+    }
 
+    const [selectedLobby, setSelectedLobby] = useState<string | null>(null);
     const handleJoinLobby = (lobbyId: string) => {
         setSelectedLobby(lobbyId);
         // Perform the action to join the lobby here
@@ -43,8 +48,20 @@ export const PlayScreen = () => {
     return (
         <div>
             <Link to="/home">Return</Link>
-            <h1>Play</h1>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <ul style={{ listStyleType: 'none', paddingLeft: 100 }}>
+                <h1>Play</h1>
+            </ul>
+            <ul style={{ listStyleType: 'none', paddingLeft: 10 }}>
+                <p>You can create your own lobby: <>    </>
+                    <button onClick={
+                        () => handleCreateLobby()}> Create lobby
+                    </button>
+                </p>
+            </ul>
+            <ul style={{ listStyleType: 'none', paddingLeft: 10 }}>
+                <p>Available lobbies:</p>
+            </ul>
+            <ul style={{ listStyleType: 'none', paddingLeft: 25 }}>
                 {lobbyList.map((lobby, index) => (
                     <li key={index} style={{ marginBottom: '10px' }}>
                         <span
@@ -65,7 +82,7 @@ export const PlayScreen = () => {
                         <button
                             onClick={
                                 () => handleJoinLobby(lobby.lobbyId)} style={{ marginTop: '10px', marginLeft: '100px' }
-                                }>Join
+                                }> Join
                         </button> <br />
                         <br />
                     </li>

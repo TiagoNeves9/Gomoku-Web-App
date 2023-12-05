@@ -12,15 +12,12 @@ export const HomeScreen = () => {
     return (
         <Layout>
             <NavBar />
-        <div>
-            <h1>Welcome to Gomoku application {currentUser.user ? currentUser.user.username : ""}</h1>
-            <Link to="/play">
-                <button>Play</button>
-            </Link>
-            <Link to="/rankings">
-                <button>Rankings</button>
-            </Link>
-        </div>
+            <div>
+                <h1>Welcome to Gomoku application {currentUser.user ? currentUser.user.username : ""}</h1>
+                <Link to="/play">
+                    <button>Play</button>
+                </Link>
+            </div>
         </Layout>
     );
 }

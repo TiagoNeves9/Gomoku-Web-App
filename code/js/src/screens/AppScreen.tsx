@@ -4,10 +4,7 @@ import '../css/General.css'
 import NavBar, { Layout } from "./utils";
 
 
-
-
 export function AppScreen() {
-    
     return (
         <Layout>
             <NavBar />

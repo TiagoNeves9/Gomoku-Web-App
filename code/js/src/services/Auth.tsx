@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useState } from "react";
 import { User } from "../domain/Users";
 import { _fetch } from "../custom-hooks/useFetch";
-import { fetchGetSession } from "./Coockies";
+import { fetchGetSession } from "./Cookies";
 
 export const tokenCookie = 'cookie'
 export const usernameCookie = 'cookie-name'

@@ -15,14 +15,14 @@ export function LobbyScreen() {
   const [isCreating, setIsCreating] = useState(false);
   let navigate = useNavigate();
   const POLLING_INTERVAL = 10000;
-  
+
   useEffect(() => {
     leaveLobby(); //leave lobby on refresh
     return () => {
       leaveLobby(); //when leave lobby page remove request from server
     };
   }, []);
-  
+
   //used for polling whether the game has been created
   useInterval(async () => {
     if (waiting) {
@@ -37,27 +37,28 @@ export function LobbyScreen() {
 
   //add endpoint to leave lobby on server
   async function leaveLobby() {
-    await LobbyService.leaveLobby().then((response) => {
-      if (!response.error) {
+    try {
+      const response = await LobbyService.leaveLobby();
+      if (response && !response.error) {
         setIsWaiting(false);
         setRequestId(null);
       }
-    });
+    } catch (error) {
+      //TODO: handle error (is it necessary?)
+      console.error("Error ocurred while leaving lobby", error);
+    };
   }
-  
 
   async function handleCreateLobby() {
     setIsCreating(true);
-    let props = {selectedBoardSize, selectedOpening, selectedVariant}
+    let props = { selectedBoardSize, selectedOpening, selectedVariant }
     await LobbyService.joinLobby(props).then((response) => {
       setRequestId(response.value.gameRequestId);
       setIsWaiting(true);
     });
     // Implement the logic for creating the lobby based on the selected values
     // Use selectedOpening, selectedVariant, and selectedBoardSize
-
   }
-
 
   let submitButton;
   let gameButton = null;
@@ -65,52 +66,32 @@ export function LobbyScreen() {
   if (waiting) {
     submitButton = (
       <Button
-        type="submit"
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          leaveLobby();
-        }}
-      >
-        Cancel
+        type="submit" variant="contained" color="secondary"
+        onClick={() => { leaveLobby(); }}
+      >Cancel
       </Button>
     );
   } else if (matched) {
-    
     submitButton = (
       <Button
-        type="submit"
-        variant="contained"
-        onClick={() => {
-          navigate(`/home`);
-        }}
-      >
-        Go to User Home
+        type="submit" variant="contained"
+        onClick={() => { navigate(`/home`); }}
+      > Go to User Home
       </Button>
     );
-
     gameButton = (
       <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          navigate(`/game/${gameID}`);
-        }}
+        type="submit" variant="contained" color="primary"
+        onClick={() => { navigate(`/game/${gameID}`); }}
       >
         Go to Game
       </Button>
     );
-
   } else {
     submitButton = (
       <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          handleCreateLobby();
-        }}
+        type="submit" variant="contained" color="primary"
+        onClick={() => { handleCreateLobby(); }}
         disabled={isCreating}
       >
         {isCreating ? "Creating..." : "Create Lobby"}
@@ -120,51 +101,34 @@ export function LobbyScreen() {
 
   return (
     <div>
+      <h1>Create your own lobby:</h1>
+
       <FormControl component="fieldset" disabled={waiting}>
+        <p>Opening:</p>
         <RadioGroup
-          aria-label="opening"
-          name="opening"
-          value={selectedOpening}
+          aria-label="opening" name="opening" value={selectedOpening}
           onChange={(e) => setSelectedOpening(e.target.value)}
         >
-          <FormControlLabel
-            value="professional"
-            control={<Radio />}
-            label="Professional"
-          />
-          <FormControlLabel
-            value="freestyle"
-            control={<Radio />}
-            label="Freestyle"
-          />
+          <FormControlLabel value="freestyle" control={<Radio />} label="Freestyle" />
+          <FormControlLabel value="pro" control={<Radio />} label="Pro" />
         </RadioGroup>
       </FormControl>
 
       <FormControl component="fieldset" disabled={waiting}>
+        <p>Variant:</p>
         <RadioGroup
-          aria-label="variant"
-          name="variant"
-          value={selectedVariant}
+          aria-label="variant" name="variant" value={selectedVariant}
           onChange={(e) => setSelectedVariant(e.target.value)}
         >
-          <FormControlLabel
-            value="professional"
-            control={<Radio />}
-            label="Professional"
-          />
-          <FormControlLabel
-            value="freestyle"
-            control={<Radio />}
-            label="Freestyle"
-          />
+          <FormControlLabel value="freestyle" control={<Radio />} label="Freestyle" />
+          <FormControlLabel value="swap_after_first" control={<Radio />} label="Swap after first" />
         </RadioGroup>
       </FormControl>
 
       <FormControl component="fieldset" disabled={waiting}>
+        <p>Board Size:</p>
         <RadioGroup
-          aria-label="board-size"
-          name="board-size"
-          value={selectedBoardSize}
+          aria-label="board-size" name="board-size" value={selectedBoardSize}
           onChange={(e) => setSelectedBoardSize(e.target.value)}
         >
           <FormControlLabel value="15" control={<Radio />} label="15x15" />
@@ -173,6 +137,7 @@ export function LobbyScreen() {
       </FormControl>
 
       {submitButton}
+
       {gameButton}
     </div>
   );
