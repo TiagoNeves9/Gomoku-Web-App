@@ -26,9 +26,10 @@ export function LobbyScreen() {
   //used for polling whether the game has been created
   useInterval(async () => {
     if (waiting) {
-      let gameId = await LobbyService.checkgameCreated(requestId);
-      if (gameId) {
-        setGameId(gameId);
+      let status = await LobbyService.checkgameCreated(requestId);
+
+      if (status == "CREATED") {
+        setGameId(requestId);
         setMatched(true);
         setIsWaiting(false);
       }
@@ -51,13 +52,11 @@ export function LobbyScreen() {
 
   async function handleCreateLobby() {
     setIsCreating(true);
-    let props = { selectedBoardSize, selectedOpening, selectedVariant }
-    await LobbyService.joinLobby(props).then((response) => {
+    let settings = { selectedBoardSize, selectedOpening, selectedVariant }
+    await LobbyService.joinLobby(settings).then((response) => {
       setRequestId(response.value.gameRequestId);
       setIsWaiting(true);
     });
-    // Implement the logic for creating the lobby based on the selected values
-    // Use selectedOpening, selectedVariant, and selectedBoardSize
   }
 
   let submitButton;

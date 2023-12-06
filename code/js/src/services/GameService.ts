@@ -9,7 +9,7 @@ export const GameService = {
             if (response.statusCode == 404) {
                 throw new Error(response.msg);
             }
-            const gameContentString = JSON.stringify(response, null, 2);
+            const gameContentString = response.json();
             const sub =
                 "{\n" +
                 gameContentString
@@ -35,7 +35,7 @@ export const GameService = {
                 throw new Error(response.msg);
             else{
                 //todo: change api response to return only the cells
-                const cellsJson = JSON.stringify(response, null, 2);
+                const cellsJson = response.json();;
                 let cells = JSON.parse(cellsJson) as Map<String, String>;
                 if(response.status == 200) {
                     return {value: cells, wasPlayed: false }
@@ -55,7 +55,7 @@ export const GameService = {
         const url = `/api/games`;
         return getData(url)
         .then((response) => {
-            const gamesJson = JSON.stringify(response, null, 2);
+            const gamesJson = response.json();;
             const games = JSON.parse(gamesJson)
             return {value: games}
         })

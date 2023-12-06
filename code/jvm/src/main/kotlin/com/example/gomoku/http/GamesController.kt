@@ -154,7 +154,7 @@ class GamesController(
 
         return try {
             if (gomokuService.isGameCreated(lobbyId)) {
-                siren(MessageOutputModel("Game has been created! ")) {
+                siren(MessageOutputModel("CREATED")) {
                     clazz("Check if game is created! ")
                     action(
                         "game",
@@ -165,7 +165,7 @@ class GamesController(
                         textField("get game")
                     }
                 }
-            } else siren(MessageOutputModel("Waiting for another player to join! ")) {
+            } else siren(MessageOutputModel("WAITING")) {
                 clazz("Check if game is created! ")
                 link(PathTemplate.home(), LinkRelations.HOME)
             }
