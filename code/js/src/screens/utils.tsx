@@ -53,7 +53,7 @@ function NavBar() {
                                 </> :
                                 <>
                                     <li style={{ float: 'right' }}>
-                                        <Link to="/home" className='active'
+                                        <Link to="/profile" className='active'
                                             style={{
                                                 display: 'block', color: 'white', textAlign: 'center',
                                                 padding: '14px 16px', textDecoration: 'none'

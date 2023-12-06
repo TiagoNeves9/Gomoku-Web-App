@@ -22,14 +22,14 @@ class UsersService(
 
         return transactionManager.run {
             if (it.usersRepository.doesUserExist(username))
-                throw Exceptions.UsernameAlreadyInUseException("Username $username already in use! ")
+                throw Exceptions.UsernameAlreadyInUseException("Username $username already in use!")
 
             val storedCount = it.usersRepository.storeUser(username, passwordEncoded)
             if (storedCount == 1) {
                 val userStatistics = UserStatistics(username, 0, 0)
                 it.statisticsRepository.insertUserStatistics(userStatistics)
                 it.usersRepository.getUserWithUsername(username)
-            } else throw Exceptions.ErrorCreatingUserException("Error creating user! ")
+            } else throw Exceptions.ErrorCreatingUserException("Error creating user!")
         }
     }
 

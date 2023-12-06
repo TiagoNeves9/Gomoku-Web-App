@@ -15,7 +15,8 @@ export function useFetch<T>(
             setLoading(true);
             try {
                 const response = await fetch(uri);
-                if (!response.ok) throw new Error('Network response was not ok.');
+                if (!response.ok)
+                    throw new Error('Network response was not ok.');
 
                 const result = await response.json();
                 if (!canceled) {
@@ -42,7 +43,9 @@ export function useFetch<T>(
     return { data, error, loading };
 }
 
-export async function _fetch(uri: string, method: string = "GET", body?: Object) {
+export async function _fetch(
+    uri: string, method: string = "GET", body?: Object
+) {
     const headers = {
         'Content-Type': 'application/json',
     };

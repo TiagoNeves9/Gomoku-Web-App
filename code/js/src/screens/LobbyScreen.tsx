@@ -26,7 +26,7 @@ export function LobbyScreen() {
   //used for polling whether the game has been created
   useInterval(async () => {
     if (waiting) {
-      let status = await LobbyService.checkgameCreated(requestId);
+      let status = await LobbyService.checkGameCreated(requestId);
 
       if (status == "CREATED") {
         setGameId(requestId);
@@ -108,8 +108,12 @@ export function LobbyScreen() {
           aria-label="opening" name="opening" value={selectedOpening}
           onChange={(e) => setSelectedOpening(e.target.value)}
         >
-          <FormControlLabel value="freestyle" control={<Radio />} label="Freestyle" />
-          <FormControlLabel value="pro" control={<Radio />} label="Pro" />
+          <FormControlLabel
+            value="freestyle" control={<Radio />} label="Freestyle"
+          />
+          <FormControlLabel
+            value="pro" control={<Radio />} label="Pro"
+          />
         </RadioGroup>
       </FormControl>
 
@@ -119,8 +123,12 @@ export function LobbyScreen() {
           aria-label="variant" name="variant" value={selectedVariant}
           onChange={(e) => setSelectedVariant(e.target.value)}
         >
-          <FormControlLabel value="freestyle" control={<Radio />} label="Freestyle" />
-          <FormControlLabel value="swap_after_first" control={<Radio />} label="Swap after first" />
+          <FormControlLabel
+            value="freestyle" control={<Radio />} label="Freestyle"
+          />
+          <FormControlLabel
+            value="swap_after_first" control={<Radio />} label="Swap after first"
+          />
         </RadioGroup>
       </FormControl>
 

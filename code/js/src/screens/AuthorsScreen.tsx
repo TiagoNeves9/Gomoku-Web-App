@@ -23,10 +23,10 @@ export const AuthorsScreen = () => {
 
     return (
         <Layout>
-            <NavBar />    
+            <NavBar />
             <div id="authors">
                 <h1 className="h1">Authors</h1>
-                <ul style={{ listStyleType: 'none', padding: 0}}>
+                <ul style={{ listStyleType: 'none', padding: 0 }}>
                     {authors.map((author, index) => (
                         <li key={index} className="li">
                             <span style={{ display: 'inline-block', width: '100px', textAlign: 'left' }}>{author.name}</span>
@@ -35,7 +35,7 @@ export const AuthorsScreen = () => {
                         </li>
                     ))}
                 </ul>
-            </div>    
+            </div>
         </Layout>
     )
 }

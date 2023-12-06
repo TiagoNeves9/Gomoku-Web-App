@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useFetch } from "../custom-hooks/useFetch";
 import NavBar, { Layout } from "./utils";
 

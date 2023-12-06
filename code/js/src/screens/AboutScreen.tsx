@@ -1,8 +1,7 @@
 import { useFetch } from "../custom-hooks/useFetch";
 import React from "react";
-import { Author } from "../domain/Authors";
-import { Link } from "react-router-dom";
 import NavBar, { Layout } from "./utils";
+
 
 export function AboutScreen() {
     const { data: content, loading, error } = useFetch<{
@@ -22,10 +21,10 @@ export function AboutScreen() {
         <Layout>
             <NavBar />
             <div id="about">
-            <h1 className="h1">About Application</h1>
-            <p className="version">Version: {version}</p>
+                <h1 className="h1">About Application</h1>
+                <p className="version">Version: {version}</p>
             </div>
         </Layout>
-        
+
     )
 }
