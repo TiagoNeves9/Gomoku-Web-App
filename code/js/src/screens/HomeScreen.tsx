@@ -5,7 +5,6 @@ import NavBar, { Layout } from "./utils";
 
 
 export const HomeScreen = () => {
-
     const currentUser = useContext(AuthContext);
     console.log(currentUser.user)
 

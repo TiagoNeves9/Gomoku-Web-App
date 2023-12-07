@@ -42,6 +42,8 @@ data class LobbiesOutputModel(val lobbyList: List<LobbyOutputModel>) : OutputMod
 
 data class RankingsOutputModel(val rankingList: List<UserStatistics>) : OutputModel
 
+data class UserRankingOutputModel(val userRanking: UserStatistics) : OutputModel
+
 data class MessageOutputModel(val waitMessage: String) : OutputModel
 
 data class ErrorOutputModel(val statusCode: Int, val msg: String?) : OutputModel

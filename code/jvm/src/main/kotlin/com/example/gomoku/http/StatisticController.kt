@@ -1,8 +1,8 @@
 package com.example.gomoku.http
 
-import com.example.gomoku.domain.UserStatistics
 import com.example.gomoku.http.model.OutputModel
 import com.example.gomoku.http.model.RankingsOutputModel
+import com.example.gomoku.http.model.UserRankingOutputModel
 import com.example.gomoku.service.StatisticsService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,6 +24,10 @@ class StatisticController(val statisticService: StatisticsService) {
     }
 
     @GetMapping(PathTemplate.USER_RANKING)
-    fun getUserRanking(@PathVariable username: String): UserStatistics =
-        statisticService.getUserRanking(username)
+    fun getUserRanking(@PathVariable username: String): SirenModel<OutputModel> {
+        val userRanking = statisticService.getUserRanking(username)
+        return siren(
+            UserRankingOutputModel(userRanking = userRanking)
+        ) { clazz("UserRanking")}
+    }
 }
