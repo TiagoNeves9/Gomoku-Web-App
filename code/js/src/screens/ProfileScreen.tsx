@@ -19,24 +19,6 @@ export const ProfileScreen = () => {
         );
     }
 
-    /*
-    GET http://localhost:8080/rankings/JP
-    {
-        "class": [
-            "UserRanking"
-        "properties": {
-            "userRanking": {
-                "user": "JP",
-                "score": 450,
-                "ngames": 5
-            }
-        },
-        "links": [],
-        "entities": [],
-        "actions": []
-    }
-    */
-
     const userRankingUri = "api/rankings/" + currentUser.user.username;
     const { data: content, loading, error } = useFetch<{
         properties: { userRanking: { user: string; score: number; ngames: number } }
