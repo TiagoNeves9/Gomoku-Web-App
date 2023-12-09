@@ -2,8 +2,8 @@ import React, { useState, ChangeEvent, useContext } from "react";
 import { makeStyles } from "@material-ui/core";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
-import NavBar, { Layout } from "./utils";
-import { AuthContext } from "../services/Auth";
+import { useCurrentUser, useSetUser } from "../services/Auth";
+import { useCookies } from "react-cookie";
 
 
 const useStyles = makeStyles(
@@ -26,19 +26,21 @@ async function login(
 }
 
 function CallLoginScreen() {
-    const currentUser = useContext(AuthContext);
-    //const classes = useStyles();
+    const currentUser = useCurrentUser;
+    const setUser = useSetUser();
+
     const [inputs, setInputs] =
         useState({ username: '', password: '' });
+    const [redirect, setRedirect] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(undefined)
-    const [redirect, setRedirect] = useState(false);
+    const [cookies, setCookie] = useCookies(["Token"]);
     const location = useLocation();
     const navigate = useNavigate();
 
     if (redirect)
         return <Navigate
-            to={location.state?.source?.pathname || "/userhome"} replace={true}
+            to={location.state?.source?.pathname || "/home"} replace={true}
         />
 
     async function acceptChange(e: ChangeEvent<HTMLInputElement>) {
@@ -52,15 +54,19 @@ function CallLoginScreen() {
         try {
             const resp = await login(inputs.username, inputs.password);
             console.log(resp);
-            if (resp) {
+            if (resp)   {
                 console.log(resp.properties);
-                currentUser.user = {
+                const user = {
                     username: resp.properties.username,
                     id: resp.properties.id,
                     token: resp.properties.token
                 };
-                console.log(currentUser.user);
-                navigate("/home");
+                setCookie("Token", resp.properties.token, 
+                {
+                    path: '/'
+                });
+                setUser(user);
+                setRedirect(true);
             } else setError(<p>Login failed. Please check your credentials.</p>);
         } catch (error) {
             setError(<p>An error occurred during login. </p>);
@@ -70,8 +76,6 @@ function CallLoginScreen() {
     }
 
     return <>
-        <Layout>
-            <NavBar />
             {!submitting ?
                 <form
                     onSubmit={acceptSubmit}
@@ -109,7 +113,6 @@ function CallLoginScreen() {
                 </form> :
                 null
             }
-        </Layout>
     </>
 }
 

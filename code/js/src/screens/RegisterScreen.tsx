@@ -2,8 +2,7 @@ import React, { useState, ChangeEvent, useContext } from "react";
 import { makeStyles } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
-import { AuthContext } from "../services/Auth";
-import NavBar, { Layout } from "./utils";
+import { useCurrentUser, useSetUser } from "../services/Auth";
 
 
 const useStyles = makeStyles(
@@ -26,7 +25,8 @@ async function signup(
 }
 
 function CallRegisterScreen() {
-    const currentUser = useContext(AuthContext);
+    const currentUser = useCurrentUser();
+    const setUser = useSetUser();
     const [error, setError] = useState(undefined)
     //const classes = useStyles();
     const [inputs, setInputs] =
@@ -55,12 +55,13 @@ function CallRegisterScreen() {
             try {
                 const resp = await signup(username, password);
                 if (resp && resp.properties.username && resp.properties.id && resp.properties.token) {
-                    currentUser.user = {
+                    const user = {
                         username: resp.properties.username,
                         id: resp.properties.id,
                         token: resp.properties.token
                     };
-                    console.log(currentUser.user);
+                    setUser(user);
+                    console.log(currentUser);
                     navigate("/home");
                 } else
                     setError(<p>Sign up failed. Please check your credentials, try a different username.</p>);
@@ -73,8 +74,6 @@ function CallRegisterScreen() {
     }
 
     return <>
-        <Layout>
-            <NavBar />
             {!submitting ?
                 <form
                     onSubmit={acceptSubmit}
@@ -119,7 +118,6 @@ function CallRegisterScreen() {
                 </form> :
                 null
             }
-        </Layout>
     </>
 }
 

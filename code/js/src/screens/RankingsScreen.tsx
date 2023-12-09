@@ -1,6 +1,5 @@
 import React from "react";
 import { useFetch } from "../custom-hooks/useFetch";
-import NavBar, { Layout } from "./utils";
 
 
 export const RankingsScreen = () => {
@@ -17,20 +16,17 @@ export const RankingsScreen = () => {
     const { rankingList } = content.properties;
 
     return (
-        <Layout>
-            <NavBar />
-            <div id="rankings">
-                <h1 className="h1">Rankings</h1>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    {rankingList.map((user, index) => (
-                        <li key={index} style={{ marginBottom: '10px' }} className="ranking">
-                            <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
-                            <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
-                            <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </Layout>
+        <div id="rankings">
+            <h1 className="h1">Rankings</h1>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {rankingList.map((user, index) => (
+                    <li key={index} style={{ marginBottom: '10px' }} className="ranking">
+                        <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
+                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
+                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };

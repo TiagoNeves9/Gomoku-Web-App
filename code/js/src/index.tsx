@@ -5,4 +5,8 @@ import App from './Router'
 
 const root = createRoot(document.getElementById("container"));
 
-root.render(<App />);
+root.render(
+    <CookiesProvider>
+      <App />  
+    </CookiesProvider>
+);

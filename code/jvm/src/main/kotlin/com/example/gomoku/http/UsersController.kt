@@ -1,10 +1,13 @@
 package com.example.gomoku.http
 
+import com.example.gomoku.domain.AuthenticatedUser
 import com.example.gomoku.domain.User
 import com.example.gomoku.http.model.ErrorOutputModel
 import com.example.gomoku.http.model.OutputModel
 import com.example.gomoku.http.model.UserInputModel
 import com.example.gomoku.http.model.UserOutputModel
+import com.example.gomoku.http.pipeline.Authenticated
+import com.example.gomoku.http.pipeline.AuthenticatedUserArgumentResolver
 import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.UsersService
 import jakarta.servlet.http.Cookie
@@ -74,5 +77,25 @@ class UsersController(private val usersService: UsersService) {
         } catch (ex: Exceptions.WrongUserOrPasswordException) {
              throw ex
         }
+    }
+
+    @Authenticated
+    @GetMapping(PathTemplate.USER)
+    fun getUser(request: HttpServletRequest): SirenModel<OutputModel> {
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+        val user = usersService.getUserByToken(aUser.token)
+        return if(user != null){
+            val userModel = UserOutputModel(
+                user.username,
+                user.userId,
+                aUser.token
+            )
+            siren(userModel) {
+                clazz("user login")
+                link(PathTemplate.home(), LinkRelations.HOME)
+                link(PathTemplate.start(), LinkRelations.LOBBY)
+            }
+        } else siren(ErrorOutputModel(404, "User not found!")) {}
     }
 }

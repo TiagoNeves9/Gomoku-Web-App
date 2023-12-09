@@ -27,13 +27,11 @@ class AuthInterceptor(
                 val authHeader = request.getHeader(NAME_AUTHORIZATION_HEADER)
 
                 val aUser = authorizationHeaderProcessor.process(authHeader)
-
                 val cookie = request.cookies?.find {it.name == COOKIE}
                 var aUserCookie : AuthenticatedUser? = null
                 if(cookie != null) {
                     aUserCookie = tokenCookieProcessor.process(cookie.value)
                 }
-
                 if(aUser == null && aUserCookie == null) {
                     response.status = 401
                     response.addHeader(
@@ -55,7 +53,7 @@ class AuthInterceptor(
 
     companion object {
         const val NAME_AUTHORIZATION_HEADER = "Authorization"
-        const val AUTH_TYPE = "bearer"
+        const val AUTH_TYPE = "Bearer"
         const val COOKIE = "Token"
         private const val NAME_WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
     }

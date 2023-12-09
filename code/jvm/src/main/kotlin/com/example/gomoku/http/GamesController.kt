@@ -216,7 +216,9 @@ class GamesController(
         val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
         return try {
+            println("got here!!!")
             val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
+            println("got here 2!!!")
             if(wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
             else throw Exceptions.ErrorLeavingLobby("Leaving")
         } catch (ex: Exception) {

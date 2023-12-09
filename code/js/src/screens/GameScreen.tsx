@@ -69,8 +69,11 @@ export function Board() {
         for (let j = 0; j < rows.length; j++) {
             let key: string = (rows[j] + cols[i]).toString()
             console.log(key)
-            if (cells.has(key))
+            if (cells.has(key)){
+                console.log("here!!!!")
                 board.push(<Cell cellKey={key} cellType={cells.get(key)} />)
+            }
+                
             board.push(<Cell cellKey={key} cellType={"EMPTY"} />)
         }
     }

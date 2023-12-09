@@ -18,6 +18,7 @@ object PathTemplate {
     const val IS_GAME_CREATED = "/lobbies/{id}"
     const val GAME_BY_ID = "/games/{id}"
 
+    const val USER = "/user"
     const val USERS = "/users"
     const val USER_BY_ID = "/users/{id}"
     const val CREATE_USER = "/users/signup"

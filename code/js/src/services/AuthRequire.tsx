@@ -1,18 +1,18 @@
 import * as React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { AuthInContextCookie, useCurrentUser } from "./Auth";
+import { useCurrentUser } from "./Auth";
+import { ReactElement, ReactNode } from "react";
 
 
 export function RequireAuth({
   children,
 }: {
-  children: React.ReactNode;
-}): React.ReactElement {
-    const {loggedInState} = React.useContext(AuthInContextCookie)
-    const auth = useCurrentUser();
+  children: ReactNode;
+}): ReactElement {
+    const currentUser = useCurrentUser();
     const location = useLocation();
 
-    if (loggedInState.auth) {
+    if (currentUser) {
         return <>{children}</>;
     } else {
         return (

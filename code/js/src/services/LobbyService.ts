@@ -1,4 +1,4 @@
-import { getData, reqData } from "./FetchData";
+import { deleteData, getData, postData } from "./FetchData";
 
 
 interface Response {
@@ -6,62 +6,49 @@ interface Response {
   value?: any;
 }
 
-interface GameRequestId {
-  gameRequestId: String;
-}
-
 
 export const LobbyService = {
-  joinLobby: async function (lobbySettings, bearerToken) {
-    try {
-      const response =
-        await reqData("api/games/start", "POST", lobbySettings, bearerToken);
-
-      if (!response.ok)
-        throw new Error('Unauthorized: You do not have permission to do this.');
-
-      const contentStr = await response.json();
-      if (contentStr.class && contentStr.class === "Lobby") {
-        const id = contentStr.properties.lobbyId;
-        let lobbyResponse = JSON.parse(id) as GameRequestId;
-        return { value: lobbyResponse };
-      } else if (contentStr.class && contentStr.class === "Game") {
-        const id = contentStr.properties.id;
-        let gameResponse = JSON.parse(id) as GameRequestId;
-        return { value: gameResponse };
+  joinLobby: function (lobbySettings): Promise<Response> {
+    return postData("api/games/start", lobbySettings).then((response) => {
+      console.log(response)
+      if (response.class && response.class.includes("Lobby")) {
+        const id = response.properties.lobbyId;
+        console.log(id)
+        return { value: id };
+      } else if (response.class && response.class.includes("Game")) {
+        const id = response.properties.id;
+        console.log(id)
+        return { value: id };
       }
-      console.error('Invalid response from backend:', contentStr);
-      throw new Error('Unexpected response from server.');
-    } catch (error) {
-      console.error('Error joining lobby:', error);
-      throw error;
-    }
+
+      //TOAST: ERROR INVALID FORMAT RESPONSE 
+    });
   },
 
   checkGameCreated: async function (requestId): Promise<String> {
     const url = `api/lobbies/${requestId}`;
     const response = await getData(url);
-    const contentStr = response.json();
-    console.log(contentStr);
+    console.log(response);
 
-    const waitMessage = contentStr.properties?.waitMessage;
+    const waitMessage = response.properties?.waitMessage;
     if (waitMessage) return waitMessage;
 
     //TOAST: ERROR INVALID FORMAT RESPONSE
   },
 
-  leaveLobby: async function (bearerToken) {
-    try {
-      const response =
-        await reqData("api/lobbies/leave", "DELETE", {}, bearerToken);
-      if (response.ok) return {}; // Return an empty object for success
-      else {
-        console.error("Failed to leave lobby. Status:", response.status);
-        throw new Error("Failed to leave lobby");
-      }
+  //do we need a reply to the user here? or do we just change to another "page" ?
+  leaveLobby: function (): Promise<Response> {
+    try{
+      return deleteData("api/lobbies/leave").then((response) => {
+        if (response.ok) return {}; // Return an empty object for success
+        else{
+          console.error("Failed to leave lobby. Status:", response.status);
+          throw new Error("Failed to leave lobby");
+        }
     } catch (error) {
-      console.error("Error leaving lobby:", error);
-      throw error;
-    }
-  }
+        console.error("Error leaving lobby:", error);
+        throw error;
+      }
+    });
+  },
 };

@@ -54,7 +54,14 @@ export const PlayScreen = () => {
             <div>
                 <Link to="/home">Return</Link>
                 <h1>Play</h1>
-                <p>No lobbies are available; you can create yours.</p>
+                <p>No lobbies are available</p>
+                <ul style={{ listStyleType: 'none', paddingLeft: 10 }}>
+                <p>You can create your own lobby <>    </>
+                    <button onClick={
+                        () => handleCreateLobby()}> Create lobby
+                    </button>
+                </p>
+            </ul>
             </div>
         );
     }

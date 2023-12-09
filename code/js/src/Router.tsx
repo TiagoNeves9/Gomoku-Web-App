@@ -14,6 +14,7 @@ import { LobbyScreen } from "./screens/LobbyScreen";
 import { Game } from "./screens/GameScreen";
 import { AuthContainer } from "./services/Auth";
 import { RequireAuth } from "./services/AuthRequire";
+import NavBar from "./screens/utils";
 
 
 export const router = createBrowserRouter(
@@ -22,6 +23,7 @@ export const router = createBrowserRouter(
             path: "/",
             element: (
                 <AuthContainer>
+                    <NavBar/>
                     <Outlet/>
                 </AuthContainer>
             ),
@@ -101,8 +103,8 @@ export const router = createBrowserRouter(
 
 export default function App() {
     return (
-        <StrictMode>
+        <div>
             <RouterProvider router={router} />
-        </StrictMode>
+        </div>
     )
 }

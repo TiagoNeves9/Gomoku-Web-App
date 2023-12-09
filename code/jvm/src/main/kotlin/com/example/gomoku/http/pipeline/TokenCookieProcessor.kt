@@ -12,12 +12,9 @@ class TokenCookieProcessor(
     fun process(cookieValue: String?) : AuthenticatedUser? {
         if(cookieValue == null) return null
 
-        val substring = cookieValue.substring(20)
-        val parts = substring.trim().split("%")
-        val token = parts[0] + "="
-        val user = usersService.getUserByToken(token)
+        val user = usersService.getUserByToken(cookieValue)
         return if (user == null) null
-        else AuthenticatedUser(user,token)
+        else AuthenticatedUser(user,cookieValue)
     }
 
 }
