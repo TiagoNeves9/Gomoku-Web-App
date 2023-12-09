@@ -23,16 +23,16 @@ export function AuthContainer({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState(undefined);
 
 
-    const userContent = "200"//useFetch("/api/user");
+    
+    const userContent = useFetch("/api/user");
     if (!userContent) return <div>Fetching user....</div>;
     if (userContent && user == null) {
         try {
             const contentStr = JSON.stringify(userContent, null, 2);
-            
             const sub =
                 "{\n" +
                 contentStr
-                .substring(contentStr.indexOf('"id":'), contentStr.indexOf('"links"'))
+                .substring(contentStr.indexOf('"username":'), contentStr.indexOf('"links"'))
                 .trim();
 
             const final = sub.substring(0, sub.length - 1);

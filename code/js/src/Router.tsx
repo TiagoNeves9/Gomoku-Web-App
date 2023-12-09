@@ -89,7 +89,7 @@ export const router = createBrowserRouter(
                     )
                 },
                 {
-                    path: "game",
+                    path: "/game/:gid",
                     element: (
                         <RequireAuth>
                             <Game /> 

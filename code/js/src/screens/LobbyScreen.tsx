@@ -88,7 +88,7 @@ export function LobbyScreen() {
     gameButton = (
       <Button
         type="submit" variant="contained" color="primary"
-        onClick={() => { navigate(`/game`); }}
+        onClick={() => { navigate(`/game/${gameID}`); }}
       >
         Go to Game
       </Button>

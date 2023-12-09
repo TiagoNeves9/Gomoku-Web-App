@@ -2,32 +2,33 @@ import React, { createContext, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import '../css/Board.css'
 import { GameService } from "../services/GameService";
+import { useParams } from 'react-router-dom';
+import { Game } from "../domain/Game";
+import { useCurrentUser } from "../services/Auth";
 
 
-type ContextType = {
-    turn: String,
-    setTurnClick?: () => void
-}
+type GameType = {
+    game: Game | null;
+    turn: Boolean,
+    play? : (cell) => void;
+};
 
-const TypeContext = createContext<ContextType>({ turn: "EMPTY" });
+export const GameContext = createContext<GameType>({  
+    game: undefined,
+    turn: false,
+    play: () => {} 
+});
+
 
 function Cell(props) {
-    const [type, setType] = useState("EMPTY_PIECE") //BLACK_PIECE, WHITE_PIECE, EMPTY_PIECE
-    const { turn, setTurnClick } = useContext(TypeContext)
-
-    //todo: change this to make a request to the services
+    const { play, turn } = useContext(GameContext)
+    
     const onCellClick = () => {
-        GameService.play(1, props.cellKey)
-        console.log("Placed " + turn)
-
-        if (turn == "BLACK_PIECE") setType("BLACK_PIECE")
-        else if (turn == "WHITE_PIECE") setType("WHITE_PIECE")
-        else throw ("ERROR | Player turn incorrect!")
-
-        setTurnClick()
+        play(props.cellKey)
+        console.log("Placed " + props.cellKey)
     }
 
-    console.log("cell: " + props.cellType + " " + props.cellKey)
+    //console.log("cell: " + props.cellType + " " + props.cellKey)
     if (props.cellType == "BLACK_PIECE")
         return (
             <button disabled className="cell black-stone"></button>
@@ -36,11 +37,13 @@ function Cell(props) {
         return (
             <button disabled className="cell white-stone"></button>
         )
-    else
+    else if(turn)
         return (
-            <button
-                onClick={onCellClick}
-                className="cell "></button>
+            <button onClick={onCellClick} className="cell "></button>
+        )
+    else 
+        return (
+            <button disabled className="cell "></button>
         )
 }
 
@@ -48,6 +51,8 @@ const cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
 const rows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
 
 export function Board() {
+    const { game } = useContext(GameContext)
+    
     let board = []
     let cells: Map<String, String> = new Map()
 
@@ -63,8 +68,8 @@ export function Board() {
         else setTurn("BLACK_PIECE")
         console.log("Switched turn! After: " + turn)
         console.log(" ")
-    };
-    console.log(cells)
+    }
+    //console.log(game.boardCells)
     for (let i = cols.length - 1; i >= 0; i--) {
         for (let j = 0; j < rows.length; j++) {
             let key: string = (rows[j] + cols[i]).toString()
@@ -79,18 +84,49 @@ export function Board() {
     }
 
     return (
-        <TypeContext.Provider value={{ turn: turn, setTurnClick: onClickSwitchTurn }}>
-            <div id="board">{board}</div>
-        </TypeContext.Provider>
+        <div id="board">{board}</div>
     )
 }
 
 export function Game() {
-    return (
-        <div>
+    let { gid } = useParams(); 
+    const [obtainedGame, setObtainedGame] = useState<Game>(null)
+    const [turn, setTurn] = useState<Boolean>(false)
+    const user = useCurrentUser()
+    console.log(user)
+
+    async function loadGame(){
+        await GameService.getGame(gid).then((gameObj) => {
+            console.log(gameObj)
+            setObtainedGame(gameObj)
+            //if(user.username == obtainedGame.turn) setTurn(true)
+        })
+    }
+    
+    async function doPlay(cell){
+        await GameService.play(gid,cell).then((gameObj) => {
+            console.log(gameObj)
+            setObtainedGame(gameObj.properties)
+            //if(user.username == obtainedGame.turn) setTurn(true)
+        })
+    }
+    if(obtainedGame != null){
+        return (
+        <GameContext.Provider value={{game: obtainedGame, play: doPlay, turn: turn}}>
+           <div>
             <h1> GOMOKU </h1>
             <Board />
-            <h1><Link to="/"> Home </Link></h1>
-        </div>
+            <h1><Link to="/home"> Home </Link></h1>
+        </div> 
+        </GameContext.Provider>
     )
+    } else {
+        loadGame()
+        return(
+            <div>
+                Loading Game . . .
+            </div>
+        )
+    }
+    
 }
