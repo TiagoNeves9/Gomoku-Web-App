@@ -11,59 +11,91 @@ import { RegisterScreen } from "./screens/RegisterScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import { PlayScreen } from "./screens/PlayScreen";
 import { LobbyScreen } from "./screens/LobbyScreen";
+import { Game } from "./screens/GameScreen";
+import { AuthContainer } from "./services/Auth";
+import { RequireAuth } from "./services/AuthRequire";
 
 
 export const router = createBrowserRouter(
     [
         {
             path: "/",
-            errorElement: <div>
-                <Link to="/"> Return </Link>
-                <h1 style={{ color: 'red' }}>Error Page</h1>
-            </div>,
-            element: <AppScreen /> //Switch to navbar?
-        },
-        {
-            path: "home",
-            element: <HomeScreen />
-        },
-        {
-            path: "rankings",
-            element: <RankingsScreen />
-        },
-        {
-            path: "authors",
-            element: <AuthorsScreen />
-        },
-        {
-            path: "about",
-            element: <AboutScreen />
-        },
-        {
-            path: "login",
-            element: <LoginScreen />
-        },
-        {
-            path: "register",
-            element: <RegisterScreen />
-        },
-        {
-            path: "profile",
-            element: <ProfileScreen />
-        },
-        {
-            path: "play",
-            element: <PlayScreen />
-        },
-        {
-            path: "lobby",
-            element: <LobbyScreen />
+            element: (
+                <AuthContainer>
+                    <Outlet/>
+                </AuthContainer>
+            ),
+            children: [
+                {
+                    path: "/",
+                    errorElement: <div>
+                        <Link to="/"> Return </Link>
+                        <h1 style={{ color: 'red' }}>Error Page</h1>
+                    </div>,
+                    element: <AppScreen /> 
+                },
+                {
+                    path: "home",
+                    element: (
+                        <RequireAuth>
+                            <HomeScreen /> 
+                        </RequireAuth>
+                    )
+                },
+                {
+                    path: "rankings",
+                    element: <RankingsScreen />
+                },
+                {
+                    path: "authors",
+                    element: <AuthorsScreen />
+                },
+                {
+                    path: "about",
+                    element: <AboutScreen />
+                },
+                {
+                    path: "login",
+                    element: <LoginScreen />
+                },
+                {
+                    path: "register",
+                    element: <RegisterScreen />
+                },
+                {
+                    path: "profile",
+                    element: (
+                        <RequireAuth>
+                            <ProfileScreen /> 
+                        </RequireAuth>
+                    )
+                },
+                {
+                    path: "play",
+                    element: (
+                        <RequireAuth>
+                            <PlayScreen /> 
+                        </RequireAuth>
+                    )
+                },
+                {
+                    path: "lobby",
+                    element: (
+                        <RequireAuth>
+                            <LobbyScreen /> 
+                        </RequireAuth>
+                    )
+                },
+                {
+                    path: "game",
+                    element: (
+                        <RequireAuth>
+                            <Game /> 
+                        </RequireAuth>
+                    )
+                },
+            ]
         }
-        /*,
-        {
-            path: "game",
-            element: <Game />
-        },*/
     ]
 )
 
