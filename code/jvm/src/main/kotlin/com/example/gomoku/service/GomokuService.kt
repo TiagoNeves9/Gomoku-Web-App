@@ -2,6 +2,7 @@ package com.example.gomoku.service
 
 import com.example.gomoku.domain.*
 import com.example.gomoku.domain.board.*
+import com.example.gomoku.http.DEFAULT_SCORE
 import com.example.gomoku.http.model.LobbyOutputModel
 import com.example.gomoku.repository.TransactionManager
 import org.springframework.stereotype.Component
@@ -35,7 +36,9 @@ class GomokuService(private val transactionManager: TransactionManager) {
 
     // when the other player tries to join the lobby,
     // we create a game and remove the lobby
-    fun createGame(lobby: LobbyOutputModel, host: User, joined: User, score: Int = 100): Game =
+    fun createGame(
+        lobby: LobbyOutputModel, host: User, joined: User, score: Int = DEFAULT_SCORE
+    ): Game =
         transactionManager.run {
             val hostPlayer = Player(host, Turn.BLACK_PIECE)
             val rules = Rules(lobby.boardDim, lobby.opening.toOpening(), lobby.variant.toVariant())
@@ -91,7 +94,7 @@ class GomokuService(private val transactionManager: TransactionManager) {
             it.lobbiesRepository.delete(lobby)
         }
 
-    fun deleteUserLobby(userId: UUID) : Boolean {
+    fun deleteUserLobby(userId: UUID): Boolean {
         return transactionManager.run {
             val deleted = it.lobbiesRepository.deleteUserLobby(userId)
             deleted == 1

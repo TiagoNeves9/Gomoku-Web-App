@@ -12,6 +12,7 @@ object PathTemplate {
     const val START = "/games/start"
     const val LOBBIES = "/lobbies"
     const val LEAVE_LOBBY = "/lobbies/leave"
+    const val JOIN_LOBBY = "/lobbies/join"
     const val GAMES = "/games"
     const val PLAY = "/games/{id}"
     const val SPECTATE = "/games/spectate/{id}"

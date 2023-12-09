@@ -26,16 +26,32 @@ class UsersController(private val usersService: UsersService) {
     *  links/actions ? siren?
     * */
 
+    @Authenticated
+    @GetMapping(PathTemplate.USER)
+    fun getUser(request: HttpServletRequest): SirenModel<OutputModel> {
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+
+        val user = usersService.getUserByToken(aUser.token)
+        return if (user != null) {
+            val userModel = UserOutputModel(
+                user.username,
+                user.userId,
+                aUser.token
+            )
+            siren(userModel) {
+                clazz("user login")
+                link(PathTemplate.home(), LinkRelations.HOME)
+                link(PathTemplate.start(), LinkRelations.LOBBY)
+            }
+        } else siren(ErrorOutputModel(404, "User not found!")) {}
+    }
+
     @GetMapping(PathTemplate.USERS)
     fun getAll(): List<User> = usersService.getAll()
 
     @GetMapping(PathTemplate.USER_BY_ID)
     fun getById(@PathVariable id: UUID): User = usersService.getById(id)
-
-    @GetMapping(PathTemplate.COOKIE)
-    fun checkCookie(request: HttpServletRequest): Array<out Cookie>? {
-        return request.cookies
-    }
 
     /*
     * todo:
@@ -75,27 +91,10 @@ class UsersController(private val usersService: UsersService) {
                 link(PathTemplate.start(), LinkRelations.LOBBY)
             }
         } catch (ex: Exceptions.WrongUserOrPasswordException) {
-             throw ex
+            throw ex
         }
     }
 
-    @Authenticated
-    @GetMapping(PathTemplate.USER)
-    fun getUser(request: HttpServletRequest): SirenModel<OutputModel> {
-        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
-        val user = usersService.getUserByToken(aUser.token)
-        return if(user != null){
-            val userModel = UserOutputModel(
-                user.username,
-                user.userId,
-                aUser.token
-            )
-            siren(userModel) {
-                clazz("user login")
-                link(PathTemplate.home(), LinkRelations.HOME)
-                link(PathTemplate.start(), LinkRelations.LOBBY)
-            }
-        } else siren(ErrorOutputModel(404, "User not found!")) {}
-    }
+    @GetMapping(PathTemplate.COOKIE)
+    fun checkCookie(request: HttpServletRequest): Array<out Cookie>? = request.cookies
 }

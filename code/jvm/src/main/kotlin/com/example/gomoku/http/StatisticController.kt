@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class StatisticController(val statisticService: StatisticsService) {
-    fun insertUserStatistics(username: String, score: Int = 0) =
-        statisticService.insertUserStatistics(username, score)
-
-    /* Present also number of total played games? */
     @GetMapping(PathTemplate.RANKINGS)
     fun getRankings(): SirenModel<OutputModel> {
         val rankings = statisticService.getRankings()
@@ -28,6 +24,6 @@ class StatisticController(val statisticService: StatisticsService) {
         val userRanking = statisticService.getUserRanking(username)
         return siren(
             UserRankingOutputModel(userRanking = userRanking)
-        ) { clazz("UserRanking")}
+        ) { clazz("UserRanking") }
     }
 }

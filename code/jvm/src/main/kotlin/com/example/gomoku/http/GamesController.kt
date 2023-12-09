@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 
+const val DEFAULT_SCORE = 100
+
 @RestController
 class GamesController(
     private val gomokuService: GomokuService,
@@ -31,7 +33,7 @@ class GamesController(
         @RequestBody input: GomokuStartInputModel
     ): SirenModel<OutputModel> {
         val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
 
         check(input.boardDim == BOARD_DIM || input.boardDim == BIG_BOARD_DIM) {
             "Board dimension must be $BOARD_DIM or $BIG_BOARD_DIM!"
@@ -86,6 +88,47 @@ class GamesController(
         ) { clazz("Lobbies") }
     }
 
+    @Authenticated
+    @DeleteMapping(PathTemplate.LEAVE_LOBBY)
+    fun leaveLobby(request: HttpServletRequest): SirenModel<OutputModel> {
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+        return try {
+            val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
+            if (wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
+            else throw Exceptions.ErrorLeavingLobby("Leaving")
+        } catch (ex: Exception) {
+            throw ex
+        }
+    }
+
+    @Authenticated
+    @PostMapping(PathTemplate.JOIN_LOBBY)
+    fun joinLobby(
+        request: HttpServletRequest,
+        @RequestBody lobbyOutputModel: LobbyOutputModel
+    ): SirenModel<OutputModel> {
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+
+        val joiningUser = User(aUser.user.userId, aUser.user.username, aUser.user.encodedPassword)
+        val hostUser = usersController.getById(lobbyOutputModel.hostUserId)
+        val game = gomokuService.createGame(lobbyOutputModel, hostUser, joiningUser)
+        val gameModel = GameOutputModel(
+            id = game.gameId,
+            userB = game.users.first,
+            userW = game.users.second,
+            turn = game.currentPlayer.first.username,
+            rules = game.rules,
+            boardCells = game.board.positions,
+            boardState = game.board.typeToString()
+        )
+        gomokuService.deleteLobby(lobbyOutputModel)
+        return siren(gameModel) {
+            clazz("Lobby")
+        }
+    }
+
     @GetMapping(PathTemplate.GAMES)
     fun getGames(): List<Game> = gomokuService.getGames()
 
@@ -97,7 +140,7 @@ class GamesController(
         @RequestBody cell: CellInputModel
     ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
 
         return try {
             val updatedGame = gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
@@ -137,9 +180,9 @@ class GamesController(
                     boardState = game.board.typeToString()
                 )
                 siren(gameModel) { clazz("Game") }
-            } else siren(ErrorOutputModel(404, "Game was not been created! ")) {}
+            } else siren(ErrorOutputModel(404, "Game was not been created!")) {}
         } catch (ex: Exceptions.GameDoesNotExistException) {
-            siren(ErrorOutputModel(404, "Game was not been created! ")) {}
+            siren(ErrorOutputModel(404, "Game was not been created!")) {}
         }
     }
 
@@ -150,12 +193,12 @@ class GamesController(
         @PathVariable("id") lobbyId: UUID
     ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
 
         return try {
             if (gomokuService.isGameCreated(lobbyId)) {
                 siren(MessageOutputModel("CREATED")) {
-                    clazz("Check if game is created! ")
+                    clazz("Check if game is created!")
                     action(
                         "game",
                         PathTemplate.gameById(lobbyId),
@@ -170,7 +213,7 @@ class GamesController(
                 link(PathTemplate.home(), LinkRelations.HOME)
             }
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(404, "Game has not been created! ")) {}
+            siren(ErrorOutputModel(404, "Game has not been created!")) {}
         }
     }
 
@@ -181,7 +224,8 @@ class GamesController(
         @PathVariable("id") gameId: UUID
     ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+
         return try {
             val game = gomokuService.getById(gameId)
             val gameModel = GameOutputModel(
@@ -206,23 +250,6 @@ class GamesController(
             }
         } catch (ex: Exceptions.GameDoesNotExistException) {
             siren(ErrorOutputModel(404, ex.message)) {}
-        }
-    }
-
-
-    @Authenticated
-    @DeleteMapping(PathTemplate.LEAVE_LOBBY)
-    fun leaveLobby(request: HttpServletRequest) : SirenModel<OutputModel> {
-        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
-        return try {
-            println("got here!!!")
-            val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
-            println("got here 2!!!")
-            if(wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
-            else throw Exceptions.ErrorLeavingLobby("Leaving")
-        } catch (ex: Exception) {
-            throw ex
         }
     }
 }

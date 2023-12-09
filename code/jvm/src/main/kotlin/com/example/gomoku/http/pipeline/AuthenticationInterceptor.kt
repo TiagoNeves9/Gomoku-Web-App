@@ -25,27 +25,22 @@ class AuthInterceptor(
                 controller.isAnnotationPresent(Authenticated::class.java)
             ) {
                 val authHeader = request.getHeader(NAME_AUTHORIZATION_HEADER)
-
                 val aUser = authorizationHeaderProcessor.process(authHeader)
-                val cookie = request.cookies?.find {it.name == COOKIE}
-                var aUserCookie : AuthenticatedUser? = null
-                if(cookie != null) {
+                val cookie = request.cookies?.find { it.name == COOKIE }
+                var aUserCookie: AuthenticatedUser? = null
+                if (cookie != null)
                     aUserCookie = tokenCookieProcessor.process(cookie.value)
-                }
-                if(aUser == null && aUserCookie == null) {
+                if (aUser == null && aUserCookie == null) {
                     response.status = 401
                     response.addHeader(
                         NAME_WWW_AUTHENTICATE_HEADER,
                         AUTH_TYPE
                     )
                     return false
-                } else if(aUser != null){
+                } else if (aUser != null)
                     AuthenticatedUserArgumentResolver.addUserTo(aUser, request)
-                    return true
-                } else if(aUserCookie != null) {
+                else if (aUserCookie != null)
                     AuthenticatedUserArgumentResolver.addUserTo(aUserCookie, request)
-                    return true
-                }
             }
         }
         return true // não requer auth

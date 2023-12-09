@@ -13,6 +13,7 @@ interface LobbiesRepository {
 
     fun getAll(): List<LobbyOutputModel>
 
-    fun delete(lobby: LobbyOutputModel)
+    fun delete(lobby: LobbyOutputModel): Int
+
     fun deleteUserLobby(userId: UUID): Int
 }

@@ -22,9 +22,10 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
 
         val lobbyId = UUID.fromString(lobbyIdStr)
         val hostUserId = UUID.fromString(hostUserIdStr)
-        //val rules = Rules(boardSize, opening.toOpening(), variant.toVariant())
 
-        return LobbyOutputModel(lobbyId, hostUserId, boardSize, opening, variant)
+        val lobbyOutputModel = LobbyOutputModel(lobbyId, hostUserId, boardSize, opening, variant)
+        //println(lobbyOutputModel)
+        return lobbyOutputModel
     }
 
     override fun insert(lobby: Lobby) {
@@ -63,26 +64,22 @@ class JdbiLobbiesRepository(private val handle: Handle) : LobbiesRepository {
             .map { rs, _ -> myMapToLobby(rs) }
             .list()
 
-    override fun delete(lobby: LobbyOutputModel) {
-        handle.createUpdate(
-            """
-                delete from dbo.Lobbies
-                where lobby_id = :lobby_id
-                """
+    override fun delete(lobby: LobbyOutputModel): Int {
+        return handle.createUpdate(
+            "delete from dbo.Lobbies where lobby_id = :id"
         )
-            .bind("lobby_id", lobby.lobbyId)
+            .bind("id", lobby.lobbyId)
             .execute()
     }
 
-    override fun deleteUserLobby(userId: UUID) : Int {
+    override fun deleteUserLobby(userId: UUID): Int {
         val lobby = handle.createQuery(
             "select * from dbo.lobbies where host =:userId"
         )
             .bind("userId", userId)
-            .map{ rs, _ -> myMapToLobby(rs) }
+            .map { rs, _ -> myMapToLobby(rs) }
             .singleOrNull()
-
-        if(lobby != null) {
+        if (lobby != null) {
             return handle.createUpdate(
                 "DELETE from dbo.lobbies where lobby_id =:id"
             )
