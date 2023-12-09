@@ -38,17 +38,13 @@ export const LobbyService = {
 
   //do we need a reply to the user here? or do we just change to another "page" ?
   leaveLobby: function (): Promise<Response> {
-    try{
+    
       return deleteData("api/lobbies/leave").then((response) => {
         if (response.ok) return {}; // Return an empty object for success
         else{
           console.error("Failed to leave lobby. Status:", response.status);
           throw new Error("Failed to leave lobby");
         }
-    } catch (error) {
-        console.error("Error leaving lobby:", error);
-        throw error;
-      }
     });
   },
 };

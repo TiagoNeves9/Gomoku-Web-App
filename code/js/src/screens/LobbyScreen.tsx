@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { LobbyService } from "../services/LobbyService";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl } from "@material-ui/core";
 import { useNavigate, Link } from "react-router-dom";
-import { LobbyService } from "../services/LobbyService";
 
 
 export function LobbyScreen() {
@@ -40,7 +39,7 @@ export function LobbyScreen() {
   async function leaveLobby() {
     try {
       console.log("before leaveLobby");
-      const response = await LobbyService.leaveLobby(currentUser.user.token);
+      const response = await LobbyService.leaveLobby();
       console.log("leaveLobby response:", response);
 
       if (response) {
@@ -55,7 +54,6 @@ export function LobbyScreen() {
   }
 
   async function handleCreateLobby() {
-    try{
       setIsCreating(true);
       let settings = {
         "boardDim" : selectedBoardSize,
@@ -65,11 +63,7 @@ export function LobbyScreen() {
         console.log(response.value)
         setRequestId(response.value);
         setIsWaiting(true);
-    } catch (error) {
-      console.error('Error creating lobby:', error);
-    } finally {
-      setIsCreating(false);
-    }
+      })
   }
 
   let submitButton;
