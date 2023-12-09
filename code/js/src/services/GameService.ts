@@ -1,5 +1,5 @@
 import { Game } from "../domain/Game";
-import { getData, postData } from "./FetchData";
+import { getData, reqData } from "./FetchData";
 
 export const GameService = {
     getGame: function(id): Promise<any> {
@@ -29,7 +29,7 @@ export const GameService = {
 
     play: function(id, cellKey): Promise<any> {
         const url = `/api/games/${id}`;
-        return postData(url, cellKey)
+        return reqData(url, "POST", cellKey)
         .then((response) => {
             if (response.status < 500 && response.status >= 400)
                 throw new Error(response.msg);

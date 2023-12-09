@@ -1,5 +1,4 @@
 import * as React from "react";
-import { CookiesProvider } from "react-cookie";
 import { createRoot } from "react-dom/client";
 import App from './Router'
 

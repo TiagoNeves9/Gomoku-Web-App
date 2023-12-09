@@ -1,10 +1,24 @@
-import React, { useState } from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useFetch } from "../custom-hooks/useFetch";
+import { AuthContext } from "../services/Auth";
+
 
 
 export const PlayScreen = () => {
     const navigate = useNavigate();
+    const currentUser = useContext(AuthContext);
+    console.log(currentUser.user);
+
+    if (!currentUser || !currentUser.user) {
+        return (
+            <div>
+                <Link to="/home">Return</Link>
+                <p>Your session has expired or you are not logged in.</p>
+                <p>Please <Link to="/login">login</Link> to view this page.</p>
+            </div>
+        );
+    }
 
     const { data: content, loading, error } = useFetch<{
         properties: {
@@ -52,7 +66,7 @@ export const PlayScreen = () => {
                 <h1>Play</h1>
             </ul>
             <ul style={{ listStyleType: 'none', paddingLeft: 10 }}>
-                <p>You can create your own lobby: <>    </>
+                <p>{currentUser.user.username}, you can create your own lobby: <>    </>
                     <button onClick={
                         () => handleCreateLobby()}> Create lobby
                     </button>

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { LobbyService } from "../services/LobbyService";
+import React, { useEffect, useState, useContext } from "react";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { LobbyService } from "../services/LobbyService";
+import { AuthContext } from "../services/Auth";
 
 
 export function LobbyScreen() {
@@ -11,10 +12,21 @@ export function LobbyScreen() {
   const [requestId, setRequestId] = useState(null);
   const [selectedOpening, setSelectedOpening] = useState("freestyle");
   const [selectedVariant, setSelectedVariant] = useState("freestyle");
-  const [selectedBoardSize, setSelectedBoardSize] = useState("15");
+  const [selectedBoardSize, setSelectedBoardSize] = useState(15);
   const [isCreating, setIsCreating] = useState(false);
-  let navigate = useNavigate();
   const POLLING_INTERVAL = 10000;
+  let navigate = useNavigate();
+
+  const currentUser = useContext(AuthContext);
+  if (!currentUser || !currentUser.user || !currentUser.user.token) {
+    return (
+      <div>
+        <Link to="/home">Return</Link>
+        <p>Your session has expired or you are not logged in.</p>
+        <p>Please <Link to="/login">login</Link> to view this page.</p>
+      </div>
+    );
+  }
 
   useEffect(() => {
     leaveLobby(); //leave lobby on refresh
@@ -27,7 +39,6 @@ export function LobbyScreen() {
   useInterval(async () => {
     if (waiting) {
       let status = await LobbyService.checkGameCreated(requestId);
-
       if (status == "CREATED") {
         setGameId(requestId);
         setMatched(true);
@@ -36,27 +47,38 @@ export function LobbyScreen() {
     }
   }, POLLING_INTERVAL);
 
-  //add endpoint to leave lobby on server
   async function leaveLobby() {
     try {
-      const response = await LobbyService.leaveLobby();
-      if (response && !response.error) {
+      console.log("before leaveLobby");
+      const response = await LobbyService.leaveLobby(currentUser.user.token);
+      console.log("leaveLobby response:", response);
+
+      if (response) {
         setIsWaiting(false);
         setRequestId(null);
       }
     } catch (error) {
-      //TODO: handle error (is it necessary?)
-      console.error("Error ocurred while leaving lobby", error);
-    };
+      console.error("Error occurred while leaving lobby", error);
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   async function handleCreateLobby() {
-    setIsCreating(true);
-    let settings = { selectedBoardSize, selectedOpening, selectedVariant }
-    await LobbyService.joinLobby(settings).then((response) => {
+    try {
+      setIsCreating(true);
+
+      let settings = { selectedBoardSize, selectedOpening, selectedVariant };
+      const response = await LobbyService.joinLobby(settings, currentUser.user.token);
+      console.log(response);
       setRequestId(response.value.gameRequestId);
+
       setIsWaiting(true);
-    });
+    } catch (error) {
+      console.error('Error creating lobby:', error);
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   let submitButton;
@@ -135,8 +157,8 @@ export function LobbyScreen() {
       <FormControl component="fieldset" disabled={waiting}>
         <p>Board Size:</p>
         <RadioGroup
-          aria-label="board-size" name="board-size" value={selectedBoardSize}
-          onChange={(e) => setSelectedBoardSize(e.target.value)}
+          aria-label="board-size" name="board-size" value={selectedBoardSize.toString()}
+          onChange={(e) => setSelectedBoardSize(Number(e.target.value))}
         >
           <FormControlLabel value="15" control={<Radio />} label="15x15" />
           <FormControlLabel value="19" control={<Radio />} label="19x19" />
@@ -151,6 +173,7 @@ export function LobbyScreen() {
 }
 
 export function useInterval(callback, delay) {
+  console.log("useInterval called");
   useEffect(() => {
     function tick() {
       callback();

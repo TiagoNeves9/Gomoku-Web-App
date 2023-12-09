@@ -25,7 +25,7 @@ function NavBar() {
                             overflow: 'hidden', backgroundColor: '#a36615'
                         }}>
                             <li style={{ float: 'left' }}>
-                                <Link to={"/"} state={{ source: location.pathname }}
+                                <Link to={"/home"} state={{ source: location.pathname }}
                                     style={{
                                         display: 'block', color: 'white', textAlign: 'center',
                                         padding: '14px 16px', textDecoration: 'none'

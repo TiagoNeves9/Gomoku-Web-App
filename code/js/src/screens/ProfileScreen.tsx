@@ -9,7 +9,6 @@ export const ProfileScreen = () => {
     console.log(currentUser.user);
 
     if (!currentUser || !currentUser.user) {
-        // Display a message guiding the user to log in again
         return (
             <div>
                 <Link to="/home">Return</Link>
