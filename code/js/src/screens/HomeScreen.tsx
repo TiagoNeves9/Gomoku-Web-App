@@ -5,8 +5,6 @@ import { useCurrentUser } from "../services/Auth";
 
 export const HomeScreen = () => {
     const currentUser = useCurrentUser();
-    console.log(currentUser)
-
     return (
         <div>
             <h1>Welcome to Gomoku application {currentUser.username}</h1>

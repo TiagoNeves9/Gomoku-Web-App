@@ -5,7 +5,6 @@ import { AuthContext } from "../services/Auth";
 import { LobbyService } from "../services/LobbyService";
 
 
-
 export const PlayScreen = () => {
     const navigate = useNavigate();
     const currentUser = useContext(AuthContext);
@@ -85,24 +84,29 @@ export const PlayScreen = () => {
                 {lobbyList.map((lobby, index) => (
                     <li key={index} style={{ marginBottom: '10px' }}>
                         <span
-                            style={{ display: 'inline-block', width: '500px' }}>Lobby ID: {lobby.lobbyId}
+                            style={{ display: 'inline-block', width: '500px' }}>
+                            Lobby ID: {lobby.lobbyId}
                         </span> <br />
                         <span
-                            style={{ display: 'inline-block', width: '500px' }}>Host ID: {lobby.hostUserId}
+                            style={{ display: 'inline-block', width: '500px' }}>
+                            Host ID: {lobby.hostUserId}
                         </span> <br />
                         <span
-                            style={{ display: 'inline-block' }}>Board dimension: {lobby.boardDim} x {lobby.boardDim};
+                            style={{ display: 'inline-block' }}>
+                            Board dimension: {lobby.boardDim} x {lobby.boardDim};
                         </span> <> </>
                         <span
-                            style={{ display: 'inline-block' }}>Opening: {lobby.opening};
+                            style={{ display: 'inline-block' }}>
+                            Opening: {lobby.opening};
                         </span> <> </>
                         <span
-                            style={{ display: 'inline-block' }}>Variant: {lobby.variant}.
+                            style={{ display: 'inline-block' }}>
+                            Variant: {lobby.variant}.
                         </span> <br />
                         <button
-                            onClick={
-                                () => handleJoinLobby(lobby)} style={{ marginTop: '10px', marginLeft: '100px' }
-                                }> Join
+                            onClick={() => handleJoinLobby(lobby)}
+                            style={{ marginTop: '10px', marginLeft: '100px' }
+                            }> Join
                         </button> <br />
                         <br />
                     </li>
