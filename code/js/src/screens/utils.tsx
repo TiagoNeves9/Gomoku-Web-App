@@ -90,6 +90,13 @@ function NavBar() {
                         }}> Authors
                         </Link>
                     </li>
+                    <li style={{ float: 'left' }}>
+                        <Link to="/about" className="active" style={{
+                            display: 'block', color: 'white', textAlign: 'center',
+                            padding: '14px 16px', textDecoration: 'none'
+                        }}> About
+                        </Link>
+                    </li>
                     <li style={{ float: 'right' }}>
                         <Link to="/login" className="active"
                             style={{
