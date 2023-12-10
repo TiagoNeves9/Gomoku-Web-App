@@ -66,10 +66,10 @@ export function Board() {
 
     const boardSize = game.rules.boardDim
 
-    const colsLimit = 19 - boardSize
+    const colsStart = 19 - (19 - boardSize)
     const rowsLimit = boardSize
 
-    for (let i = cols.length - 1; i >= colsLimit; i--) {
+    for (let i = colsStart - 1; i >= 0; i--) {
         for (let j = 0; j < rowsLimit; j++) {
             let key: string = (rows[j] + cols[i]).toString()
             
