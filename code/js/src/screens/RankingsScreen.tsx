@@ -21,9 +21,15 @@ export const RankingsScreen = () => {
             <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {rankingList.map((user, index) => (
                     <li key={index} style={{ marginBottom: '10px' }} className="ranking">
-                        <span style={{ display: 'inline-block', width: '100px' }}>{user.user}</span>
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>{user.score} points</span>
-                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{user.ngames} games played</span>
+                        <span style={{ display: 'inline-block', width: '100px' }}>
+                            {user.user}
+                        </span>
+                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'right' }}>
+                            {user.score} points
+                        </span>
+                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>
+                            {user.ngames} games played
+                        </span>
                     </li>
                 ))}
             </ul>

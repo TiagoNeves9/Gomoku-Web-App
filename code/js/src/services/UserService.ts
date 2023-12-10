@@ -5,7 +5,7 @@ const useAuthentication = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const login = async (username,password) => {
+    const login = async (username, password) => {
         setLoading(true);
         try {
             // Fazer a chamada à API

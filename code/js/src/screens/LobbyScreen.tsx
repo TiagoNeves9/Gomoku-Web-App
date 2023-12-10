@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { LobbyService } from "../services/LobbyService";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import { LobbyService } from "../services/LobbyService";
 
 
 export function LobbyScreen() {
@@ -39,8 +39,7 @@ export function LobbyScreen() {
   async function leaveLobby() {
     try {
       const response = await LobbyService.leaveLobby();
-      if (response)
-        setRequestId(null);
+      if (response) setRequestId(null);
     } catch (error) {
       console.error("Error occurred while leaving lobby", error);
     } finally {
