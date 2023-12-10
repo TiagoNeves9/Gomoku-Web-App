@@ -1,14 +1,23 @@
 
 export async function getData(url) {
-    console.log(url);
     
-    const response = await fetch(url, {
-      method: "GET", 
-      headers: {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
         "Content-Type": "application/json",
-      },
-    });
-    return response.json();
+    },
+  });
+
+  if (!response.ok) {
+      throw new Error(`Error fetching data from ${url}: ${response.statusText}`);
+  }
+
+  try {
+      return await response.json();
+  } catch (error) {
+      console.error(`Error parsing JSON from ${url}:`, error);
+      throw new Error(`Error parsing JSON from ${url}`);
+  }
 }
 
 export async function postData(url, data = {}) {

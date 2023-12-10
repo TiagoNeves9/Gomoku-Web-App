@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
 import { useCurrentUser, useSetUser } from "../services/Auth";
+import { useCookies } from "react-cookie";
 
 
 const useStyles = makeStyles(
@@ -28,6 +29,7 @@ function CallRegisterScreen() {
     const currentUser = useCurrentUser();
     const setUser = useSetUser();
     const [error, setError] = useState(undefined)
+    const [cookies, setCookie] = useCookies(["Token"]);
     //const classes = useStyles();
     const [inputs, setInputs] =
         useState({ username: '', password: '', confirmPassword: '' });
@@ -60,6 +62,10 @@ function CallRegisterScreen() {
                         id: resp.properties.id,
                         token: resp.properties.token
                     };
+                    setCookie("Token", resp.properties.token, 
+                    {
+                        path: '/'
+                    });
                     setUser(user);
                     console.log(currentUser);
                     navigate("/home");

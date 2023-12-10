@@ -17,13 +17,17 @@ class AuthInterceptor(
     override fun preHandle(
         request: HttpServletRequest, response: HttpServletResponse, handler: Any
     ): Boolean {
+        println("inside preHandle - AuthInterceptor")
+        println("inside preHandle - handler is method $handler")
         if (handler is HandlerMethod) {
+
             val method = handler.method
             val controller = handler.beanType
             if (
                 method.isAnnotationPresent(Authenticated::class.java) ||
                 controller.isAnnotationPresent(Authenticated::class.java)
             ) {
+                println("inside preHandle - handler is authed")
                 val authHeader = request.getHeader(NAME_AUTHORIZATION_HEADER)
                 val aUser = authorizationHeaderProcessor.process(authHeader)
                 val cookie = request.cookies?.find { it.name == COOKIE }

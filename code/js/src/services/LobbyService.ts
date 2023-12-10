@@ -10,17 +10,24 @@ export const LobbyService = {
   startLobby: function (lobbySettings): Promise<Response> {
     return postData("api/games/start", lobbySettings).then((response) => {
       console.log(response)
+
       if (response.class && response.class.includes("Lobby")) {
+
         const id = response.properties.lobbyId;
         console.log(id)
         return { value: id };
-      } else if (response.class && response.class.includes("Game")) {
+
+      }
+
+      else if (response.class && response.class.includes("Game")) {
+
         const id = response.properties.id;
         console.log(id)
         return { value: id };
+
       }
 
-      //TOAST: ERROR INVALID FORMAT RESPONSE 
+      //TOAST: ERROR INVALID FORMAT RESPONSE
     });
   },
 
@@ -31,7 +38,7 @@ export const LobbyService = {
         return { value: gameId };
       }
 
-      //TOAST: ERROR INVALID FORMAT RESPONSE 
+      //TOAST: ERROR INVALID FORMAT RESPONSE
     });
   },
 

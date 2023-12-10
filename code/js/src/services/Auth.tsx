@@ -26,7 +26,7 @@ export function AuthContainer({ children }: { children: React.ReactNode }) {
     
     const userContent = useFetch("/api/user");
     if (!userContent) return <div>Fetching user....</div>;
-    if (userContent && user == null) {
+    if (userContent && user == null && userContent != "401") {
         try {
             const contentStr = JSON.stringify(userContent, null, 2);
             const sub =

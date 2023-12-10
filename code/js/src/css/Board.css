@@ -1,10 +1,11 @@
+
 #board {
     display: grid;
-    grid-template-columns: repeat(15, 50px);
-    grid-template-rows: repeat(15, 50px);
+    grid-template-columns: repeat(var(--board-size, 15), 50px);
+    grid-template-rows: repeat(var(--board-size, 15), 50px);
     place-content: center;
-    width: 765px;
-    height: 765px;
+    width: calc(var(--board-size, 15) * 50px + 15px);
+    height: calc(var(--board-size, 15) * 50px + 15px);
     background-color: black;
 }
 
@@ -27,4 +28,10 @@
 
 #board .white-stone {
     background-image: url(../../public/images/whitestone.png), url(../../public/images/cellview.png);
+}
+
+#game {
+    height: 100%;
+    width: 100%;
+    place-content: center;
 }

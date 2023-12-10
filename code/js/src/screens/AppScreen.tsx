@@ -1,9 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import '../css/General.css'
+import { useCurrentUser } from "../services/Auth";
 
 
 export function AppScreen() {
+    const currentUser = useCurrentUser();
+
+    if (currentUser) {
+        return (
+            <Navigate
+                to="/home"
+                state={{ source: location.pathname }}
+                replace={true}
+            />
+            );  
+    }
     return (
         <div id="app">
             <h1 className="h1">Welcome to Gomoku Application</h1>

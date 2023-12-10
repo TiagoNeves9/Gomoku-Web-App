@@ -26,7 +26,7 @@ async function login(
 }
 
 function CallLoginScreen() {
-    const currentUser = useCurrentUser;
+    const currentUser = useCurrentUser();
     const setUser = useSetUser();
 
     const [inputs, setInputs] =
