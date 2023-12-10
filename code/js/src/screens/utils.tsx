@@ -1,14 +1,23 @@
-import React, { useContext } from 'react'
-import { Link, useLocation } from "react-router-dom";
+import React from 'react'
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCurrentUser } from '../services/Auth';
+import { Button } from '@material-ui/core';
+import { useCookies } from "react-cookie";
 
 
 
 
 function NavBar() {
 
-    const location = useLocation()
+    const navigate = useNavigate();
     const currentUser = useCurrentUser();
+    const [cookies, setCookie, removeCookie] = useCookies(["Token"]);
+    
+    const handleLogout = () => {
+        removeCookie("Token", {path: '/'});
+        window.location.reload();
+        navigate("/");
+    };
 
     return (
             <div>
@@ -60,12 +69,11 @@ function NavBar() {
                         </Link>
                     </li>
                     <li style={{ float: 'right' }}>
-                        <Link to="/logout" className="active"
-                            style={{
-                                display: 'block', color: 'white', textAlign: 'center',
-                                padding: '14px 16px', textDecoration: 'none'
-                            }}> Logout
-                        </Link>
+                        <Button onClick={handleLogout} className="active" style={{
+                            display: 'block', color: 'white', textAlign: 'center',
+                            padding: '14px 16px', textDecoration: 'none'
+                        }}> Logout
+                        </Button>
                     </li>
                 </>
                     :
@@ -94,6 +102,14 @@ function NavBar() {
                     }}> Authors
                 </Link>
             </li>
+            <li style={{ float: 'left' }}>
+                        <Link to="/about" className="active"
+                            style={{
+                                display: 'block', color: 'white', textAlign: 'center',
+                                padding: '14px 16px', textDecoration: 'none'
+                            }}> About
+                        </Link>
+                    </li>
             <li style={{ float: 'right' }}>
                 <Link to="/login" className="active"
                     style={{
