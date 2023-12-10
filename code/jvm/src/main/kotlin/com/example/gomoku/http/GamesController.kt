@@ -93,6 +93,7 @@ class GamesController(
     fun leaveLobby(request: HttpServletRequest): SirenModel<OutputModel> {
         val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+
         return try {
             val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
             if (wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
@@ -111,8 +112,10 @@ class GamesController(
         val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
 
-        val joiningUser = User(aUser.user.userId, aUser.user.username, aUser.user.encodedPassword)
         val hostUser = usersController.getById(lobbyOutputModel.hostUserId)
+        val joiningUser = User(aUser.user.userId, aUser.user.username, aUser.user.encodedPassword)
+        if (hostUser.userId == joiningUser.userId)
+            return siren(ErrorOutputModel(405, "User can't join his own lobby!")) {}
         val game = gomokuService.createGame(lobbyOutputModel, hostUser, joiningUser)
         val gameModel = GameOutputModel(
             id = game.gameId,
