@@ -1,0 +1,585 @@
+openapi: 3.0.3
+info:
+  description: 2023_daw_leic53d_2023_daw_leic53d_g09 API
+  title: 2023_daw_leic53d_2023_daw_leic53d_g09 API
+  version: 1.0.0
+servers:
+- url: https://2023_daw_leic53d_2023_daw_leic53d_g09
+paths:
+  /users/signup:
+    post:
+      operationId: insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST users/signup
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /users/login:
+    post:
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST users/login
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /user:
+    get:
+      operationId: getUser
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: GET user
+      x-accepts: '*/*'
+  /users:
+    get:
+      operationId: getAll
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: OK
+      summary: GET users
+      x-accepts: '*/*'
+  /users/{id}:
+    get:
+      operationId: getById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+      summary: "GET users/{id}"
+      x-accepts: '*/*'
+  /users/cookie:
+    get:
+      operationId: checkCookie
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Cookie'
+                type: array
+          description: OK
+      summary: GET users/cookie
+      x-accepts: '*/*'
+  /rankings:
+    get:
+      operationId: getRankings
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: GET rankings
+      x-accepts: '*/*'
+  /rankings/{username}:
+    get:
+      operationId: getUserRanking
+      parameters:
+      - explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET rankings/{username}"
+      x-accepts: '*/*'
+  /:
+    get:
+      operationId: home
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
+      summary: 'GET '
+      x-accepts: '*/*'
+  /authors:
+    get:
+      operationId: getAuthors
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AuthorsOutputModel'
+          description: OK
+      summary: GET authors
+      x-accepts: '*/*'
+  /about:
+    get:
+      operationId: getAbout
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AboutOutputModel'
+          description: OK
+      summary: GET about
+      x-accepts: '*/*'
+  /games/start:
+    post:
+      operationId: createOrJoinGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GomokuStartInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST games/start
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /lobbies/join:
+    post:
+      operationId: joinLobby
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LobbyOutputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: POST lobbies/join
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /games/{id}:
+    get:
+      operationId: getGameById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET games/{id}"
+      x-accepts: '*/*'
+    post:
+      operationId: play
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CellInputModel'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "POST games/{id}"
+      x-content-type: application/json
+      x-accepts: '*/*'
+  /lobbies/leave:
+    delete:
+      operationId: leaveLobby
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: DELETE lobbies/leave
+      x-accepts: '*/*'
+  /lobbies:
+    get:
+      operationId: getLobbies
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: GET lobbies
+      x-accepts: '*/*'
+  /games:
+    get:
+      operationId: getGames
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Game'
+                type: array
+          description: OK
+      summary: GET games
+      x-accepts: '*/*'
+  /games/spectate/{id}:
+    get:
+      operationId: spectate
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET games/spectate/{id}"
+      x-accepts: '*/*'
+  /lobbies/{id}:
+    get:
+      operationId: isGameCreated
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OutputModel'
+          description: OK
+      summary: "GET lobbies/{id}"
+      x-accepts: '*/*'
+components:
+  schemas:
+    UserInputModel:
+      example:
+        password: password
+        name: name
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      type: object
+    OutputModel:
+      properties: {}
+      type: object
+    User:
+      example:
+        encodedPassword: encodedPassword
+        userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        userId:
+          format: uuid
+          type: string
+        username:
+          type: string
+        encodedPassword:
+          type: string
+      type: object
+    Cookie:
+      example:
+        name: name
+        attributes: attributes
+        value: value
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        attributes:
+          type: string
+      type: object
+    Author:
+      example:
+        number: 0
+        name: name
+        email: email
+      properties:
+        number:
+          format: int32
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+      type: object
+    AuthorsOutputModel:
+      example:
+        authors:
+        - number: 0
+          name: name
+          email: email
+        - number: 0
+          name: name
+          email: email
+      properties:
+        authors:
+          items:
+            $ref: '#/components/schemas/Author'
+          type: array
+      type: object
+    AboutOutputModel:
+      example:
+        version: version
+      properties:
+        version:
+          type: string
+      type: object
+    GomokuStartInputModel:
+      example:
+        boardDim: 0
+        variant: variant
+        opening: opening
+      properties:
+        boardDim:
+          format: int32
+          type: integer
+        opening:
+          type: string
+        variant:
+          type: string
+      type: object
+    LobbyOutputModel:
+      example:
+        hostUserId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        boardDim: 0
+        variant: variant
+        opening: opening
+        lobbyId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        lobbyId:
+          format: uuid
+          type: string
+        hostUserId:
+          format: uuid
+          type: string
+        boardDim:
+          format: int32
+          type: integer
+        opening:
+          type: string
+        variant:
+          type: string
+      type: object
+    CellInputModel:
+      example:
+        row: 0
+      properties:
+        row:
+          format: int32
+          type: integer
+      type: object
+    Row:
+      example:
+        number: 0
+        index: 6
+      properties:
+        number:
+          format: int32
+          type: integer
+        index:
+          format: int32
+          type: integer
+      type: object
+    Column:
+      properties: {}
+      type: object
+    Cell:
+      example:
+        col: "{}"
+        colIndex: 5
+        rowIndex: 1
+        row:
+          number: 0
+          index: 6
+      properties:
+        row:
+          $ref: '#/components/schemas/Row'
+        col:
+          properties: {}
+          type: object
+        rowIndex:
+          format: int32
+          type: integer
+        colIndex:
+          format: int32
+          type: integer
+      type: object
+    Board:
+      example:
+        boardSize: 5
+        positions:
+          col: "{}"
+          colIndex: 5
+          rowIndex: 1
+          row:
+            number: 0
+            index: 6
+      properties:
+        positions:
+          $ref: '#/components/schemas/Cell'
+        boardSize:
+          format: int32
+          type: integer
+      type: object
+    Instant:
+      properties: {}
+      type: object
+    Rules:
+      example:
+        boardDim: 7
+        variant: FREESTYLE
+        opening: FREESTYLE
+      properties:
+        boardDim:
+          format: int32
+          type: integer
+        opening:
+          enum:
+          - FREESTYLE
+          - PRO
+          type: string
+        variant:
+          enum:
+          - FREESTYLE
+          - SWAP_AFTER_FIRST
+          type: string
+      type: object
+    Game:
+      example:
+        gameId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        score: 2
+        currentPlayer:
+          encodedPassword: encodedPassword
+          userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        now: "{}"
+        rules:
+          boardDim: 7
+          variant: FREESTYLE
+          opening: FREESTYLE
+        users:
+          encodedPassword: encodedPassword
+          userId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        board:
+          boardSize: 5
+          positions:
+            col: "{}"
+            colIndex: 5
+            rowIndex: 1
+            row:
+              number: 0
+              index: 6
+      properties:
+        gameId:
+          format: uuid
+          type: string
+        users:
+          $ref: '#/components/schemas/User'
+        board:
+          $ref: '#/components/schemas/Board'
+        currentPlayer:
+          $ref: '#/components/schemas/User'
+        score:
+          format: int32
+          type: integer
+        now:
+          properties: {}
+          type: object
+        rules:
+          $ref: '#/components/schemas/Rules'
+      type: object
+

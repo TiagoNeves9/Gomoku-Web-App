@@ -4,21 +4,83 @@ All URIs are relative to *https://2023_daw_leic53d_2023_daw_leic53d_g09*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
+| [**checkCookie**](DefaultApi.md#checkCookie) | **GET** /users/cookie | GET users/cookie |
 | [**createOrJoinGame**](DefaultApi.md#createOrJoinGame) | **POST** /games/start | POST games/start |
+| [**getAbout**](DefaultApi.md#getAbout) | **GET** /about | GET about |
 | [**getAll**](DefaultApi.md#getAll) | **GET** /users | GET users |
-| [**getAuthors**](DefaultApi.md#getAuthors) | **GET** /about | GET about |
+| [**getAuthors**](DefaultApi.md#getAuthors) | **GET** /authors | GET authors |
 | [**getById**](DefaultApi.md#getById) | **GET** /users/{id} | GET users/{id} |
 | [**getGameById**](DefaultApi.md#getGameById) | **GET** /games/{id} | GET games/{id} |
 | [**getGames**](DefaultApi.md#getGames) | **GET** /games | GET games |
 | [**getLobbies**](DefaultApi.md#getLobbies) | **GET** /lobbies | GET lobbies |
 | [**getRankings**](DefaultApi.md#getRankings) | **GET** /rankings | GET rankings |
+| [**getUser**](DefaultApi.md#getUser) | **GET** /user | GET user |
 | [**getUserRanking**](DefaultApi.md#getUserRanking) | **GET** /rankings/{username} | GET rankings/{username} |
 | [**home**](DefaultApi.md#home) | **GET** / | GET  |
 | [**insert**](DefaultApi.md#insert) | **POST** /users/signup | POST users/signup |
 | [**isGameCreated**](DefaultApi.md#isGameCreated) | **GET** /lobbies/{id} | GET lobbies/{id} |
+| [**joinLobby**](DefaultApi.md#joinLobby) | **POST** /lobbies/join | POST lobbies/join |
+| [**leaveLobby**](DefaultApi.md#leaveLobby) | **DELETE** /lobbies/leave | DELETE lobbies/leave |
 | [**login**](DefaultApi.md#login) | **POST** /users/login | POST users/login |
 | [**play**](DefaultApi.md#play) | **POST** /games/{id} | POST games/{id} |
+| [**spectate**](DefaultApi.md#spectate) | **GET** /games/spectate/{id} | GET games/spectate/{id} |
 
+
+<a name="checkCookie"></a>
+# **checkCookie**
+> List&lt;Cookie&gt; checkCookie()
+
+GET users/cookie
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    try {
+      List<Cookie> result = apiInstance.checkCookie();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#checkCookie");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**List&lt;Cookie&gt;**](Cookie.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
 
 <a name="createOrJoinGame"></a>
 # **createOrJoinGame**
@@ -73,6 +135,62 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+<a name="getAbout"></a>
+# **getAbout**
+> AboutOutputModel getAbout()
+
+GET about
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    try {
+      AboutOutputModel result = apiInstance.getAbout();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#getAbout");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**AboutOutputModel**](AboutOutputModel.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 ### HTTP response details
@@ -138,9 +256,9 @@ No authorization required
 
 <a name="getAuthors"></a>
 # **getAuthors**
-> List&lt;Object&gt; getAuthors()
+> AuthorsOutputModel getAuthors()
 
-GET about
+GET authors
 
 ### Example
 ```java
@@ -158,7 +276,7 @@ public class Example {
 
     DefaultApi apiInstance = new DefaultApi(defaultClient);
     try {
-      List<Object> result = apiInstance.getAuthors();
+      AuthorsOutputModel result = apiInstance.getAuthors();
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling DefaultApi#getAuthors");
@@ -176,7 +294,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**List&lt;Object&gt;**
+[**AuthorsOutputModel**](AuthorsOutputModel.md)
 
 ### Authorization
 
@@ -370,7 +488,7 @@ No authorization required
 
 <a name="getLobbies"></a>
 # **getLobbies**
-> List&lt;Lobby&gt; getLobbies()
+> Object getLobbies()
 
 GET lobbies
 
@@ -390,7 +508,7 @@ public class Example {
 
     DefaultApi apiInstance = new DefaultApi(defaultClient);
     try {
-      List<Lobby> result = apiInstance.getLobbies();
+      Object result = apiInstance.getLobbies();
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling DefaultApi#getLobbies");
@@ -408,7 +526,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List&lt;Lobby&gt;**](Lobby.md)
+**Object**
 
 ### Authorization
 
@@ -426,7 +544,7 @@ No authorization required
 
 <a name="getRankings"></a>
 # **getRankings**
-> List&lt;UserStatistics&gt; getRankings()
+> Object getRankings()
 
 GET rankings
 
@@ -446,7 +564,7 @@ public class Example {
 
     DefaultApi apiInstance = new DefaultApi(defaultClient);
     try {
-      List<UserStatistics> result = apiInstance.getRankings();
+      Object result = apiInstance.getRankings();
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling DefaultApi#getRankings");
@@ -464,7 +582,63 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List&lt;UserStatistics&gt;**](UserStatistics.md)
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+<a name="getUser"></a>
+# **getUser**
+> Object getUser()
+
+GET user
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    try {
+      Object result = apiInstance.getUser();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#getUser");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**Object**
 
 ### Authorization
 
@@ -482,7 +656,7 @@ No authorization required
 
 <a name="getUserRanking"></a>
 # **getUserRanking**
-> UserStatistics getUserRanking(username)
+> Object getUserRanking(username)
 
 GET rankings/{username}
 
@@ -503,7 +677,7 @@ public class Example {
     DefaultApi apiInstance = new DefaultApi(defaultClient);
     String username = "username_example"; // String | 
     try {
-      UserStatistics result = apiInstance.getUserRanking(username);
+      Object result = apiInstance.getUserRanking(username);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling DefaultApi#getUserRanking");
@@ -524,7 +698,7 @@ public class Example {
 
 ### Return type
 
-[**UserStatistics**](UserStatistics.md)
+**Object**
 
 ### Authorization
 
@@ -716,6 +890,122 @@ No authorization required
 |-------------|-------------|------------------|
 | **200** | OK |  -  |
 
+<a name="joinLobby"></a>
+# **joinLobby**
+> Object joinLobby(lobbyOutputModel)
+
+POST lobbies/join
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    LobbyOutputModel lobbyOutputModel = new LobbyOutputModel(); // LobbyOutputModel | 
+    try {
+      Object result = apiInstance.joinLobby(lobbyOutputModel);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#joinLobby");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **lobbyOutputModel** | [**LobbyOutputModel**](LobbyOutputModel.md)|  | |
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+<a name="leaveLobby"></a>
+# **leaveLobby**
+> Object leaveLobby()
+
+DELETE lobbies/leave
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    try {
+      Object result = apiInstance.leaveLobby();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#leaveLobby");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
 <a name="login"></a>
 # **login**
 > Object login(userInputModel)
@@ -831,6 +1121,66 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+<a name="spectate"></a>
+# **spectate**
+> Object spectate(id)
+
+GET games/spectate/{id}
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.DefaultApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://2023_daw_leic53d_2023_daw_leic53d_g09");
+
+    DefaultApi apiInstance = new DefaultApi(defaultClient);
+    UUID id = UUID.randomUUID(); // UUID | 
+    try {
+      Object result = apiInstance.spectate(id);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DefaultApi#spectate");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **UUID**|  | |
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 ### HTTP response details

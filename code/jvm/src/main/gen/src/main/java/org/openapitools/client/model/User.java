@@ -1,6 +1,6 @@
 /*
- * G09 Gomoku API
- * G09 Gomoku API
+ * 2023_daw_leic53d_2023_daw_leic53d_g09 API
+ * 2023_daw_leic53d_2023_daw_leic53d_g09 API
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -48,7 +48,7 @@ import org.openapitools.client.JSON;
 /**
  * User
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-10-21T13:51:48.813945400+01:00[Europe/Lisbon]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-12-10T22:14:03.953364700Z[Europe/Lisbon]")
 public class User {
   public static final String SERIALIZED_NAME_USER_ID = "userId";
   @SerializedName(SERIALIZED_NAME_USER_ID)

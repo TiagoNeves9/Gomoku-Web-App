@@ -45,22 +45,26 @@ import java.util.Set;
 import org.openapitools.client.JSON;
 
 /**
- * Row
+ * Author
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-12-10T22:14:03.953364700Z[Europe/Lisbon]")
-public class Row {
+public class Author {
   public static final String SERIALIZED_NAME_NUMBER = "number";
   @SerializedName(SERIALIZED_NAME_NUMBER)
   private Integer number;
 
-  public static final String SERIALIZED_NAME_INDEX = "index";
-  @SerializedName(SERIALIZED_NAME_INDEX)
-  private Integer index;
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
 
-  public Row() {
+  public static final String SERIALIZED_NAME_EMAIL = "email";
+  @SerializedName(SERIALIZED_NAME_EMAIL)
+  private String email;
+
+  public Author() {
   }
 
-  public Row number(Integer number) {
+  public Author number(Integer number) {
     
     this.number = number;
     return this;
@@ -83,26 +87,49 @@ public class Row {
   }
 
 
-  public Row index(Integer index) {
+  public Author name(String name) {
     
-    this.index = index;
+    this.name = name;
     return this;
   }
 
    /**
-   * Get index
-   * @return index
+   * Get name
+   * @return name
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public Integer getIndex() {
-    return index;
+  public String getName() {
+    return name;
   }
 
 
-  public void setIndex(Integer index) {
-    this.index = index;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  public Author email(String email) {
+    
+    this.email = email;
+    return this;
+  }
+
+   /**
+   * Get email
+   * @return email
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getEmail() {
+    return email;
+  }
+
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
 
@@ -115,22 +142,24 @@ public class Row {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Row row = (Row) o;
-    return Objects.equals(this.number, row.number) &&
-        Objects.equals(this.index, row.index);
+    Author author = (Author) o;
+    return Objects.equals(this.number, author.number) &&
+        Objects.equals(this.name, author.name) &&
+        Objects.equals(this.email, author.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(number, index);
+    return Objects.hash(number, name, email);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Row {\n");
+    sb.append("class Author {\n");
     sb.append("    number: ").append(toIndentedString(number)).append("\n");
-    sb.append("    index: ").append(toIndentedString(index)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -154,7 +183,8 @@ public class Row {
     // a set of all properties/fields (JSON key names)
     openapiFields = new HashSet<String>();
     openapiFields.add("number");
-    openapiFields.add("index");
+    openapiFields.add("name");
+    openapiFields.add("email");
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>();
@@ -164,23 +194,29 @@ public class Row {
   * Validates the JSON Object and throws an exception if issues found
   *
   * @param jsonObj JSON Object
-  * @throws IOException if the JSON Object is invalid with respect to Row
+  * @throws IOException if the JSON Object is invalid with respect to Author
   */
   public static void validateJsonObject(JsonObject jsonObj) throws IOException {
       if (jsonObj == null) {
-        if (Row.openapiRequiredFields.isEmpty()) {
+        if (Author.openapiRequiredFields.isEmpty()) {
           return;
         } else { // has required fields
-          throw new IllegalArgumentException(String.format("The required field(s) %s in Row is not found in the empty JSON string", Row.openapiRequiredFields.toString()));
+          throw new IllegalArgumentException(String.format("The required field(s) %s in Author is not found in the empty JSON string", Author.openapiRequiredFields.toString()));
         }
       }
 
       Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
       // check to see if the JSON string contains additional fields
       for (Entry<String, JsonElement> entry : entries) {
-        if (!Row.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `Row` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        if (!Author.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `Author` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
         }
+      }
+      if ((jsonObj.get("name") != null && !jsonObj.get("name").isJsonNull()) && !jsonObj.get("name").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `name` to be a primitive type in the JSON string but got `%s`", jsonObj.get("name").toString()));
+      }
+      if ((jsonObj.get("email") != null && !jsonObj.get("email").isJsonNull()) && !jsonObj.get("email").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `email` to be a primitive type in the JSON string but got `%s`", jsonObj.get("email").toString()));
       }
   }
 
@@ -188,22 +224,22 @@ public class Row {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!Row.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'Row' and its subtypes
+       if (!Author.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'Author' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<Row> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(Row.class));
+       final TypeAdapter<Author> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(Author.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<Row>() {
+       return (TypeAdapter<T>) new TypeAdapter<Author>() {
            @Override
-           public void write(JsonWriter out, Row value) throws IOException {
+           public void write(JsonWriter out, Author value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public Row read(JsonReader in) throws IOException {
+           public Author read(JsonReader in) throws IOException {
              JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
              validateJsonObject(jsonObj);
              return thisAdapter.fromJsonTree(jsonObj);
@@ -214,18 +250,18 @@ public class Row {
   }
 
  /**
-  * Create an instance of Row given an JSON string
+  * Create an instance of Author given an JSON string
   *
   * @param jsonString JSON string
-  * @return An instance of Row
-  * @throws IOException if the JSON string is invalid with respect to Row
+  * @return An instance of Author
+  * @throws IOException if the JSON string is invalid with respect to Author
   */
-  public static Row fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, Row.class);
+  public static Author fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, Author.class);
   }
 
  /**
-  * Convert an instance of Row to an JSON string
+  * Convert an instance of Author to an JSON string
   *
   * @return JSON string
   */

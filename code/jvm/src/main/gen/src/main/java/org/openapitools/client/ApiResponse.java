@@ -1,6 +1,6 @@
 /*
- * G09 Gomoku API
- * G09 Gomoku API
+ * 2023_daw_leic53d_2023_daw_leic53d_g09 API
+ * 2023_daw_leic53d_2023_daw_leic53d_g09 API
  *
  * The version of the OpenAPI document: 1.0.0
  * 

@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,10 +46,18 @@ import java.util.Set;
 import org.openapitools.client.JSON;
 
 /**
- * GomokuStartInputModel
+ * LobbyOutputModel
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-12-10T22:14:03.953364700Z[Europe/Lisbon]")
-public class GomokuStartInputModel {
+public class LobbyOutputModel {
+  public static final String SERIALIZED_NAME_LOBBY_ID = "lobbyId";
+  @SerializedName(SERIALIZED_NAME_LOBBY_ID)
+  private UUID lobbyId;
+
+  public static final String SERIALIZED_NAME_HOST_USER_ID = "hostUserId";
+  @SerializedName(SERIALIZED_NAME_HOST_USER_ID)
+  private UUID hostUserId;
+
   public static final String SERIALIZED_NAME_BOARD_DIM = "boardDim";
   @SerializedName(SERIALIZED_NAME_BOARD_DIM)
   private Integer boardDim;
@@ -61,10 +70,56 @@ public class GomokuStartInputModel {
   @SerializedName(SERIALIZED_NAME_VARIANT)
   private String variant;
 
-  public GomokuStartInputModel() {
+  public LobbyOutputModel() {
   }
 
-  public GomokuStartInputModel boardDim(Integer boardDim) {
+  public LobbyOutputModel lobbyId(UUID lobbyId) {
+    
+    this.lobbyId = lobbyId;
+    return this;
+  }
+
+   /**
+   * Get lobbyId
+   * @return lobbyId
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public UUID getLobbyId() {
+    return lobbyId;
+  }
+
+
+  public void setLobbyId(UUID lobbyId) {
+    this.lobbyId = lobbyId;
+  }
+
+
+  public LobbyOutputModel hostUserId(UUID hostUserId) {
+    
+    this.hostUserId = hostUserId;
+    return this;
+  }
+
+   /**
+   * Get hostUserId
+   * @return hostUserId
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public UUID getHostUserId() {
+    return hostUserId;
+  }
+
+
+  public void setHostUserId(UUID hostUserId) {
+    this.hostUserId = hostUserId;
+  }
+
+
+  public LobbyOutputModel boardDim(Integer boardDim) {
     
     this.boardDim = boardDim;
     return this;
@@ -87,7 +142,7 @@ public class GomokuStartInputModel {
   }
 
 
-  public GomokuStartInputModel opening(String opening) {
+  public LobbyOutputModel opening(String opening) {
     
     this.opening = opening;
     return this;
@@ -110,7 +165,7 @@ public class GomokuStartInputModel {
   }
 
 
-  public GomokuStartInputModel variant(String variant) {
+  public LobbyOutputModel variant(String variant) {
     
     this.variant = variant;
     return this;
@@ -142,21 +197,25 @@ public class GomokuStartInputModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GomokuStartInputModel gomokuStartInputModel = (GomokuStartInputModel) o;
-    return Objects.equals(this.boardDim, gomokuStartInputModel.boardDim) &&
-        Objects.equals(this.opening, gomokuStartInputModel.opening) &&
-        Objects.equals(this.variant, gomokuStartInputModel.variant);
+    LobbyOutputModel lobbyOutputModel = (LobbyOutputModel) o;
+    return Objects.equals(this.lobbyId, lobbyOutputModel.lobbyId) &&
+        Objects.equals(this.hostUserId, lobbyOutputModel.hostUserId) &&
+        Objects.equals(this.boardDim, lobbyOutputModel.boardDim) &&
+        Objects.equals(this.opening, lobbyOutputModel.opening) &&
+        Objects.equals(this.variant, lobbyOutputModel.variant);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(boardDim, opening, variant);
+    return Objects.hash(lobbyId, hostUserId, boardDim, opening, variant);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GomokuStartInputModel {\n");
+    sb.append("class LobbyOutputModel {\n");
+    sb.append("    lobbyId: ").append(toIndentedString(lobbyId)).append("\n");
+    sb.append("    hostUserId: ").append(toIndentedString(hostUserId)).append("\n");
     sb.append("    boardDim: ").append(toIndentedString(boardDim)).append("\n");
     sb.append("    opening: ").append(toIndentedString(opening)).append("\n");
     sb.append("    variant: ").append(toIndentedString(variant)).append("\n");
@@ -182,6 +241,8 @@ public class GomokuStartInputModel {
   static {
     // a set of all properties/fields (JSON key names)
     openapiFields = new HashSet<String>();
+    openapiFields.add("lobbyId");
+    openapiFields.add("hostUserId");
     openapiFields.add("boardDim");
     openapiFields.add("opening");
     openapiFields.add("variant");
@@ -194,23 +255,29 @@ public class GomokuStartInputModel {
   * Validates the JSON Object and throws an exception if issues found
   *
   * @param jsonObj JSON Object
-  * @throws IOException if the JSON Object is invalid with respect to GomokuStartInputModel
+  * @throws IOException if the JSON Object is invalid with respect to LobbyOutputModel
   */
   public static void validateJsonObject(JsonObject jsonObj) throws IOException {
       if (jsonObj == null) {
-        if (GomokuStartInputModel.openapiRequiredFields.isEmpty()) {
+        if (LobbyOutputModel.openapiRequiredFields.isEmpty()) {
           return;
         } else { // has required fields
-          throw new IllegalArgumentException(String.format("The required field(s) %s in GomokuStartInputModel is not found in the empty JSON string", GomokuStartInputModel.openapiRequiredFields.toString()));
+          throw new IllegalArgumentException(String.format("The required field(s) %s in LobbyOutputModel is not found in the empty JSON string", LobbyOutputModel.openapiRequiredFields.toString()));
         }
       }
 
       Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
       // check to see if the JSON string contains additional fields
       for (Entry<String, JsonElement> entry : entries) {
-        if (!GomokuStartInputModel.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `GomokuStartInputModel` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        if (!LobbyOutputModel.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `LobbyOutputModel` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
         }
+      }
+      if ((jsonObj.get("lobbyId") != null && !jsonObj.get("lobbyId").isJsonNull()) && !jsonObj.get("lobbyId").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `lobbyId` to be a primitive type in the JSON string but got `%s`", jsonObj.get("lobbyId").toString()));
+      }
+      if ((jsonObj.get("hostUserId") != null && !jsonObj.get("hostUserId").isJsonNull()) && !jsonObj.get("hostUserId").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `hostUserId` to be a primitive type in the JSON string but got `%s`", jsonObj.get("hostUserId").toString()));
       }
       if ((jsonObj.get("opening") != null && !jsonObj.get("opening").isJsonNull()) && !jsonObj.get("opening").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format("Expected the field `opening` to be a primitive type in the JSON string but got `%s`", jsonObj.get("opening").toString()));
@@ -224,22 +291,22 @@ public class GomokuStartInputModel {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!GomokuStartInputModel.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'GomokuStartInputModel' and its subtypes
+       if (!LobbyOutputModel.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'LobbyOutputModel' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<GomokuStartInputModel> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(GomokuStartInputModel.class));
+       final TypeAdapter<LobbyOutputModel> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(LobbyOutputModel.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<GomokuStartInputModel>() {
+       return (TypeAdapter<T>) new TypeAdapter<LobbyOutputModel>() {
            @Override
-           public void write(JsonWriter out, GomokuStartInputModel value) throws IOException {
+           public void write(JsonWriter out, LobbyOutputModel value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public GomokuStartInputModel read(JsonReader in) throws IOException {
+           public LobbyOutputModel read(JsonReader in) throws IOException {
              JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
              validateJsonObject(jsonObj);
              return thisAdapter.fromJsonTree(jsonObj);
@@ -250,18 +317,18 @@ public class GomokuStartInputModel {
   }
 
  /**
-  * Create an instance of GomokuStartInputModel given an JSON string
+  * Create an instance of LobbyOutputModel given an JSON string
   *
   * @param jsonString JSON string
-  * @return An instance of GomokuStartInputModel
-  * @throws IOException if the JSON string is invalid with respect to GomokuStartInputModel
+  * @return An instance of LobbyOutputModel
+  * @throws IOException if the JSON string is invalid with respect to LobbyOutputModel
   */
-  public static GomokuStartInputModel fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, GomokuStartInputModel.class);
+  public static LobbyOutputModel fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, LobbyOutputModel.class);
   }
 
  /**
-  * Convert an instance of GomokuStartInputModel to an JSON string
+  * Convert an instance of LobbyOutputModel to an JSON string
   *
   * @return JSON string
   */

@@ -45,22 +45,26 @@ import java.util.Set;
 import org.openapitools.client.JSON;
 
 /**
- * UserInputModel
+ * Cookie
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-12-10T22:14:03.953364700Z[Europe/Lisbon]")
-public class UserInputModel {
+public class Cookie {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
 
-  public static final String SERIALIZED_NAME_PASSWORD = "password";
-  @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password;
+  public static final String SERIALIZED_NAME_VALUE = "value";
+  @SerializedName(SERIALIZED_NAME_VALUE)
+  private String value;
 
-  public UserInputModel() {
+  public static final String SERIALIZED_NAME_ATTRIBUTES = "attributes";
+  @SerializedName(SERIALIZED_NAME_ATTRIBUTES)
+  private String attributes;
+
+  public Cookie() {
   }
 
-  public UserInputModel name(String name) {
+  public Cookie name(String name) {
     
     this.name = name;
     return this;
@@ -83,26 +87,49 @@ public class UserInputModel {
   }
 
 
-  public UserInputModel password(String password) {
+  public Cookie value(String value) {
     
-    this.password = password;
+    this.value = value;
     return this;
   }
 
    /**
-   * Get password
-   * @return password
+   * Get value
+   * @return value
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getPassword() {
-    return password;
+  public String getValue() {
+    return value;
   }
 
 
-  public void setPassword(String password) {
-    this.password = password;
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+
+  public Cookie attributes(String attributes) {
+    
+    this.attributes = attributes;
+    return this;
+  }
+
+   /**
+   * Get attributes
+   * @return attributes
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getAttributes() {
+    return attributes;
+  }
+
+
+  public void setAttributes(String attributes) {
+    this.attributes = attributes;
   }
 
 
@@ -115,22 +142,24 @@ public class UserInputModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserInputModel userInputModel = (UserInputModel) o;
-    return Objects.equals(this.name, userInputModel.name) &&
-        Objects.equals(this.password, userInputModel.password);
+    Cookie cookie = (Cookie) o;
+    return Objects.equals(this.name, cookie.name) &&
+        Objects.equals(this.value, cookie.value) &&
+        Objects.equals(this.attributes, cookie.attributes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, password);
+    return Objects.hash(name, value, attributes);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UserInputModel {\n");
+    sb.append("class Cookie {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    value: ").append(toIndentedString(value)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -154,7 +183,8 @@ public class UserInputModel {
     // a set of all properties/fields (JSON key names)
     openapiFields = new HashSet<String>();
     openapiFields.add("name");
-    openapiFields.add("password");
+    openapiFields.add("value");
+    openapiFields.add("attributes");
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>();
@@ -164,29 +194,32 @@ public class UserInputModel {
   * Validates the JSON Object and throws an exception if issues found
   *
   * @param jsonObj JSON Object
-  * @throws IOException if the JSON Object is invalid with respect to UserInputModel
+  * @throws IOException if the JSON Object is invalid with respect to Cookie
   */
   public static void validateJsonObject(JsonObject jsonObj) throws IOException {
       if (jsonObj == null) {
-        if (UserInputModel.openapiRequiredFields.isEmpty()) {
+        if (Cookie.openapiRequiredFields.isEmpty()) {
           return;
         } else { // has required fields
-          throw new IllegalArgumentException(String.format("The required field(s) %s in UserInputModel is not found in the empty JSON string", UserInputModel.openapiRequiredFields.toString()));
+          throw new IllegalArgumentException(String.format("The required field(s) %s in Cookie is not found in the empty JSON string", Cookie.openapiRequiredFields.toString()));
         }
       }
 
       Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
       // check to see if the JSON string contains additional fields
       for (Entry<String, JsonElement> entry : entries) {
-        if (!UserInputModel.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `UserInputModel` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        if (!Cookie.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `Cookie` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
         }
       }
       if ((jsonObj.get("name") != null && !jsonObj.get("name").isJsonNull()) && !jsonObj.get("name").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format("Expected the field `name` to be a primitive type in the JSON string but got `%s`", jsonObj.get("name").toString()));
       }
-      if ((jsonObj.get("password") != null && !jsonObj.get("password").isJsonNull()) && !jsonObj.get("password").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format("Expected the field `password` to be a primitive type in the JSON string but got `%s`", jsonObj.get("password").toString()));
+      if ((jsonObj.get("value") != null && !jsonObj.get("value").isJsonNull()) && !jsonObj.get("value").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `value` to be a primitive type in the JSON string but got `%s`", jsonObj.get("value").toString()));
+      }
+      if ((jsonObj.get("attributes") != null && !jsonObj.get("attributes").isJsonNull()) && !jsonObj.get("attributes").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `attributes` to be a primitive type in the JSON string but got `%s`", jsonObj.get("attributes").toString()));
       }
   }
 
@@ -194,22 +227,22 @@ public class UserInputModel {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!UserInputModel.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'UserInputModel' and its subtypes
+       if (!Cookie.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'Cookie' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<UserInputModel> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(UserInputModel.class));
+       final TypeAdapter<Cookie> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(Cookie.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<UserInputModel>() {
+       return (TypeAdapter<T>) new TypeAdapter<Cookie>() {
            @Override
-           public void write(JsonWriter out, UserInputModel value) throws IOException {
+           public void write(JsonWriter out, Cookie value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public UserInputModel read(JsonReader in) throws IOException {
+           public Cookie read(JsonReader in) throws IOException {
              JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
              validateJsonObject(jsonObj);
              return thisAdapter.fromJsonTree(jsonObj);
@@ -220,18 +253,18 @@ public class UserInputModel {
   }
 
  /**
-  * Create an instance of UserInputModel given an JSON string
+  * Create an instance of Cookie given an JSON string
   *
   * @param jsonString JSON string
-  * @return An instance of UserInputModel
-  * @throws IOException if the JSON string is invalid with respect to UserInputModel
+  * @return An instance of Cookie
+  * @throws IOException if the JSON string is invalid with respect to Cookie
   */
-  public static UserInputModel fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, UserInputModel.class);
+  public static Cookie fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, Cookie.class);
   }
 
  /**
-  * Convert an instance of UserInputModel to an JSON string
+  * Convert an instance of Cookie to an JSON string
   *
   * @return JSON string
   */
