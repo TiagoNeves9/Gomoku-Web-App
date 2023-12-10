@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LobbyService } from "../services/LobbyService";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl } from "@material-ui/core";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export function LobbyScreen() {
@@ -16,13 +16,13 @@ export function LobbyScreen() {
   const POLLING_INTERVAL = 10000;
   let navigate = useNavigate();
 
-  /*useEffect(() => {
+  useEffect(() => {
     leaveLobby(); //leave lobby on refresh
     return () => {
       leaveLobby(); //when leave lobby page remove request from server
     };
   }, []);
-  */
+
   //used for polling whether the game has been created
   useInterval(async () => {
     if (waiting) {
@@ -38,32 +38,29 @@ export function LobbyScreen() {
 
   async function leaveLobby() {
     try {
-      console.log("before leaveLobby");
       const response = await LobbyService.leaveLobby();
-      console.log("leaveLobby response:", response);
-
-      if (response) {
-        setIsWaiting(false);
+      if (response)
         setRequestId(null);
-      }
     } catch (error) {
       console.error("Error occurred while leaving lobby", error);
     } finally {
+      setIsWaiting(false);
       setIsCreating(false);
     }
   }
 
   async function handleCreateLobby() {
-      setIsCreating(true);
-      let settings = {
-        "boardDim" : selectedBoardSize,
-        "opening" : selectedOpening,
-        "variant" : selectedVariant }
-      await LobbyService.joinLobby(settings).then((response) => {
-        console.log(response.value)
-        setRequestId(response.value);
-        setIsWaiting(true);
-      })
+    setIsCreating(true);
+    let settings = {
+      "boardDim": selectedBoardSize,
+      "opening": selectedOpening,
+      "variant": selectedVariant
+    }
+    await LobbyService.startLobby(settings).then((response) => {
+      console.log(response.value)
+      setRequestId(response.value);
+      setIsWaiting(true);
+    })
   }
 
   let submitButton;
@@ -89,8 +86,7 @@ export function LobbyScreen() {
       <Button
         type="submit" variant="contained" color="primary"
         onClick={() => { navigate(`/game/${gameID}`); }}
-      >
-        Go to Game
+      > Go to Game
       </Button>
     );
   } else {
@@ -107,9 +103,11 @@ export function LobbyScreen() {
   let lobbiesButton = (
     <Button
       type="submit" variant="contained" color="primary"
-      onClick={() => { navigate(`/play`); }}
-    >
-      Go to Lobbies
+      onClick={() => {
+        leaveLobby();
+        navigate(`/play`);
+      }}
+    > Go to Lobbies
     </Button>
   );
 

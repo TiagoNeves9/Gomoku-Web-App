@@ -31,12 +31,11 @@ export const ProfileScreen = () => {
 
     return (
         <div>
-            <Link to="/home">Return</Link>
-            <h1>Profile</h1>
-            <h2>Username:</h2>
-            <p style={{ paddingLeft: '20px' }}>{currentUser.user.username}</p>
-            <h2>Rank:</h2>
-            <p style={{ paddingLeft: '20px' }}>
+            <h1 style={{ paddingBottom: 10 }}>My profile</h1>
+            <h2 style={{ paddingLeft: '20px' }}>Username:</h2>
+            <p style={{ paddingLeft: '40px' }}>{currentUser.user.username}</p>
+            <h2 style={{ paddingLeft: '20px' }}>Statistics:</h2>
+            <p style={{ paddingLeft: '40px' }}>
                 Total score: {content.properties.userRanking.score} <br />
                 Games played: {content.properties.userRanking.ngames}
             </p>

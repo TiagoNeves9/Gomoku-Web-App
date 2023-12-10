@@ -19,7 +19,11 @@ export function AboutScreen() {
     return (
         <div id="about">
             <h1 className="h1">About Application</h1>
-            <p className="version">Version: {version}</p>
+            <p
+                className="version"
+                style={{ listStyleType: 'none', paddingBottom: 250 }}
+            > Version: {version}
+            </p>
         </div>
-       )
+    )
 }

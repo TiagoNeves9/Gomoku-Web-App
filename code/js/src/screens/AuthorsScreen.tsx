@@ -23,12 +23,18 @@ export const AuthorsScreen = () => {
     return (
         <div id="authors">
             <h1 className="h1">Authors</h1>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <ul style={{ listStyleType: 'none', paddingBottom: 200 }}>
                 {authors.map((author, index) => (
                     <li key={index} className="li">
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'left' }}>{author.name}</span>
-                        <span style={{ display: 'inline-block', width: '100px', textAlign: 'center' }}>{author.number}</span>
-                        <span style={{ display: 'inline-block', width: '150px', textAlign: 'right' }}>{author.email}</span>
+                        <span
+                            style={{ display: 'inline-block', width: '150px', textAlign: 'left' }}>{author.name}
+                        </span>
+                        <span
+                            style={{ display: 'inline-block', width: '80px', textAlign: 'left' }}>{author.number}
+                        </span>
+                        <span
+                            style={{ display: 'inline-block', width: '150px', textAlign: 'left' }}>{author.email}
+                        </span>
                     </li>
                 ))}
             </ul>

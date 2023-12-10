@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFetch } from "../custom-hooks/useFetch";
 import { AuthContext } from "../services/Auth";
+import { LobbyService } from "../services/LobbyService";
 
 
 
@@ -37,10 +38,10 @@ export const PlayScreen = () => {
     }
 
     const [selectedLobby, setSelectedLobby] = useState<string | null>(null);
-    const handleJoinLobby = (lobbyId: string) => {
-        setSelectedLobby(lobbyId);
-        // Perform the action to join the lobby here
-        // Example: Redirect to the game page
+    const handleJoinLobby = (lobby) => {
+        setSelectedLobby(lobby);
+        LobbyService.joinLobby(lobby);
+        navigate(`/game/${lobby.lobbyId}`);
     };
 
     if (loading) return <div>Loading...</div>;
@@ -52,23 +53,21 @@ export const PlayScreen = () => {
     if (lobbyList.length === 0) {
         return (
             <div>
-                <Link to="/home">Return</Link>
                 <h1>Play</h1>
-                <p>No lobbies are available</p>
-                <ul style={{ listStyleType: 'none', paddingLeft: 10 }}>
-                <p>You can create your own lobby <>    </>
-                    <button onClick={
-                        () => handleCreateLobby()}> Create lobby
-                    </button>
-                </p>
-            </ul>
+                <p>No lobbies are available...</p>
+                <ul style={{ listStyleType: 'none', paddingLeft: 20 }}>
+                    <p>You can create your own lobby <>    </>
+                        <button onClick={
+                            () => handleCreateLobby()}> Create lobby
+                        </button>
+                    </p>
+                </ul>
             </div>
         );
     }
 
     return (
         <div>
-            <Link to="/home">Return</Link>
             <ul style={{ listStyleType: 'none', paddingLeft: 100 }}>
                 <h1>Play</h1>
             </ul>
@@ -102,7 +101,7 @@ export const PlayScreen = () => {
                         </span> <br />
                         <button
                             onClick={
-                                () => handleJoinLobby(lobby.lobbyId)} style={{ marginTop: '10px', marginLeft: '100px' }
+                                () => handleJoinLobby(lobby)} style={{ marginTop: '10px', marginLeft: '100px' }
                                 }> Join
                         </button> <br />
                         <br />

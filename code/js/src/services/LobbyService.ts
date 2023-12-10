@@ -6,9 +6,8 @@ interface Response {
   value?: any;
 }
 
-
 export const LobbyService = {
-  joinLobby: function (lobbySettings): Promise<Response> {
+  startLobby: function (lobbySettings): Promise<Response> {
     return postData("api/games/start", lobbySettings).then((response) => {
       console.log(response)
       if (response.class && response.class.includes("Lobby")) {
@@ -19,6 +18,17 @@ export const LobbyService = {
         const id = response.properties.id;
         console.log(id)
         return { value: id };
+      }
+
+      //TOAST: ERROR INVALID FORMAT RESPONSE 
+    });
+  },
+
+  joinLobby: function (lobby): Promise<Response> {
+    return postData("api/lobbies/join", lobby).then((response) => {
+      if (response.class && response.class.includes("Lobby")) {
+        const gameId = response.properties.gameId;
+        return { value: gameId };
       }
 
       //TOAST: ERROR INVALID FORMAT RESPONSE 
@@ -38,13 +48,12 @@ export const LobbyService = {
 
   //do we need a reply to the user here? or do we just change to another "page" ?
   leaveLobby: function (): Promise<Response> {
-    
-      return deleteData("api/lobbies/leave").then((response) => {
-        if (response.ok) return {}; // Return an empty object for success
-        else{
-          console.error("Failed to leave lobby. Status:", response.status);
-          throw new Error("Failed to leave lobby");
-        }
+    return deleteData("api/lobbies/leave").then((response) => {
+      if (response.ok) return {}; // Return an empty object for success
+      else {
+        console.error("Failed to leave lobby. Status:", response.status);
+        throw new Error("Failed to leave lobby");
+      }
     });
   },
 };
