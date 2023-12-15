@@ -142,11 +142,11 @@ class GamesController(
         @PathVariable("id") gameId: UUID,
         @RequestBody cell: CellInputModel
     ): SirenModel<OutputModel> {
-        request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
 
         return try {
-            val updatedGame = gomokuService.play(gameId, Cell(Row(cell.row), Column(cell.col)))
+            val updatedGame = gomokuService.play(aUser, gameId, Cell(Row(cell.row), Column(cell.col)))
             val gameModel = GameOutputModel(
                 id = updatedGame.gameId,
                 userB = updatedGame.users.first,
@@ -228,11 +228,9 @@ class GamesController(
     ): SirenModel<OutputModel> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
             ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
-        println("inside getGameById")
+
         return try {
-            println("WE GOT HERE!")
             val game = gomokuService.getById(gameId)
-            println("WE GOT HERE 2!")
             val gameModel = GameOutputModel(
                 id = game.gameId,
                 userB = game.users.first,
@@ -242,7 +240,6 @@ class GamesController(
                 boardCells = game.board.positions,
                 boardState = game.board.typeToString()
             )
-            println("WE GOT HERE 3!")
             siren(gameModel) {
                 clazz("Game")
                 action(

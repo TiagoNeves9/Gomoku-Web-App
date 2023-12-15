@@ -56,14 +56,19 @@ class GomokuService(private val transactionManager: TransactionManager) {
             game
         }
 
-    fun play(gameID: UUID, cell: Cell): Game =
+    fun play(aUser: AuthenticatedUser, gameID: UUID, cell: Cell): Game =
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
+            if (game.currentPlayer.first.userId != aUser.user.userId)
+                throw Exceptions.PlayNotAllowedException("It's not your turn")
 
             val updatedGame = game.computeNewGame(cell)
             if (updatedGame.board is BoardWin) {
                 it.statisticsRepository
-                    .updateUserRanking(updatedGame.currentPlayer.first.username, updatedGame.score)
+                    .updateUserRanking(
+                        updatedGame.currentPlayer.first.username, updatedGame.score
+                    )
+
                 val losingUser =
                     if (updatedGame.currentPlayer.first != updatedGame.users.first)
                         updatedGame.users.first
