@@ -5,16 +5,13 @@ import { Button } from '@material-ui/core';
 import { useCookies } from "react-cookie";
 
 
-
-
 function NavBar() {
-
     const navigate = useNavigate();
     const currentUser = useCurrentUser();
     const [cookies, setCookie, removeCookie] = useCookies(["Token"]);
-    
+
     const handleLogout = () => {
-        removeCookie("Token", {path: '/'});
+        removeCookie("Token", { path: '/' });
         window.location.reload();
         navigate("/");
     };

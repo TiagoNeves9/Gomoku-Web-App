@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+
 const useAuthentication = () => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
@@ -17,9 +18,7 @@ const useAuthentication = () => {
                 body: JSON.stringify({ username, password }),
             });
 
-            if (!response.ok) {
-                throw new Error('Erro ao fazer login');
-            }
+            if (!response.ok) throw new Error('Error in login');
 
             // Obter os dados do usuário da resposta
             const userInfo = await response.json();

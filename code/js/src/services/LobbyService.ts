@@ -9,22 +9,14 @@ interface Response {
 export const LobbyService = {
   startLobby: function (lobbySettings): Promise<Response> {
     return postData("api/games/start", lobbySettings).then((response) => {
-      console.log(response)
-
       if (response.class && response.class.includes("Lobby")) {
-
         const id = response.properties.lobbyId;
-        console.log(id)
         return { value: id };
-
       }
 
       else if (response.class && response.class.includes("Game")) {
-
         const id = response.properties.id;
-        console.log(id)
         return { value: id };
-
       }
 
       //TOAST: ERROR INVALID FORMAT RESPONSE
@@ -45,7 +37,6 @@ export const LobbyService = {
   checkGameCreated: async function (requestId): Promise<String> {
     const url = `api/lobbies/${requestId}`;
     const response = await getData(url);
-    console.log(response);
 
     const waitMessage = response.properties?.waitMessage;
     if (waitMessage) return waitMessage;

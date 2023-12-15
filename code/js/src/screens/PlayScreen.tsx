@@ -7,9 +7,8 @@ import { LobbyService } from "../services/LobbyService";
 
 export const PlayScreen = () => {
     const navigate = useNavigate();
+    
     const currentUser = useContext(AuthContext);
-    console.log(currentUser.user);
-
     if (!currentUser || !currentUser.user) {
         return (
             <div>

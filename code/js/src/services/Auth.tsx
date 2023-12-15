@@ -55,21 +55,18 @@ export function useSetUser() {
   return useContext(AuthContext).setUser;
 }
 
-function useFetch(
-  url: string,
-  refreshFlag?: Boolean
-): string | undefined {
-  console.log(url);
+function useFetch(url: string, refreshFlag?: Boolean): string | undefined {
   const [content, setContent] = useState(undefined);
+
   useEffect(() => {
     let cancelled = false;
     async function doFetch() {
       try {
         const resp = await fetch(url);
-        console.log(`resp is = ${resp}`);
+        //console.log(`resp is = ${resp}`);
         if (resp.status >= 400 && resp.status < 500) throw resp.status;
         const body = await resp.json();
-        console.log(`resp is = ${body}`);
+        //console.log(`resp is = ${body}`);
         if (!cancelled) setContent(body);
       } catch (error) {
         setContent(error);
@@ -79,5 +76,6 @@ function useFetch(
     doFetch();
     return () => { cancelled = true; };
   }, [url, refreshFlag]);
+
   return content;
 }

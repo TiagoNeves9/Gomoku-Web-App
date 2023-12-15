@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AppScreen } from "./screens/AppScreen";
@@ -11,7 +11,7 @@ import { RegisterScreen } from "./screens/RegisterScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import { PlayScreen } from "./screens/PlayScreen";
 import { LobbyScreen } from "./screens/LobbyScreen";
-import { Game } from "./screens/GameScreen";
+import { GameScreen } from "./screens/GameScreen";
 import { AuthContainer } from "./services/Auth";
 import { RequireAuth } from "./services/AuthRequire";
 import NavBar from "./screens/utils";
@@ -23,8 +23,8 @@ export const router = createBrowserRouter(
             path: "/",
             element: (
                 <AuthContainer>
-                    <NavBar/>
-                    <Outlet/>
+                    <NavBar />
+                    <Outlet />
                 </AuthContainer>
             ),
             children: [
@@ -34,13 +34,13 @@ export const router = createBrowserRouter(
                         <Link to="/"> Return </Link>
                         <h1 style={{ color: 'red' }}>Error Page</h1>
                     </div>,
-                    element: <AppScreen /> 
+                    element: <AppScreen />
                 },
                 {
                     path: "home",
                     element: (
                         <RequireAuth>
-                            <HomeScreen /> 
+                            <HomeScreen />
                         </RequireAuth>
                     )
                 },
@@ -68,7 +68,7 @@ export const router = createBrowserRouter(
                     path: "profile",
                     element: (
                         <RequireAuth>
-                            <ProfileScreen /> 
+                            <ProfileScreen />
                         </RequireAuth>
                     )
                 },
@@ -76,7 +76,7 @@ export const router = createBrowserRouter(
                     path: "play",
                     element: (
                         <RequireAuth>
-                            <PlayScreen /> 
+                            <PlayScreen />
                         </RequireAuth>
                     )
                 },
@@ -84,7 +84,7 @@ export const router = createBrowserRouter(
                     path: "lobby",
                     element: (
                         <RequireAuth>
-                            <LobbyScreen /> 
+                            <LobbyScreen />
                         </RequireAuth>
                     )
                 },
@@ -92,7 +92,7 @@ export const router = createBrowserRouter(
                     path: "/game/:gid",
                     element: (
                         <RequireAuth>
-                            <Game /> 
+                            <GameScreen />
                         </RequireAuth>
                     )
                 },
@@ -102,9 +102,5 @@ export const router = createBrowserRouter(
 )
 
 export default function App() {
-    return (
-        <div>
-            <RouterProvider router={router} />
-        </div>
-    )
+    return (<div><RouterProvider router={router} /></div>)
 }

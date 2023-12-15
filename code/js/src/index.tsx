@@ -6,8 +6,9 @@ import { CookiesProvider } from "react-cookie";
 
 const root = createRoot(document.getElementById("container"));
 
+// render the app with CookiesProvider
 root.render(
-    <CookiesProvider>
-      <App />  
-    </CookiesProvider>
+  <CookiesProvider>
+    <App />
+  </CookiesProvider>
 );

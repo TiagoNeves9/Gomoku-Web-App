@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
-import '../css/General.css'
 import { useCurrentUser } from "../services/Auth";
+import '../css/General.css';
 
 
 export function AppScreen() {
@@ -14,8 +14,9 @@ export function AppScreen() {
                 state={{ source: location.pathname }}
                 replace={true}
             />
-            );  
+        );
     }
+
     return (
         <div id="app">
             <h1 className="h1">Welcome to Gomoku Application</h1>

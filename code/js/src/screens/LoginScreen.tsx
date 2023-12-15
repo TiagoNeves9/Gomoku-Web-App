@@ -27,13 +27,14 @@ async function login(
 
 function CallLoginScreen() {
     const setUser = useSetUser();
+    const location = useLocation();
 
-    const [inputs, setInputs] = useState({ username: '', password: '' });
-    const [redirect, setRedirect] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
+    const [inputs, setInputs] =
+        useState({ username: '', password: '' });
     const [error, setError] = useState(undefined)
     const [cookies, setCookie] = useCookies(["Token"]);
-    const location = useLocation();
+    const [submitting, setSubmitting] = useState(false);
+    const [redirect, setRedirect] = useState(false);
 
     if (redirect)
         return <Navigate
@@ -48,20 +49,19 @@ function CallLoginScreen() {
     async function acceptSubmit(ev: React.FormEvent<HTMLFormElement>) {
         ev.preventDefault();
         setSubmitting(true);
+
         try {
             const resp = await login(inputs.username, inputs.password);
-            console.log(resp);
-            if (resp)   {
-                console.log(resp.properties);
+            if (resp) {
                 const user = {
                     username: resp.properties.username,
                     id: resp.properties.id,
                     token: resp.properties.token
                 };
-                setCookie("Token", resp.properties.token, 
-                {
-                    path: '/'
-                });
+                setCookie("Token", resp.properties.token,
+                    {
+                        path: '/'
+                    });
                 setUser(user);
                 setRedirect(true);
             } else setError(<p>Login failed. Please check your credentials.</p>);
@@ -73,50 +73,48 @@ function CallLoginScreen() {
     }
 
     return <>
-            {!submitting ?
-                <form
-                    onSubmit={acceptSubmit}
-                    style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 40
-                    }}
-                >
-                    <fieldset disabled={submitting}>
-                        <h1 style={{ textAlign: 'center' }}>Login</h1>
-                        <div>
-                            <label htmlFor="username">Username</label>
-                            <input
-                                id="username" type="text" name="username"
-                                value={inputs.username} onChange={acceptChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input
-                                id="password" type="password" name="password"
-                                value={inputs.password} onChange={acceptChange}
-                            />
-                        </div>
-                        <div>
-                            <button
-                                type="submit"
-                                disabled={!inputs.username || !inputs.password}
-                            > Login
-                            </button> <br />
-                            <a>Don't have an account? </a>
-                            <a href="/register">Sign up</a>
-                        </div>
-                    </fieldset>
-                    {error}
-                </form> :
-                null
-            }
+        {!submitting ?
+            <form
+                onSubmit={acceptSubmit}
+                style={{
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', padding: 40
+                }}
+            >
+                <fieldset disabled={submitting}>
+                    <h1 style={{ textAlign: 'center' }}>Login</h1>
+                    <div>
+                        <label htmlFor="username">Username</label>
+                        <input
+                            id="username" type="text" name="username"
+                            value={inputs.username} onChange={acceptChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password">Password</label>
+                        <input
+                            id="password" type="password" name="password"
+                            value={inputs.password} onChange={acceptChange}
+                            text-align="right"
+                        />
+                    </div>
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={!inputs.username || !inputs.password}
+                        > Login
+                        </button> <br />
+                        <a>Don't have an account? </a>
+                        <a href="/register">Sign up</a>
+                    </div>
+                </fieldset>
+                {error}
+            </form> :
+            null
+        }
     </>
 }
 
 export const LoginScreen = () => {
-    return (
-        <div>
-            <CallLoginScreen />
-        </div>
-    );
+    return (<div><CallLoginScreen /></div>);
 }

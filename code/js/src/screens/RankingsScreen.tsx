@@ -7,8 +7,7 @@ export const RankingsScreen = () => {
         properties: { rankingList: { user: string; score: number; ngames: number }[] }
     }>({ uri: "api/rankings" });
 
-    if (loading)
-        return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
 
     if (error || !content || !content.properties || !content.properties.rankingList)
         return <div>Error fetching data...</div>;

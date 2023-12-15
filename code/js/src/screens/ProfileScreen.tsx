@@ -6,7 +6,6 @@ import { useFetch } from "../custom-hooks/useFetch";
 
 export const ProfileScreen = () => {
     const currentUser = useContext(AuthContext);
-    console.log(currentUser.user);
 
     if (!currentUser || !currentUser.user) {
         return (
@@ -23,8 +22,7 @@ export const ProfileScreen = () => {
         properties: { userRanking: { user: string; score: number; ngames: number } }
     }>({ uri: userRankingUri });
 
-    if (loading)
-        return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
 
     if (error || !content || !content.properties || !content.properties.userRanking)
         return <div>Error fetching data...</div>;

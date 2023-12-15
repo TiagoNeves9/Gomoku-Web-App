@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { _fetch } from "../custom-hooks/useFetch";
-import { useCurrentUser, useSetUser } from "../services/Auth";
+import { useSetUser } from "../services/Auth";
 import { useCookies } from "react-cookie";
 
 
@@ -15,13 +15,13 @@ async function signup(
 
 function CallRegisterScreen() {
     const setUser = useSetUser();
+    const navigate = useNavigate();
+
     const [inputs, setInputs] =
         useState({ username: '', password: '', confirmPassword: '' });
     const [error, setError] = useState(undefined)
     const [cookies, setCookie] = useCookies(["Token"]);
     const [submitting, setSubmitting] = useState(false);
-    const currentUser = useCurrentUser();
-    const navigate = useNavigate();
 
     async function acceptChange(e: ChangeEvent<HTMLInputElement>) {
         const name = e.currentTarget.name;
@@ -79,7 +79,7 @@ function CallRegisterScreen() {
                 }}
             >
                 <fieldset disabled={submitting}>
-                    <h1>Sign up</h1>
+                    <h1 style={{ textAlign: 'center' }}>Sign up</h1>
                     <div>
                         <label htmlFor="username">Username</label>
                         <input

@@ -5,6 +5,8 @@ import { LobbyService } from "../services/LobbyService";
 
 
 export function LobbyScreen() {
+  let navigate = useNavigate();
+
   const [waiting, setIsWaiting] = useState(false);
   const [matched, setMatched] = useState(false);
   const [gameID, setGameId] = useState<number>();
@@ -14,7 +16,6 @@ export function LobbyScreen() {
   const [selectedBoardSize, setSelectedBoardSize] = useState("15");
   const [isCreating, setIsCreating] = useState(false);
   const POLLING_INTERVAL = 10000;
-  let navigate = useNavigate();
 
   useEffect(() => {
     leaveLobby(); //leave lobby on refresh
@@ -27,7 +28,6 @@ export function LobbyScreen() {
   useInterval(async () => {
     if (waiting) {
       let status = await LobbyService.checkGameCreated(requestId);
-
       if (status == "CREATED") {
         setGameId(requestId);
         setMatched(true);
@@ -50,13 +50,14 @@ export function LobbyScreen() {
 
   async function handleCreateLobby() {
     setIsCreating(true);
+
     let settings = {
       "boardDim": selectedBoardSize,
       "opening": selectedOpening,
       "variant": selectedVariant
     }
+
     await LobbyService.startLobby(settings).then((response) => {
-      console.log(response.value)
       setRequestId(response.value);
       setIsWaiting(true);
     })
@@ -166,7 +167,6 @@ export function LobbyScreen() {
 }
 
 export function useInterval(callback, delay) {
-  console.log("useInterval called");
   useEffect(() => {
     function tick() {
       callback();
