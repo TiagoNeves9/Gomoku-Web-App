@@ -29,8 +29,9 @@ class UsersController(private val usersService: UsersService) {
     @Authenticated
     @GetMapping(PathTemplate.USER)
     fun getUser(request: HttpServletRequest): SirenModel<OutputModel> {
-        val aUser = request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+        val aUser =
+            request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+                ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
 
         val user = usersService.getUserByToken(aUser.token)
         return if (user != null) {

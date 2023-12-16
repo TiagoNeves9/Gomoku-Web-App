@@ -11,7 +11,7 @@ type GameType = {
     game: Game | null;
     turn: Boolean,
     setTurn: (boolean) => void,
-    play?: (cell) => void;
+    play?: (cell_and_size) => void;
 };
 
 export const GameContext = createContext<GameType>({
@@ -27,7 +27,8 @@ function Cell(props) {
     const onCellClick = () => {
         const playSettings = {
             "row": props.row,
-            "col": props.col
+            "col": props.col,
+            "boardSize": props.boardSize
         }
         play(playSettings)
         //console.log("Placed " + props.row + props.col)
@@ -89,7 +90,7 @@ export function Board() {
 }
 
 export function GameScreen() {
-    let { gid } = useParams();
+    let { gid: gId } = useParams();
     const [obtainedGame, setObtainedGame] = useState<Game>(null)
     const [turn, setTurn] = useState<Boolean>(false)
     const POLLING_INTERVAL = 6000;
@@ -99,7 +100,7 @@ export function GameScreen() {
     useEffect(() => {
         const intervalId = setInterval(async () => {
             if (isPolling) {
-                let gameObj = await GameService.getGame(gid);
+                let gameObj = await GameService.getGame(gId);
                 setObtainedGame(gameObj);
 
                 if (gameObj.boardState == "RUNNING") {
@@ -118,9 +119,9 @@ export function GameScreen() {
         return () => clearInterval(intervalId);
     }, [isPolling])
 
-    async function doPlay(cell) {
+    async function doPlay(cell_and_size) {
         setTurn(false)
-        let gameObj = await GameService.play(gid, cell)
+        let gameObj = await GameService.play(gId, cell_and_size)
         setObtainedGame(gameObj)
         setIsPolling(true)
     }
