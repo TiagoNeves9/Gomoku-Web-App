@@ -12,26 +12,21 @@ import com.example.gomoku.service.Exceptions
 import com.example.gomoku.service.UsersService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
-
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
 
 @RestController
 class UsersController(private val usersService: UsersService) {
-    /*
-    * TODO:
-    *  CHANGE EXCEPTIONS
-    *  Status codes
-    *  links/actions ? siren?
-    * */
-
     @Authenticated
     @GetMapping(PathTemplate.USER)
-    fun getUser(request: HttpServletRequest): SirenModel<OutputModel> {
+    fun getUser(request: HttpServletRequest): ResponseEntity<SirenModel<OutputModel>> {
         val aUser =
             request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-                ?: return siren(ErrorOutputModel(401, "User not authenticated! ")) {}
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
 
         val user = usersService.getUserByToken(aUser.token)
         return if (user != null) {
@@ -40,12 +35,16 @@ class UsersController(private val usersService: UsersService) {
                 user.userId,
                 aUser.token
             )
-            siren(userModel) {
-                clazz("user login")
-                link(PathTemplate.home(), LinkRelations.HOME)
-                link(PathTemplate.start(), LinkRelations.LOBBY)
-            }
-        } else siren(ErrorOutputModel(404, "User not found!")) {}
+            ResponseEntity.status(201).body(
+                siren(userModel) {
+                    clazz("user login")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.start(), LinkRelations.LOBBY)
+                }
+            )
+        } else ResponseEntity.status(404).body(
+            siren(ErrorOutputModel(404, "User not found!")) {}
+        )
     }
 
     @GetMapping(PathTemplate.USERS)
@@ -60,25 +59,31 @@ class UsersController(private val usersService: UsersService) {
     * we shouldn't call service twice since it's creating a new transaction each time
     * */
     @PostMapping(PathTemplate.CREATE_USER)
-    fun insert(@RequestBody user: UserInputModel): SirenModel<OutputModel> {
+    fun insert(@RequestBody user: UserInputModel): ResponseEntity<SirenModel<OutputModel>> {
         return try {
             val createdUser = usersService.createNewUser(user.name, user.password)
             val token = usersService.createToken(user.name, user.password)
             val userModel = UserOutputModel(createdUser.username, createdUser.userId, token)
-            siren(userModel) {
-                clazz("user signup")
-                link(PathTemplate.home(), LinkRelations.HOME)
-                link(PathTemplate.start(), LinkRelations.LOBBY)
-            }
+            ResponseEntity.status(200).body(
+                siren(userModel) {
+                    clazz("user signup")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.start(), LinkRelations.LOBBY)
+                }
+            )
         } catch (ex: Exceptions.UsernameAlreadyInUseException) {
-            siren(ErrorOutputModel(409, ex.message)) {}
+            ResponseEntity.status(409).body(
+                siren(ErrorOutputModel(409, ex.message)) {}
+            )
         } catch (ex: Exceptions.ErrorCreatingUserException) {
-            siren(ErrorOutputModel(400, ex.message)) {}
+            ResponseEntity.status(400).body(
+                siren(ErrorOutputModel(400, ex.message)) {}
+            )
         }
     }
 
     @PostMapping(PathTemplate.LOGIN)
-    fun login(@RequestBody user: UserInputModel): SirenModel<OutputModel> {
+    fun login(@RequestBody user: UserInputModel): ResponseEntity<SirenModel<OutputModel>> {
         return try {
             val loggedUser = usersService.getUserCredentials(user.name, user.password)
             val userModel = UserOutputModel(
@@ -86,13 +91,17 @@ class UsersController(private val usersService: UsersService) {
                 loggedUser.id,
                 loggedUser.token
             )
-            siren(userModel) {
-                clazz("user login")
-                link(PathTemplate.home(), LinkRelations.HOME)
-                link(PathTemplate.start(), LinkRelations.LOBBY)
-            }
+            ResponseEntity.status(200).body(
+                siren(userModel) {
+                    clazz("user login")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.start(), LinkRelations.LOBBY)
+                }
+            )
         } catch (ex: Exceptions.WrongUserOrPasswordException) {
-            throw ex
+            ResponseEntity.status(401).body(
+                siren(ErrorOutputModel(401, ex.message)) {}
+            )
         }
     }
 

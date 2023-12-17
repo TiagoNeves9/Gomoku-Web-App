@@ -33,11 +33,9 @@ class UsersService(
         }
     }
 
-    fun getById(id: UUID) =
-        transactionManager.run { it.usersRepository.getById(id) }
+    fun getById(id: UUID) = transactionManager.run { it.usersRepository.getById(id) }
 
-    fun getAll(): List<User> =
-        transactionManager.run { it.usersRepository.getAll() }
+    fun getAll(): List<User> = transactionManager.run { it.usersRepository.getAll() }
 
     fun doesUserExist(username: String): Boolean =
         transactionManager.run {
@@ -56,7 +54,6 @@ class UsersService(
             token
         }
 
-    //User?
     fun getByUsername(username: String): User =
         transactionManager.run {
             it.usersRepository.getUserWithUsername(username)
@@ -70,27 +67,25 @@ class UsersService(
     fun getUserCredentials(name: String, pass: String): UserOutputModel =
         transactionManager.run {
             if (!it.usersRepository.doesUserExist(name))
-                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect! ")
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect!")
 
             val user = it.usersRepository.getUserWithUsername(name)
             if (!passwordEncoder.matches(pass, user.encodedPassword))
-                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect! ")
+                throw Exceptions.WrongUserOrPasswordException("User or Password are incorrect!")
 
             val token = it.usersRepository.getUserToken(user.userId)
             UserOutputModel(user.username, user.userId, token)
         }
 
-
     fun getUserToken(userID: UUID): String =
         transactionManager.run {
-            val user = it.usersRepository.getById(userID)
+            it.usersRepository.getById(userID)
             val token = it.usersRepository.getUserToken(userID)
             token
         }
 
     /*AUXILIARY FUNCTIONS*/
-    private fun getInstant(): Instant =
-        Instant.ofEpochSecond(Instant.now().epochSecond)
+    private fun getInstant(): Instant = Instant.ofEpochSecond(Instant.now().epochSecond)
 
     private fun checkTokenValidation(token: Token): Boolean {
         val instant = getInstant()

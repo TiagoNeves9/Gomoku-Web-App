@@ -33,8 +33,8 @@ object PathTemplate {
     const val ABOUT = "/about"
 
     fun home(): URI = URI(HOME)
-    fun createUser(): URI = URI(CREATE_USER)
     fun start(): URI = URI(START)
+    fun joinLobby(): URI = URI(JOIN_LOBBY)
     fun play(gameId: UUID): URI = UriTemplate(PLAY).expand(gameId)
     fun isGameCreated(lobbyId: UUID): URI = UriTemplate(IS_GAME_CREATED).expand(lobbyId)
     fun gameById(gameId: UUID): URI = UriTemplate(GAME_BY_ID).expand(gameId)

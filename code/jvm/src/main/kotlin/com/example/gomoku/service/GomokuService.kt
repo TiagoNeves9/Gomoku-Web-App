@@ -41,7 +41,8 @@ class GomokuService(private val transactionManager: TransactionManager) {
     ): Game =
         transactionManager.run {
             val hostPlayer = Player(host, Turn.BLACK_PIECE)
-            val rules = Rules(lobby.boardDim, lobby.opening.toOpening(), lobby.variant.toVariant())
+            val rules =
+                Rules(lobby.boardDim, lobby.opening.toOpening(), lobby.variant.toVariant())
             val game = Game(
                 lobby.lobbyId, //game ID is the same as lobby ID
                 Pair(host, joined),
@@ -60,25 +61,28 @@ class GomokuService(private val transactionManager: TransactionManager) {
         transactionManager.run {
             val game = it.gamesRepository.getById(gameID)
             if (game.currentPlayer.first.userId != aUser.user.userId)
-                throw Exceptions.PlayNotAllowedException("It's not your turn")
+                throw Exceptions.NotYourTurnException("It's not your turn")
 
             val updatedGame = game.computeNewGame(cell)
             if (updatedGame.board is BoardWin) {
-                it.statisticsRepository
-                    .updateUserRanking(
-                        updatedGame.currentPlayer.first.username, updatedGame.score
-                    )
+                it.statisticsRepository.updateUserRanking(
+                    updatedGame.currentPlayer.first.username, updatedGame.score
+                )
 
                 val losingUser =
                     if (updatedGame.currentPlayer.first != updatedGame.users.first)
                         updatedGame.users.first
                     else updatedGame.users.second
-                it.statisticsRepository.updateUserRanking(losingUser.username, 0)
+                it.statisticsRepository.updateUserRanking(
+                    losingUser.username, 0
+                )
             } else if (updatedGame.board is BoardDraw) {
-                it.statisticsRepository
-                    .updateUserRanking(game.users.first.username, updatedGame.score / 2)
-                it.statisticsRepository
-                    .updateUserRanking(game.users.second.username, updatedGame.score / 2)
+                it.statisticsRepository.updateUserRanking(
+                    game.users.first.username, updatedGame.score / 2
+                )
+                it.statisticsRepository.updateUserRanking(
+                    game.users.second.username, updatedGame.score / 2
+                )
             }
             it.gamesRepository.update(updatedGame)
             updatedGame
@@ -102,6 +106,9 @@ class GomokuService(private val transactionManager: TransactionManager) {
     fun deleteUserLobby(userId: UUID): Boolean {
         return transactionManager.run {
             val deleted = it.lobbiesRepository.deleteUserLobby(userId)
+            if (deleted == 0)
+                throw Exceptions.ErrorLeavingLobby("User $userId has no lobby")
+
             deleted == 1
         }
     }

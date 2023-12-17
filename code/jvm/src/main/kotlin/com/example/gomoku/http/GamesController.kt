@@ -22,19 +22,19 @@ class GamesController(
     private val usersController: UsersController
 ) {
     @ExceptionHandler(value = [Exceptions.NotFoundException::class])
-    fun exceptionHandler() = ResponseEntity
-        .status(404)
-        .body("GAME NOT FOUND")
+    fun exceptionHandler() = ResponseEntity.status(404).body("GAME NOT FOUND")
 
     @Authenticated
     @PostMapping(PathTemplate.START)
     fun createOrJoinGame(
         request: HttpServletRequest,
         @RequestBody input: GomokuStartInputModel
-    ): SirenModel<OutputModel> {
+    ): ResponseEntity<SirenModel<OutputModel>> {
         val aUser =
             request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-                ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
 
         check(input.boardDim == BOARD_DIM || input.boardDim == BIG_BOARD_DIM) {
             "Board dimension must be $BOARD_DIM or $BIG_BOARD_DIM!"
@@ -54,13 +54,28 @@ class GamesController(
                 lobby.rules.opening.toString(),
                 lobby.rules.variant.toString()
             )
-            return siren(lobbyModel) {
-                clazz("Lobby")
-            }
+            return ResponseEntity.status(201).body(
+                siren(lobbyModel) {
+                    clazz("Lobby")
+                    action(
+                        "create lobby",
+                        PathTemplate.joinLobby(),
+                        HttpMethod.POST,
+                        "application/x-www-form-urlencoded"
+                    ) {
+                        textField("create lobby")
+                    }
+                }
+            )
         } else {
             // host user is trying to join the lobby
-            if (lobbyOrNull.hostUserId == user.userId)
-                siren(ErrorOutputModel(405, "User can't join his own lobby!")) {}
+            if (lobbyOrNull.hostUserId == user.userId) {
+                ResponseEntity.status(405).body(
+                    siren(
+                        ErrorOutputModel(405, "You can't join your own lobby!")
+                    ) {}
+                )
+            }
 
             // join the unique lobby, start a game and remove the lobby
             gomokuService.deleteLobby(lobbyOrNull)
@@ -77,31 +92,51 @@ class GamesController(
                 boardCells = game.board.positions,
                 boardState = game.board.typeToString()
             )
-            return siren(gameModel) { clazz("Game") }
+            return ResponseEntity.status(201).body(
+                siren(gameModel) {
+                    clazz("Game")
+                    action(
+                        "create game and delete lobby",
+                        PathTemplate.play(game.gameId),
+                        HttpMethod.POST,
+                        "application/x-www-form-urlencoded"
+                    ) {
+                        textField("create game and delete lobby")
+                    }
+                }
+            )
         }
     }
 
     @GetMapping(PathTemplate.LOBBIES)
-    fun getLobbies(): SirenModel<OutputModel> {
+    fun getLobbies(): ResponseEntity<SirenModel<OutputModel>> {
         val lobbies = gomokuService.getLobbies()
-        return siren(
-            LobbiesOutputModel(lobbyList = lobbies)
-        ) { clazz("Lobbies") }
+        return ResponseEntity.status(200).body(
+            siren(LobbiesOutputModel(lobbyList = lobbies)) { clazz("Lobbies") }
+        )
     }
 
     @Authenticated
     @DeleteMapping(PathTemplate.LEAVE_LOBBY)
-    fun leaveLobby(request: HttpServletRequest): SirenModel<OutputModel> {
+    fun leaveLobby(request: HttpServletRequest): ResponseEntity<SirenModel<OutputModel>> {
         val aUser =
             request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-                ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
 
         return try {
             val wasDeleted = gomokuService.deleteUserLobby(aUser.user.userId)
-            if (wasDeleted) siren(MessageOutputModel("Left Lobby")) {}
-            else throw Exceptions.ErrorLeavingLobby("Leaving")
+            if (wasDeleted) ResponseEntity.status(200).body(
+                siren(MessageOutputModel("Left Lobby")) {}
+            )
+            else ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, "User was not in a lobby!")) {}
+            )
         } catch (ex: Exception) {
-            throw ex
+            ResponseEntity.status(400).body(
+                siren(ErrorOutputModel(400, ex.message)) {}
+            )
         }
     }
 
@@ -110,15 +145,20 @@ class GamesController(
     fun joinLobby(
         request: HttpServletRequest,
         @RequestBody lobbyOutputModel: LobbyOutputModel
-    ): SirenModel<OutputModel> {
+    ): ResponseEntity<SirenModel<OutputModel>> {
         val aUser =
             request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-                ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
 
         val hostUser = usersController.getById(lobbyOutputModel.hostUserId)
         val joiningUser = User(aUser.user.userId, aUser.user.username, aUser.user.encodedPassword)
         if (hostUser.userId == joiningUser.userId)
-            return siren(ErrorOutputModel(405, "User can't join his own lobby!")) {}
+            return ResponseEntity.status(405).body(
+                siren(ErrorOutputModel(405, "User can't join his own lobby!")) {}
+            )
+
         val game = gomokuService.createGame(lobbyOutputModel, hostUser, joiningUser)
         val gameModel = GameOutputModel(
             id = game.gameId,
@@ -129,10 +169,21 @@ class GamesController(
             boardCells = game.board.positions,
             boardState = game.board.typeToString()
         )
+
         gomokuService.deleteLobby(lobbyOutputModel)
-        return siren(gameModel) {
-            clazz("Lobby")
-        }
+        return ResponseEntity.status(200).body(
+            siren(gameModel) {
+                clazz("Game")
+                action(
+                    "game created and lobby deleted",
+                    PathTemplate.joinLobby(),
+                    HttpMethod.POST,
+                    "application/x-www-form-urlencoded"
+                ) {
+                    textField("game created and lobby deleted")
+                }
+            }
+        )
     }
 
     @GetMapping(PathTemplate.GAMES)
@@ -144,15 +195,16 @@ class GamesController(
         request: HttpServletRequest,
         @PathVariable("id") gameId: UUID,
         @RequestBody cellInputModel: CellInputModel
-    ): SirenModel<OutputModel> {
+    ): ResponseEntity<SirenModel<OutputModel>> {
         val aUser =
             request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-                ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
 
         return try {
             val cell = cellInputModel.toCell()
-            val updatedGame =
-                gomokuService.play(aUser, gameId, cell)
+            val updatedGame = gomokuService.play(aUser, gameId, cell)
             val gameModel = GameOutputModel(
                 id = updatedGame.gameId,
                 userB = updatedGame.users.first,
@@ -162,20 +214,34 @@ class GamesController(
                 boardCells = updatedGame.board.positions,
                 boardState = updatedGame.board.typeToString()
             )
-            siren(gameModel) { clazz("Game") }
+            ResponseEntity.status(200).body(
+                siren(gameModel) { clazz("Game") }
+            )
         } catch (ex: Exceptions.GameDoesNotExistException) {
-            siren(ErrorOutputModel(404, ex.message)) {}
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, ex.message)) {}
+            )
+        } catch (ex: Exceptions.NotYourTurnException) {
+            ResponseEntity.status(401).body(
+                siren(ErrorOutputModel(401, ex.message)) {}
+            )
         } catch (ex: Exceptions.PlayNotAllowedException) {
-            siren(ErrorOutputModel(405, ex.message)) {}
+            ResponseEntity.status(405).body(
+                siren(ErrorOutputModel(405, ex.message)) {}
+            )
         } catch (ex: Exceptions.WrongPlayException) {
-            siren(ErrorOutputModel(405, ex.message)) {}
+            ResponseEntity.status(405).body(
+                siren(ErrorOutputModel(405, ex.message)) {}
+            )
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(400, ex.message)) {}
+            ResponseEntity.status(400).body(
+                siren(ErrorOutputModel(400, ex.message)) {}
+            )
         }
     }
 
     @GetMapping(PathTemplate.SPECTATE)
-    fun spectate(@PathVariable("id") gameId: UUID): SirenModel<OutputModel> {
+    fun spectate(@PathVariable("id") gameId: UUID): ResponseEntity<SirenModel<OutputModel>> {
         return try {
             if (gomokuService.isGameCreated(gameId)) {
                 val game = gomokuService.getById(gameId)
@@ -188,10 +254,16 @@ class GamesController(
                     boardCells = game.board.positions,
                     boardState = game.board.typeToString()
                 )
-                siren(gameModel) { clazz("Game") }
-            } else siren(ErrorOutputModel(404, "Game was not been created!")) {}
+                ResponseEntity.status(200).body(
+                    siren(gameModel) { clazz("Game") }
+                )
+            } else ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, "Game does not exist!")) {}
+            )
         } catch (ex: Exceptions.GameDoesNotExistException) {
-            siren(ErrorOutputModel(404, "Game was not been created!")) {}
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, ex.message)) {}
+            )
         }
     }
 
@@ -200,29 +272,38 @@ class GamesController(
     fun isGameCreated(
         request: HttpServletRequest,
         @PathVariable("id") lobbyId: UUID
-    ): SirenModel<OutputModel> {
+    ): ResponseEntity<SirenModel<OutputModel>> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+            ?: return ResponseEntity.status(401).body(
+                siren(ErrorOutputModel(401, "User not authenticated!")) {}
+            )
 
         return try {
             if (gomokuService.isGameCreated(lobbyId)) {
-                siren(MessageOutputModel("CREATED")) {
-                    clazz("Check if game is created!")
-                    action(
-                        "game",
-                        PathTemplate.gameById(lobbyId),
-                        HttpMethod.GET,
-                        "application/x-www-form-urlencoded"
-                    ) {
-                        textField("get game")
+                ResponseEntity.status(200).body(
+                    siren(MessageOutputModel("CREATED")) {
+                        clazz("Check if game is created!")
+                        action(
+                            "game",
+                            PathTemplate.gameById(lobbyId),
+                            HttpMethod.GET,
+                            "application/x-www-form-urlencoded"
+                        ) {
+                            textField("get game")
+                        }
                     }
+                )
+            } else ResponseEntity.status(404).body(
+                siren(MessageOutputModel("WAITING")) {
+                    clazz("Check if game is created!")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.isGameCreated(lobbyId), LinkRelations.SELF)
                 }
-            } else siren(MessageOutputModel("WAITING")) {
-                clazz("Check if game is created! ")
-                link(PathTemplate.home(), LinkRelations.HOME)
-            }
+            )
         } catch (ex: Exception) {
-            siren(ErrorOutputModel(404, "Game has not been created!")) {}
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, "Game has not been created!")) {}
+            )
         }
     }
 
@@ -231,9 +312,11 @@ class GamesController(
     fun getGameById(
         request: HttpServletRequest,
         @PathVariable("id") gameId: UUID
-    ): SirenModel<OutputModel> {
+    ): ResponseEntity<SirenModel<OutputModel>> {
         request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
-            ?: return siren(ErrorOutputModel(401, "User not authenticated!")) {}
+            ?: return ResponseEntity.status(401).body(
+                siren(ErrorOutputModel(401, "User not authenticated!")) {}
+            )
 
         return try {
             val game = gomokuService.getById(gameId)
@@ -246,19 +329,26 @@ class GamesController(
                 boardCells = game.board.positions,
                 boardState = game.board.typeToString()
             )
-            siren(gameModel) {
-                clazz("Game")
-                action(
-                    "play",
-                    PathTemplate.play(game.gameId),
-                    HttpMethod.POST,
-                    "application/x-www-form-urlencoded"
-                ) {
-                    textField("place piece")
+            ResponseEntity.status(200).body(
+
+                siren(gameModel) {
+                    clazz("Game")
+                    action(
+                        "play",
+                        PathTemplate.play(game.gameId),
+                        HttpMethod.POST,
+                        "application/x-www-form-urlencoded"
+                    ) {
+                        textField("place piece")
+                    }
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.gameById(game.gameId), LinkRelations.GAME)
                 }
-            }
+            )
         } catch (ex: Exceptions.GameDoesNotExistException) {
-            siren(ErrorOutputModel(404, ex.message)) {}
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, ex.message)) {}
+            )
         }
     }
 }
