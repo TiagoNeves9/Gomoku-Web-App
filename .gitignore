@@ -120,3 +120,4 @@ dist
 *.bkp
 *.tmp
 code/js/package-lock.json
+docker/data
