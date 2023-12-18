@@ -293,7 +293,7 @@ class GamesController(
                         }
                     }
                 )
-            } else ResponseEntity.status(404).body(
+            } else ResponseEntity.status(200).body(
                 siren(MessageOutputModel("WAITING")) {
                     clazz("Check if game is created!")
                     link(PathTemplate.home(), LinkRelations.HOME)

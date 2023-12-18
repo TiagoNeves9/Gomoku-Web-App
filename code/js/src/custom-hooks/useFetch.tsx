@@ -14,7 +14,13 @@ export function useFetch<T>(
         async function fetchData() {
             setLoading(true);
             try {
-                const response = await fetch(uri);
+                const response = await fetch(
+                    uri,
+                    {
+                        headers: {
+                    'Content-Type': 'application/json',}
+                    }
+                );
                 if (!response.ok)
                     throw new Error('Network response was not ok.');
 

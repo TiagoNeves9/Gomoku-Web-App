@@ -4,6 +4,7 @@ import com.example.gomoku.SYSTEM_VERSION
 import com.example.gomoku.domain.authors
 import com.example.gomoku.http.model.AboutOutputModel
 import com.example.gomoku.http.model.AuthorsOutputModel
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -17,7 +18,8 @@ class MainController() {
     @GetMapping(PathTemplate.AUTHORS)
     fun getAuthors(): ResponseEntity<SirenModel<AuthorsOutputModel>> {
         val authorsModel = AuthorsOutputModel(authors)
-        return ResponseEntity.status(200).body(
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON)
+            .body(
             siren(authorsModel) { clazz("Authors") }
         )
     }

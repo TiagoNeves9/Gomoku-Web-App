@@ -36,7 +36,7 @@ sealed class Board(val positions: Map<Cell, Turn>, val boardSize: Int) {
     fun positionsToString(): String {
         var str = ""
         positions.forEach {
-            val key = if (it.key.rowIndex <= 9) "0${it.key}" else "${it.key}"
+            val key = if (it.key.rowIndex < 9) "0${it.key}" else "${it.key}"
             str += if (it.value == Turn.BLACK_PIECE) "${key}B"
             else "${key}W"
         }
