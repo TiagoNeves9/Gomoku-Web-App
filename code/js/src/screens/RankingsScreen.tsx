@@ -17,7 +17,7 @@ export const RankingsScreen = () => {
     return (
         <div id="rankings">
             <h1 className="h1">Rankings</h1>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <ul style={{ listStyleType: 'none', paddingBottom: 200 }}>
                 {rankingList.map((user, index) => (
                     <li key={index} style={{ marginBottom: '10px' }} className="ranking">
                         <span style={{ display: 'inline-block', width: '100px' }}>
