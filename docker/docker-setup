@@ -1,4 +1,4 @@
-docker-compose build
+docker-compose build --no-cache
     (construir os containers)
 
 docker-compose up -d
