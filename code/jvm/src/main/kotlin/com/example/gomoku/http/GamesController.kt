@@ -308,6 +308,88 @@ class GamesController(
     }
 
     @Authenticated
+    @GetMapping(PathTemplate.LATEST_GAME)
+    fun getLatestGame(request: HttpServletRequest) : ResponseEntity<SirenModel<OutputModel>>{
+        val aUser =
+            request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
+        return try {
+            val game = gomokuService.getLatestGame(aUser.user.userId)
+            val gameModel = GameOutputModel(
+                id = game.gameId,
+                userB = game.users.first,
+                userW = game.users.second,
+                turn = game.currentPlayer.first.username,
+                rules = game.rules,
+                boardCells = game.board.positions,
+                boardState = game.board.typeToString()
+            )
+            ResponseEntity.status(200).body(
+                siren(gameModel) {
+                    clazz("Game")
+                    action(
+                        "play",
+                        PathTemplate.play(game.gameId),
+                        HttpMethod.POST,
+                        "application/x-www-form-urlencoded"
+                    ) {
+                        textField("place piece")
+                    }
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                    link(PathTemplate.gameById(game.gameId), LinkRelations.GAME)
+                }
+            )
+        } catch(ex : Exception) {
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, ex.message)) {}
+            )
+        }
+    }
+
+    @Authenticated
+    @GetMapping(PathTemplate.LATEST_EXIST)
+    fun doesLatestExist(
+        request: HttpServletRequest
+    ): ResponseEntity<SirenModel<OutputModel>> {
+        val aUser =
+            request.getAttribute(AuthenticatedUserArgumentResolver.getKey()) as AuthenticatedUser?
+                ?: return ResponseEntity.status(401).body(
+                    siren(ErrorOutputModel(401, "User not authenticated!")) {}
+                )
+
+        return try {
+            if (gomokuService.doesLatestExist(aUser.user.userId)) {
+                val game = gomokuService.getLatestGame(aUser.user.userId)
+                ResponseEntity.status(200).body(
+                    siren(MessageOutputModel("EXISTS")) {
+                        clazz("Check if game is created!")
+                        action(
+                            "game",
+                            PathTemplate.gameById(game.gameId),
+                            HttpMethod.GET,
+                            "application/x-www-form-urlencoded"
+                        ) {
+                            textField("get game")
+                        }
+                    }
+                )
+            } else ResponseEntity.status(200).body(
+                siren(MessageOutputModel("NEXISTS")) {
+                    clazz("Check if game is created!")
+                    link(PathTemplate.home(), LinkRelations.HOME)
+                }
+            )
+        } catch (ex: Exception) {
+            println(ex.message)
+            ResponseEntity.status(404).body(
+                siren(ErrorOutputModel(404, "Error finding latest game!")) {}
+            )
+        }
+    }
+
+    @Authenticated
     @GetMapping(PathTemplate.GAME_BY_ID)
     fun getGameById(
         request: HttpServletRequest,

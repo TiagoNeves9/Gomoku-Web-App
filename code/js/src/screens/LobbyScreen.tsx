@@ -18,7 +18,7 @@ export function LobbyScreen() {
   const POLLING_INTERVAL = 10000;
 
   useEffect(() => {
-    leaveLobby(); //leave lobby on refresh
+    if(waiting) leaveLobby(); //leave lobby on refresh
     return () => {
       leaveLobby(); //when leave lobby page remove request from server
     };

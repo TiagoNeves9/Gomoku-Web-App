@@ -14,4 +14,8 @@ interface GamesRepository {
     fun update(game: Game)
 
     fun doesGameExist(id: UUID): Boolean
+
+    fun getLatestGame(userID: UUID) : Game
+
+    fun doesLatestExist(userID: UUID) : Boolean
 }

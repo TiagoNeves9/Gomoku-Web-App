@@ -112,4 +112,17 @@ class GomokuService(private val transactionManager: TransactionManager) {
             deleted == 1
         }
     }
+
+    fun getLatestGame(userId: UUID): Game {
+        return transactionManager.run {
+            return@run it.gamesRepository.getLatestGame(userId)
+        }
+    }
+
+    fun doesLatestExist(userId: UUID): Boolean {
+        return transactionManager.run {
+            return@run it.gamesRepository.doesLatestExist(userId)
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import com.example.gomoku.domain.board.*
 import com.example.gomoku.repository.GamesRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import org.jdbi.v3.core.statement.SqlStatements
 import java.sql.ResultSet
 import java.util.*
 
@@ -145,4 +146,23 @@ class JdbiGamesRepository(
             .bind("id", id)
             .mapTo<Int>()
             .single() == 1
+
+    override fun getLatestGame(userID: UUID): Game =
+        handle.createQuery("select * from dbo.games where board_type = 'RUNNING' AND (? = user1_id or ? = user2_id)")
+            .bind(0, userID)
+            .bind(1, userID)
+            .map { rs, _ -> myMapToGame(rs) }
+            .single()
+
+
+    override fun doesLatestExist(userID: UUID): Boolean {
+        return handle.createQuery("select count(*) from dbo.games where board_type = 'RUNNING' AND (? = user1_id or ? = user2_id)")
+            .bind(0, userID)
+            .bind(1, userID)
+            .mapTo<Int>()
+            .single() == 1
+    }
+
+
+
 }

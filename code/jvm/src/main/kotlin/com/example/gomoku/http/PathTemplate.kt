@@ -18,6 +18,8 @@ object PathTemplate {
     const val SPECTATE = "/games/spectate/{id}"
     const val IS_GAME_CREATED = "/lobbies/{id}"
     const val GAME_BY_ID = "/games/{id}"
+    const val LATEST_GAME = "/games/game"
+    const val LATEST_EXIST = "/lobbies/game"
 
     const val USER = "/user"
     const val USERS = "/users"
