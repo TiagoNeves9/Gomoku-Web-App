@@ -4,8 +4,4 @@ import java.time.Instant
 import java.util.*
 
 
-data class Token(
-    val token: String, //todo - encode token before storing it?
-    val userId: UUID,
-    val createdAt: Instant,
-)
+data class Token(val token: String, val userId: UUID, val createdAt: Instant)

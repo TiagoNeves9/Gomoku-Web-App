@@ -17,7 +17,6 @@ sealed class Board(val positions: Map<Cell, Turn>, val boardSize: Int) {
     fun addPiece(cell: Cell): BoardRun {
         check(this is BoardRun) { "Game finished." }
 
-        //TODO: Catch do error em vez de throw
         return if (cell.rowIndex !in 0 until boardSize || cell.colIndex !in 0 until boardSize)
             throw Exceptions.PlayNotAllowedException("Invalid cell (outside of the board dimensions)!")
         else if (cell.toString() in this.positions.map { it.key.toString() })
