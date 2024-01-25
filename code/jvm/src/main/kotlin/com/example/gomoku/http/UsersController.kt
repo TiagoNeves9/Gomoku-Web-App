@@ -35,7 +35,7 @@ class UsersController(private val usersService: UsersService) {
                 user.userId,
                 aUser.token
             )
-            ResponseEntity.status(201).body(
+            ResponseEntity.status(200).body(
                 siren(userModel) {
                     clazz("user login")
                     link(PathTemplate.home(), LinkRelations.HOME)
@@ -61,10 +61,11 @@ class UsersController(private val usersService: UsersService) {
     @PostMapping(PathTemplate.CREATE_USER)
     fun insert(@RequestBody user: UserInputModel): ResponseEntity<SirenModel<OutputModel>> {
         return try {
+            println("entrou aqui!!")
             val createdUser = usersService.createNewUser(user.name, user.password)
             val token = usersService.createToken(user.name, user.password)
             val userModel = UserOutputModel(createdUser.username, createdUser.userId, token)
-            ResponseEntity.status(200).body(
+            ResponseEntity.status(201).body(
                 siren(userModel) {
                     clazz("user signup")
                     link(PathTemplate.home(), LinkRelations.HOME)
@@ -77,7 +78,9 @@ class UsersController(private val usersService: UsersService) {
             )
         } catch (ex: Exceptions.ErrorCreatingUserException) {
             ResponseEntity.status(400).body(
-                siren(ErrorOutputModel(400, ex.message)) {}
+                siren(ErrorOutputModel(400, ex.message)) {
+                    clazz("error")
+                }
             )
         }
     }
